@@ -1,0 +1,2647 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tao.Cg</name>
+    </assembly>
+    <members>
+        <member name="T:Tao.Cg.Cg">
+            <summary>
+                Cg core runtime binding for .NET, implementing Cg 1.2.1.
+            </summary>
+            <remarks>
+                Binds functions and definitions in cg.dll or libcg.so.
+            </remarks>
+        </member>
+        <member name="F:Tao.Cg.Cg.CALLING_CONVENTION">
+            <summary>
+                Specifies the calling convention.
+            </summary>
+            <remarks>
+                Specifies <see cref="F:System.Runtime.InteropServices.CallingConvention.Cdecl"/> for Windows and Linux.
+            </remarks>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT0">
+            <summary>
+                Texture unit.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXUINT15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ATTR15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_C">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEX7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HPOS">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COL0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COL1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COL2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COL3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZ">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_WPOS">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_POSITION15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DIFFUSE0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TANGENT15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SPECULAR0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDINDICES15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COLOR15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PSIZE15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BINORMAL15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOG15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEPTH15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLE15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BLENDWEIGHT15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NORMAL15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FOGCOORD">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD2">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD3">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD4">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD5">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD6">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD7">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD8">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD9">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD10">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD11">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD12">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD13">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD14">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TEXCOORD15">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TESSFACTOR">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMBINER_CONST0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMBINER_CONST1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMBINER_STAGE_CONST0">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMBINER_STAGE_CONST1">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OFFSET_TEXTURE_MATRIX">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OFFSET_TEXTURE_SCALE">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OFFSET_TEXTURE_BIAS">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_CONST_EYE">
+            <summary>
+                
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FALSE">
+            <summary>
+                False.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TRUE">
+            <summary>
+                True.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_UNKNOWN_TYPE">
+            <summary>
+                An unknown data type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_STRUCT">
+            <summary>
+                A collection of one or more members of possibly different types.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ARRAY">
+            <summary>
+                A collection of one or more elements of the same type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_TYPE_START_ENUM">
+            <summary>
+                Start of the Cg data type definitions.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF">
+            <summary>
+                The half type is lower-precision IEEE-like floating point.  Profiles must
+                support the half type, but may choose to implement it with the same precision
+                as the float type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF2">
+            <summary>
+                Two-element, packed, half array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF3">
+            <summary>
+                Three-element, packed, half array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF4">
+            <summary>
+                Four-element, packed, half array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF1x1">
+            <summary>
+                1x1, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF1x2">
+            <summary>
+                1x2, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF1x3">
+            <summary>
+                1x3, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF1x4">
+            <summary>
+                1x4, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF2x1">
+            <summary>
+                2x1, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF2x2">
+            <summary>
+                2x2, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF2x3">
+            <summary>
+                2x3, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF2x4">
+            <summary>
+                2x4, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF3x1">
+            <summary>
+                3x1, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF3x2">
+            <summary>
+                3x2, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF3x3">
+            <summary>
+                3x3, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF3x4">
+            <summary>
+                3x4, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF4x1">
+            <summary>
+                4x1, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF4x2">
+            <summary>
+                4x2, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF4x3">
+            <summary>
+                4x3, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF4x4">
+            <summary>
+                4x4, packed, half array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT">
+            <summary>
+                The float type is as close as possible to the IEEE single precision (32-bit)
+                floating point.  Profiles must support the float data type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT2">
+            <summary>
+                Two-element, packed, float array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT3">
+            <summary>
+                Three-element, packed, float array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT4">
+            <summary>
+                Four-element, packed, float array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT1x1">
+            <summary>
+                1x1, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT1x2">
+            <summary>
+                1x2, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT1x3">
+            <summary>
+                1x3, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT1x4">
+            <summary>
+                1x4, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT2x1">
+            <summary>
+                2x1, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT2x2">
+            <summary>
+                2x2, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT2x3">
+            <summary>
+                2x3, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT2x4">
+            <summary>
+                2x4, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT3x1">
+            <summary>
+                3x1, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT3x2">
+            <summary>
+                3x2, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT3x3">
+            <summary>
+                3x3, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT3x4">
+            <summary>
+                3x4, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT4x1">
+            <summary>
+                4x1, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT4x2">
+            <summary>
+                4x2, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT4x3">
+            <summary>
+                4x3, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT4x4">
+            <summary>
+                4x4, packed, float array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLER1D">
+            <summary>
+                A handle to a 1-dimensional texture object.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLER2D">
+            <summary>
+                A handle to a 2-dimensional texture object.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLER3D">
+            <summary>
+                A handle to a 3-dimensional texture object.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLERRECT">
+            <summary>
+                A handle to a texture object rectangle.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SAMPLERCUBE">
+            <summary>
+                A handle to a texture object cube map.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED">
+            <summary>
+                The fixed type is a signed type with a range of at least [-2,2) and with at
+                least 10 bits of fractional precision.  Overflow operations on the data type
+                clamp rather than wrap.  Fragment profiles must support the fixed type, but
+                may implement it with the same precision as the half or float types.
+                Vertex profiles are required to provide partial support for the fixed type.
+                Vertex profiles have the option to provide full support for the fixed type or
+                to implement the fixed type with the same precision as the half or float types.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED2">
+            <summary>
+                Two-element, packed, fixed array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED3">
+            <summary>
+                Three-element, packed, fixed array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED4">
+            <summary>
+                Four-element, packed, fixed array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED1x1">
+            <summary>
+                1x1, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED1x2">
+            <summary>
+                1x2, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED1x3">
+            <summary>
+                1x3, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED1x4">
+            <summary>
+                1x4, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED2x1">
+            <summary>
+                2x1, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED2x2">
+            <summary>
+                2x2, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED2x3">
+            <summary>
+                2x3, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED2x4">
+            <summary>
+                2x4, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED3x1">
+            <summary>
+                3x1, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED3x2">
+            <summary>
+                3x2, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED3x3">
+            <summary>
+                3x3, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED3x4">
+            <summary>
+                3x4, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED4x1">
+            <summary>
+                4x1, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED4x2">
+            <summary>
+                4x2, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED4x3">
+            <summary>
+                4x3, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED4x4">
+            <summary>
+                4x4, packed, fixed array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_HALF1">
+            <summary>
+                Single-element, packed, half array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FLOAT1">
+            <summary>
+                Single-element, packed, float array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FIXED1">
+            <summary>
+                Single-element, packed, fixed array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT">
+            <summary>
+                The int type is preferably 32-bit two’s complement.  Profiles may
+                optionally treat int as float.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT1">
+            <summary>
+                Single-element, packed, int array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT2">
+            <summary>
+                Two-element, packed, int array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT3">
+            <summary>
+                Three-element, packed, int array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT4">
+            <summary>
+                Four-element, packed, int array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT1x1">
+            <summary>
+                1x1, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT1x2">
+            <summary>
+                1x2, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT1x3">
+            <summary>
+                1x3, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT1x4">
+            <summary>
+                1x4, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT2x1">
+            <summary>
+                2x1, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT2x2">
+            <summary>
+                2x2, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT2x3">
+            <summary>
+                2x3, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT2x4">
+            <summary>
+                2x4, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT3x1">
+            <summary>
+                3x1, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT3x2">
+            <summary>
+                3x2, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT3x3">
+            <summary>
+                3x3, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT3x4">
+            <summary>
+                3x4, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT4x1">
+            <summary>
+                4x1, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT4x2">
+            <summary>
+                4x2, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT4x3">
+            <summary>
+                4x3, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INT4x4">
+            <summary>
+                4x4, packed, int array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL">
+            <summary>
+                The bool type represents Boolean values.  Objects of bool type are either
+                true or false.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL1">
+            <summary>
+                Single-element, packed, bool array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL2">
+            <summary>
+                Two-element, packed, bool array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL3">
+            <summary>
+                Three-element, packed, bool array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL4">
+            <summary>
+                Four-element, packed, bool array (vector type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL1x1">
+            <summary>
+                1x1, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL1x2">
+            <summary>
+                1x2, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL1x3">
+            <summary>
+                1x3, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL1x4">
+            <summary>
+                1x4, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL2x1">
+            <summary>
+                2x1, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL2x2">
+            <summary>
+                2x2, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL2x3">
+            <summary>
+                2x3, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL2x4">
+            <summary>
+                2x4, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL3x1">
+            <summary>
+                3x1, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL3x2">
+            <summary>
+                3x2, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL3x3">
+            <summary>
+                3x3, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL3x4">
+            <summary>
+                3x4, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL4x1">
+            <summary>
+                4x1, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL4x2">
+            <summary>
+                4x2, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL4x3">
+            <summary>
+                4x3, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_BOOL4x4">
+            <summary>
+                4x4, packed, bool array (matrix type).
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_UNKNOWN">
+            <summary>
+                Unknown resource.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_IN">
+            <summary>
+                Specifies an input parameter.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OUT">
+            <summary>
+                Specifies an output parameter.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INOUT">
+            <summary>
+                Specifies a parameter that is both input and output.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_MIXED">
+            <summary>
+                A structure parameter that contains parameters that differ in variability.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_VARYING">
+            <summary>
+                A varying parameter is one whose value changes with each invocation of the
+                program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_UNIFORM">
+            <summary>
+                A uniform parameter is one whose value does not chance with each invocation of a
+                program, but whose value can change between groups of program invocations.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_CONSTANT">
+            <summary>
+                A constant parameter never changes for the life of a compiled program.
+                Modifying a constant parameter requires program recompilation.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_SOURCE">
+            <summary>
+                The original Cg source program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_ENTRY">
+            <summary>
+                The main entry point for the program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMPILED_PROGRAM">
+            <summary>
+                The string for the compiled program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_PROFILE">
+            <summary>
+                The profile for the program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_GLOBAL">
+            <summary>
+                A global.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM">
+            <summary>
+                The program.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_DEFAULT">
+            <summary>
+                The default values for a uniform parameter.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ERROR">
+            <summary>
+                An error.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_SOURCE">
+            <summary>
+                A string that contains Cg source code.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OBJECT">
+            <summary>
+                A string that contains object code that resulted from the precompilation of some
+                Cg source code.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NO_ERROR">
+            <summary>
+                No error has occurred.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_COMPILER_ERROR">
+            <summary>
+                The compile returned an error.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_PARAMETER_ERROR">
+            <summary>
+                The parameter used is invalid.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_PROFILE_ERROR">
+            <summary>
+                The profile is not supported.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_LOAD_ERROR">
+            <summary>
+                The program could not load.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_BIND_ERROR">
+            <summary>
+                The program could not bind.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROGRAM_NOT_LOADED_ERROR">
+            <summary>
+                The program must be loaded before this operation may be used.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_UNSUPPORTED_GL_EXTENSION_ERROR">
+            <summary>
+                An unsupported GL extension was required to perform this operation.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_VALUE_TYPE_ERROR">
+            <summary>
+                An unknown value type was assigned to a parameter.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NOT_MATRIX_PARAM_ERROR">
+            <summary>
+                The parameter is not of matrix type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_ENUMERANT_ERROR">
+            <summary>
+                The enumerant parameter has an invalid value.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NOT_4x4_MATRIX_ERROR">
+            <summary>
+                The parameter must be a 4x4 matrix type.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FILE_READ_ERROR">
+            <summary>
+                The file could not be read.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_FILE_WRITE_ERROR">
+            <summary>
+                The file could not be written.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_NVPARSE_ERROR">
+            <summary>
+                nvparse could not successfully parse the output from the Cg compiler backend.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_MEMORY_ALLOC_ERROR">
+            <summary>
+                Memory allocation failed.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_CONTEXT_HANDLE_ERROR">
+            <summary>
+                Invalid context handle.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_PROGRAM_HANDLE_ERROR">
+            <summary>
+                Invalid program handle.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_PARAM_HANDLE_ERROR">
+            <summary>
+                Invalid parameter handle.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_UNKNOWN_PROFILE_ERROR">
+            <summary>
+                The specified profile is unknown.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_VAR_ARG_ERROR">
+            <summary>
+                The variable arguments were specified incorrectly.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_INVALID_DIMENSION_ERROR">
+            <summary>
+                The dimension value is invalid.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_ARRAY_PARAM_ERROR">
+            <summary>
+                The parameter must be an array.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_OUT_OF_ARRAY_BOUNDS_ERROR">
+            <summary>
+                Index into the array is out of bounds.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_UNKNOWN">
+            <summary>
+                Unknown profile.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_VP20">
+            <summary>
+                OpenGL NV2x vertex programs.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_FP20">
+            <summary>
+                OpenGL NV2x fragment programs.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_VP30">
+            <summary>
+                OpenGL NV30 vertex programs.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_FP30">
+            <summary>
+                OpenGL NV30 fragment programs.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_ARBVP1">
+            <summary>
+                OpenGL ARB vertex programs 1.0.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_ARBFP1">
+            <summary>
+                OpenGL ARB fragment programs 1.0.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_VS_1_1">
+            <summary>
+                DirectX 8 vertex shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_PS_1_1">
+            <summary>
+                DirectX 8 pixel shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_PS_1_2">
+            <summary>
+                DirectX 8 pixel shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_PS_1_3">
+            <summary>
+                DirectX 8 pixel shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_VS_2_0">
+            <summary>
+                DirectX 9 vertex shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_VS_2_X">
+            <summary>
+                DirectX 9 vertex shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_PS_2_0">
+            <summary>
+                DirectX 9 pixel shaders.
+            </summary>
+        </member>
+        <member name="F:Tao.Cg.Cg.CG_PROFILE_PS_2_X">
+            <summary>
+                DirectX 9 pixel shaders.
+            </summary>
+        </member>
+        <member name="M:Tao.Cg.Cg.#ctor">
+            <summary>
+                Prevents instantiation.
+            </summary>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgCreateContext">
+            <summary>
+                Creates a new Cg context to use.
+            </summary>
+            <returns>
+                A handle to the newly created Cg context.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgDestroyContext(System.IntPtr)">
+            <summary>
+                Destroys the specified Cg context.
+            </summary>
+            <param name="context">
+                Handle to the Cg context to destroy.
+            </param>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgIsContext(System.IntPtr)">
+            <summary>
+                Given the specified context handle, returns true if it is a valid Cg context.
+            </summary>
+            <param name="context">
+                Handle of the context to check.
+            </param>
+            <returns>
+                CG_TRUE if valid, CG_FALSE otherwise.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetLastListing(System.IntPtr)">
+            <summary>
+                Gets the compiler output from the results of the most recent program compilation for the given Cg context.
+            </summary>
+            <param name="context">
+                Handle to the context to query.
+            </param>
+            <returns>
+                String representing compiler output from last program compiled.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetLastListingA(System.IntPtr)">
+            <summary>
+                Gets the compiler output from the results of the most recent program compilation for the given Cg context.
+            </summary>
+            <param name="context">
+                Handle to the context to query.
+            </param>
+            <returns>
+                IntPtr that must be converted to a string with Marshal.PtrToStringAnsi.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgCopyProgram(System.IntPtr)">
+            <summary>
+                Makes a copy of the specified Cg program within the same context.
+            </summary>
+            <param name="program">
+                Handle to the program to copy.
+            </param>
+            <returns>
+                Handle to a new program within the same context.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgCreateProgram(System.IntPtr,System.Int32,System.String,System.Int32,System.String,System.String[])">
+            <summary>
+                Compiles and creates a Cg program.
+            </summary>
+            <param name="context">
+                Current Cg context.
+            </param>
+            <param name="type">
+                Type of source to use.
+            </param>
+            <param name="source">
+                Source Cg code.
+            </param>
+            <param name="profile">
+                Profile to use for compiling the program.
+            </param>
+            <param name="entry">
+                Entry point of the specified Cg source.  If null, then 'main' is assumed.
+            </param>
+            <param name="args">
+                Optional args to pass to the compiler.
+            </param>
+            <returns>
+                Handle to the newly created Cg program.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgCreateProgramFromFile(System.IntPtr,System.Int32,System.String,System.Int32,System.String,System.String[])">
+            <summary>
+                Creates a Cg program from the specified file.
+            </summary>
+            <param name="context">
+                Current Cg context.
+            </param>
+            <param name="type">
+                Type of source to use.
+            </param>
+            <param name="file">
+                Name of the file to load and compile.
+            </param>
+            <param name="profile">
+                Profile to use for compiling the program.
+            </param>
+            <param name="entry">
+                Entry point of the specified Cg source.  If null, then 'main' is assumed.
+            </param>
+            <param name="args">
+                Optional args to pass to the compiler.
+            </param>
+            <returns>
+                Handle to the newly created Cg program.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgDestroyProgram(System.IntPtr)">
+            <summary>
+                Destroys the specified Cg program.
+            </summary>
+            <param name="program">
+                Handle to the program to destroy.
+            </param>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetProgramString(System.IntPtr,System.Int32)">
+            <summary>
+                Gets the specified source from the program.
+            </summary>
+            <param name="program">
+                Handle to the Cg program.
+            </param>
+            <param name="sourceType">
+                Type of source to pull, whether original or compiled, etc.
+            </param>
+            <returns>
+                String containing the source of the specified type from the program.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetProgramStringA(System.IntPtr,System.Int32)">
+            <summary>
+                Gets the specified source from the program.
+            </summary>
+            <param name="program">
+                Handle to the Cg program.
+            </param>
+            <param name="sourceType">
+                Type of source to pull, whether original or compiled, etc.
+            </param>
+            <returns>
+                IntPtr to the string data.  Must be converted using Marshal.PtrToStringAnsi.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetFirstProgram(System.IntPtr)">
+            <summary>
+                Gets the first program in a context.
+            </summary>
+            <param name="context">
+                The context to retreive first program from.
+            </param>
+            <returns>
+                The program or null if no programs available.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetNextProgram(System.IntPtr)">
+            <summary>
+                Iterate trough programs in a context.
+            </summary>
+            <param name="current">
+                Current program.
+            </param>
+            <returns>
+                Next program in context's internal sequence of programs.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetProgramContext(System.IntPtr)">
+            <summary>
+                Gets a programs parent context.
+            </summary>
+            <param name="prog">
+                Program to retreive context from.
+            </param>
+            <returns>
+                The context a given program belongs to.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgIsProgram(System.IntPtr)">
+            <summary>
+                Determine if a program handle references a Cg program object.
+            </summary>
+            <param name="prog">
+                The program handle.
+            </param>
+            <returns>
+                CG_TRUE if prog references a valid program object.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgCompileProgram(System.IntPtr)">
+            <summary>
+                Compile a program object.
+            </summary>
+            <param name="prog">
+                The program to be compiled or inspected.
+            </param>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterType(System.IntPtr)">
+            <summary>
+               Gets the data type of the specified parameter.
+            </summary>
+            <param name="param">Id of the parameter to query.</param>
+            <returns>Enum value representing the parameter's data type.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgIsProgramCompiled(System.IntPtr)">
+            <summary>
+                Determines if a program has been compiled.
+            </summary>
+            <param name="prog">
+                Specifies the program.
+            </param>
+            <returns>
+                CG_TRUE if specified program has been compiled.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetProgramProfile(System.IntPtr)">
+            <summary>
+                Gets the profile enumeration of the program.
+            </summary>
+            <param name="prog">
+                Specifies the program.
+            </param>
+            <returns>
+                The profile enumeration or CG_PROFILE_UNKNOWN if compilation failed.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetProfile(System.String)">
+            <summary>
+                Returns a profile enum value based on the string representation of the profile.
+            </summary>
+            <param name="profile">
+                Name of the profile, i.e. arbvp1, vs_1_1, etc.
+            </param>
+            <returns>
+                Enum value containing the integral representation of the profile.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetNamedParameter(System.IntPtr,System.String)">
+            <summary>
+            Gets the named parameter from the program.
+            </summary>
+            <param name="program">
+            The program to get parameter from.
+            </param>
+            <param name="parameter">
+            The name of the parameter to return.
+            </param>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetFirstLeafParameter(System.IntPtr,System.Int32)">
+            <summary>
+               Used to get the first leaf parameter from the specified program.
+            </summary>
+            <remarks>
+               Leaf params read into params that are structs as well, eliminating the need to explictly 
+               determine if the param is a struct or other type.
+            </remarks>
+            <param name="program">
+               Handle to the program to query.
+            </param>
+            <param name="nameSpace">
+               Namespace in which to query for the params (usually CG_PROGRAM).
+            </param>
+            <returns>
+               Handle to the first Cg parameter in the specified program.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetNextLeafParameter(System.IntPtr)">
+            <summary>
+               Gets a handle to the leaf parameter directly following the specified param.
+            </summary>
+            <param name="currentParam">Current Cg parameter.</param>
+            <returns>Handle to the next param after the current program, null if the current is the last param.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterDirection(System.IntPtr)">
+            <summary>
+               Gets the direction of this parameter, i.e. CG_IN, CG_OUT, CG_INOUT.
+            </summary>
+            <param name="param">Id of the parameter to query.</param>
+            <returns>Enum value representing the parameter's direction.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterName(System.IntPtr)">
+            <summary>
+               Gets the name of the specified program.
+            </summary>
+            <param name="param">Handle to the program to query.</param>
+            <returns>The name of the specified program as a string.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterNameA(System.IntPtr)">
+            <summary>
+               Gets the name of the specified program.
+            </summary>
+            <param name="param">Handle to the program to query.</param>
+            <returns>IntPtr that must be converted to an Ansi string via Marshal.PtrToStringAnsi.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterResourceIndex(System.IntPtr)">
+            <summary>
+               Retrieves the index of the specifed parameter according to its type and variability.
+            </summary>
+            <remarks>
+               For example, if the resource for a given parameter is CG_TEXCOORD7,
+               cgGetParameterResourceIndex() returns 7.  Also, for uniform params, it equates
+               to the constant index that will be used in the resulting program.
+            </remarks>
+            <param name="param">
+               Handle of the param to query.
+            </param>
+            <returns>
+               Index of the specified parameter according to its type and variability.
+            </returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterVariability(System.IntPtr)">
+            <summary>
+               Gets the variability of the specified param (i.e, uniform, varying, etc).
+            </summary>
+            <param name="param">Handle of the program to query.</param>
+            <returns>Enum stating the variability of the program.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgIsParameterReferenced(System.IntPtr)">
+            <summary>
+               Queries whether the specified program will be used in the final compiled program.
+            </summary>
+            <remarks>
+               The compiler may ignore parameters that are not actually used within the program.
+            </remarks>
+            <param name="param">Handle to the Cg parameter.</param>
+            <returns>True if the param is being used, false if not.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterResource(System.IntPtr)">
+            <summary>
+            Gets a parameter's resource.
+            </summary>
+            <param name="param">Parameter to retreive resource from</param>
+            <returns>Resource of a given parameter.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterBaseResource(System.IntPtr)">
+            <summary>
+            Gets a parameter's base resource.
+            </summary>
+            <param name="param">Parameter to retreive base resource from</param>
+            <returns>Base resource of a given parameter.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetFirstParameter(System.IntPtr,System.Int32)">
+            <summary>
+            Gets the first parameter in specified program.
+            </summary>
+            <param name="prog">The program to retreive the first program from.</param>
+            <param name="name_space">Namespace of the parameter to iterate through.</param>
+            <returns>First parameter in specified program.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetNextParameter(System.IntPtr)">
+            <summary>
+            Iterates to next parameter in program.
+            </summary>
+            <param name="currentParam">The current parameter.</param>
+            <returns>The next parameter in the program's internal sequence of parameters.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetFirstStructParameter(System.IntPtr)">
+            <summary>
+            Gets the first child parameter in a struct parameter.
+            </summary>
+            <param name="param">The struct parameter to get child parameter from.</param>
+            <returns>First child parameter in specified struct parameter.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetArrayParameter(System.IntPtr,System.Int32)">
+            <summary>
+            Gets the parameter from an array.
+            </summary>
+            <param name="aparam">Array parameter.</param>
+            <param name="index">Index into the array.</param>
+            <returns>Parameter of array param specified by the index.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetArrayDimension(System.IntPtr)">
+            <summary>
+            Gets the dimension of an array parameter.
+            </summary>
+            <param name="param">Parameter.</param>
+            <returns>Dimension of the specified parameter.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetArraySize(System.IntPtr,System.Int32)">
+            <summary>
+            Gets the size of an array.
+            </summary>
+            <param name="param">Parameter.</param>
+            <param name="dimension">The dimension whose size will be returned.</param>
+            <returns>Size of specified parameters dimension.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterProgram(System.IntPtr)">
+            <summary>
+            Gets program that specified parameter belongs to.
+            </summary>
+            <param name="param">Parameter to retreive it's parent program.</param>
+            <returns>A program given parameter belongs to.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgIsParameter(System.IntPtr)">
+            <summary>
+            Determines if parameter is valid Cg parameter object.
+            </summary>
+            <param name="param">Parameter.</param>
+            <returns>CG_TRUE ig parameter is valid Cg parameter object.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterSemantic(System.IntPtr)">
+            <summary>
+            Gets the parameter's semantic string.
+            </summary>
+            <param name="param">Parameter to get semantic from.</param>
+            <returns>Parameter's semantic string.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterValues(System.IntPtr,System.Int32,System.Int32[])">
+            <summary>
+            Gets a program parameter's values. 
+            </summary>
+            <param name="param">Parameter to retreive parameter's values from.</param>
+            <param name="value_type">CG_CONSTANT or CG?DEFAULT</param>
+            <param name="nvalues">Array of integers indicating the number of values in parameters.</param>
+            <returns>Array of double values.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterValues(System.IntPtr,System.Int32,System.Int32*)">
+            <summary>
+            Gets a program parameter's values. 
+            </summary>
+            <param name="param">Parameter to retreive parameter's values from.</param>
+            <param name="value_type">CG_CONSTANT or CG?DEFAULT</param>
+            <param name="nvalues">Array of integers indicating the number of values in parameters.</param>
+            <returns>Array of double values.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterValues(System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            Gets a program parameter's values. 
+            </summary>
+            <param name="param">Parameter to retreive parameter's values from.</param>
+            <param name="value_type">CG_CONSTANT or CG?DEFAULT</param>
+            <param name="nvalues">Array of integers indicating the number of values in parameters.</param>
+            <returns>Array of double values.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetParameterOrdinalNumber(System.IntPtr)">
+            <summary>
+            Returns an integer that represents the position of a parameter when it was declared within the Cg program.
+            </summary>
+            <param name="param">Parameter to retreive it's ordinal number.</param>
+            <returns>Parameter's ordinal number.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetResourceString(System.Int32)">
+            <summary>
+            get the resource name associated with a resource enumerant 
+            </summary>
+            <param name="resource">Resource ID to get name from.</param>
+            <returns>Resource's name.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetResource(System.String)">
+            <summary>
+            Gets the resource enumerant assigned to a resource name.
+            </summary>
+            <param name="resource_name">Resource's name.</param>
+            <returns>Resource enumerant.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetError">
+            <summary>
+               Returns an error enum if an error has occured in the last Cg method call.
+            </summary>
+            <returns>Error enum.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetErrorString(System.Int32)">
+            <summary>
+               Returns an error description from the specified error enum value.
+            </summary>
+            <param name="error">Error enum value.</param>
+            <returns>String description of the specified error enum value.</returns>
+        </member>
+        <member name="M:Tao.Cg.Cg.cgGetErrorStringA(System.Int32)">
+            <summary>
+               Returns an error description from the specified error enum value.
+            </summary>
+            <param name="error">Error enum value.</param>
+            <returns>IntPtr that must be converted to Ansi string via Marshal.PtrToStringAnsi.</returns>
+        </member>
+    </members>
+</doc>
