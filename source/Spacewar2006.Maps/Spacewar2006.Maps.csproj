@@ -1,0 +1,92 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{043D9999-E1E9-4E80-B398-E790B024DBCB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Spacewar2006.Maps</RootNamespace>
+    <AssemblyName>Spacewar2006.Maps</AssemblyName>
+    <PlatformTarget>x86</PlatformTarget>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SWCTF01.cs" />
+    <Compile Include="SWCTF01.designer.cs">
+      <DependentUpon>SWCTF01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SWDOM01.cs" />
+    <Compile Include="SWDOM01.designer.cs">
+      <DependentUpon>SWDOM01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SWMISSION01.cs" />
+    <Compile Include="SWMISSION01.designer.cs">
+      <DependentUpon>SWMISSION01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SWMISSION02.cs" />
+    <Compile Include="SWMISSION02.designer.cs">
+      <DependentUpon>SWMISSION02.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SWRACE01.cs" />
+    <Compile Include="SWRACE01.designer.cs">
+      <DependentUpon>SWRACE01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestSector.cs" />
+    <Compile Include="TestSector.designer.cs">
+      <DependentUpon>TestSector.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cheetah\Cheetah.csproj">
+      <Project>{4631EB9F-BE01-4453-8BFC-E3BE51783316}</Project>
+      <Name>Cheetah</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spacewar2006\Spacewar2006.csproj">
+      <Project>{A1E976C6-632B-4E48-93B0-E051D6785C93}</Project>
+      <Name>Spacewar2006</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\..\dist\maps\</PostBuildEvent>
+  </PropertyGroup>
+</Project>
