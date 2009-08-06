@@ -1,0 +1,2 @@
+all:
+	gmcs *.cs -optimize+ -unsafe -reference:System.Drawing -lib:../../dist/bin/linux -reference:Tao.OpenGl.dll -reference:Tao.Sdl.dll -reference:Tao.DevIl.dll -reference:ICSharpCode.SharpZipLib.dll -reference:Tao.OpenGl.ExtensionLoader.dll -reference:Tao.OpenGl.Glu.dll -reference:Boo.Lang.Compiler -reference:System.Web -reference:Boo.Lang.Parser -reference:Boo.Lang.Interpreter -reference:Meebey.SmartIrc4net -target:library -out:../../dist/bin/linux/cheetah.dll
