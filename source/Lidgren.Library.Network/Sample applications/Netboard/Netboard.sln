@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netboard", "Netboard\Netboard.csproj", "{A67E40EA-9882-4912-99BB-31A77FD42556}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetboardServer", "NetboardServer\NetboardServer.csproj", "{FA41A035-192B-4EBD-82AD-368510DBBEEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetboardCommon", "NetboardCommon\NetboardCommon.csproj", "{5BB03624-42BE-4327-A93B-CDB192DC7FCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Library.Network", "..\Lidgren.Library.Network\Lidgren.Library.Network.csproj", "{D4592CBE-B347-4770-989A-D6FA47C5B191}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A67E40EA-9882-4912-99BB-31A77FD42556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67E40EA-9882-4912-99BB-31A77FD42556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67E40EA-9882-4912-99BB-31A77FD42556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67E40EA-9882-4912-99BB-31A77FD42556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA41A035-192B-4EBD-82AD-368510DBBEEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA41A035-192B-4EBD-82AD-368510DBBEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA41A035-192B-4EBD-82AD-368510DBBEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA41A035-192B-4EBD-82AD-368510DBBEEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BB03624-42BE-4327-A93B-CDB192DC7FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BB03624-42BE-4327-A93B-CDB192DC7FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BB03624-42BE-4327-A93B-CDB192DC7FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BB03624-42BE-4327-A93B-CDB192DC7FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

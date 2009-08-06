@@ -1,0 +1,26 @@
+
+
+Message header:
+3 bit	[Type 0-7] - for all messages
+5 bit	[Sequence channel, 0-31), only for User, OkAck, AckBF
+12 bit	[Sequence number, 0-4095] - only for User, OkAck, AckBF
+12 bit	[Payload length, 0-4095] - only for User, Discovery, Handshake
+
+
+Types:
+None = 0, // No message; packet padding due to encryption
+User = 1, // Application message
+UserFragmented = 2, // Application message
+Acknowledge = 3,
+AcknowledgeBitField = 4,
+Handshake = 5, // (connect, connectresponse, connectestablished, disconnected (incl. server full))
+PingPong = 6, // (ping, pong, optimizeinfo)
+Discovery = 7, // (request, response)
+		
+		
+Sequence channels:
+0: Unreliable
+1-15: Sequenced 1-15
+16: Reliable
+17-31: Ordered 1-15
+
