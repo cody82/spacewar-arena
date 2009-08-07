@@ -85,12 +85,12 @@ namespace Cheetah
                     }
                     //catch (Exception e)
                     {
-                        StreamWriter sw1=new StreamWriter("c:\\vertex.txt", false);
-                        StreamWriter sw2 = new StreamWriter("c:\\fragment.txt", false);
-                        sw1.Write(v);
-                        sw2.Write(f);
-                        sw1.Close();
-                        sw2.Close();
+                        //StreamWriter sw1=new StreamWriter("c:\\vertex.txt", false);
+                        //StreamWriter sw2 = new StreamWriter("c:\\fragment.txt", false);
+                        //sw1.Write(v);
+                        //sw2.Write(f);
+                        //sw1.Close();
+                        //sw2.Close();
                         //throw e;
                     }
                 }
