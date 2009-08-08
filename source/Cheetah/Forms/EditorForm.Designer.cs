@@ -244,7 +244,7 @@ namespace Cheetah.Forms
             this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControl1.Location = new System.Drawing.Point(196, 49);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Renderer = null;
+            //this.glControl1.Renderer = null;
             this.glControl1.Size = new System.Drawing.Size(658, 503);
             this.glControl1.TabIndex = 7;
             // 

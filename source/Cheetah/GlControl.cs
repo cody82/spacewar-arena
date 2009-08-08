@@ -6,11 +6,11 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-using OpenTK.OpenGL;
+//using OpenTK.OpenGL;
 
 namespace Cheetah
 {
-    public partial class GlControl : UserControl, IUserInterface
+    public partial class GlControl : OpenTK.GLControl, IUserInterface
     {
         class MouseControl : IControl
         {
@@ -61,8 +61,8 @@ namespace Cheetah
             public bool[] Keys = new bool[512];
         }
 
-        private OpenTK.OpenGL.ColorDepth cd = new OpenTK.OpenGL.ColorDepth(24);
-        private OpenTK.OpenGL.GLContext glc = null;
+        //private OpenTK.OpenGL.ColorDepth cd = new OpenTK.OpenGL.ColorDepth(24);
+        //private OpenTK.OpenGL.GLContext glc = null;
         private OpenGL gl;
 
         public GlControl()
@@ -73,8 +73,8 @@ namespace Cheetah
         private void GlControl_Load(object sender, EventArgs e)
         {
             if (this.DesignMode) return;
-            glc = OpenTK.OpenGL.GLContext.Create(this, cd, 8, 0);
-            glc.MakeCurrent();
+            //glc = OpenTK.OpenGL.GLContext.Create(this, cd, 8, 0);
+            //glc.MakeCurrent();
         }
 
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
@@ -95,11 +95,15 @@ namespace Cheetah
 
         public void Swap()
         {
-            glc.SwapBuffers();
+            this.Context.SwapBuffers();
         }
         public void Create(bool fullscreen, int width, int height, bool audio)
         {
-            glc.MakeCurrent();
+            //glc.MakeCurrent();
+            if (!this.Context.IsCurrent)
+            {
+                throw new Exception("not current");
+            }
             gl = new OpenGL(Width, Height);
             gl.SwapFunc = Swap;
         }
@@ -281,7 +285,7 @@ namespace Cheetah
 
         private void GlControl_SizeChanged(object sender, EventArgs e)
         {
-            if (glc != null)
+            if (!this.DesignMode && Renderer!=null)
             {
                 Renderer.WindowSize = new Point(Size.Width,Size.Height);
                 Renderer.RenderSize = new Point(Size.Width, Size.Height);

@@ -131,21 +131,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Ode.NET.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.Framework, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OpenTK, Version=0.9.9.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\OpenTK.Framework.dll</HintPath>
+      <HintPath>..\libs\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.OpenGL, Version=0.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OpenTK.Utilities, Version=0.9.9.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\OpenTK.OpenGL.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.Platform.Windows, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\OpenTK.Platform.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.Platform.X11, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\OpenTK.Platform.X11.dll</HintPath>
+      <HintPath>..\libs\OpenTK.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
