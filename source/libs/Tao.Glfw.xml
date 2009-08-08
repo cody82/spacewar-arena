@@ -6,7 +6,7 @@
     <members>
         <member name="T:Tao.Glfw.Glfw">
             <summary>
-                GLFW (OpenGL Framework) binding for .NET, implementing GLFW 2.4.2.
+                GLFW (OpenGL Framework) binding for .NET, implementing GLFW 2.6.0.
             </summary>
             <remarks>
                 <para>
@@ -53,6 +53,17 @@
                         </item>
                     </list>
                 </para>
+            </remarks>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_NATIVE_LIBRARY">
+            <summary>
+            Specifies the GLFW native library used in the bindings
+            </summary>
+            <remarks>
+            The Windows dll is specified here universally - note that
+            under Mono the non-windows native library can be mapped using
+            the ".config" file mechanism.  Kudos to the Mono team for this
+            simple yet elegant solution.
             </remarks>
         </member>
         <member name="F:Tao.Glfw.Glfw.GLFW_VERSION_MAJOR">
@@ -410,6 +421,46 @@
                 Delinates end of 'special' keys.
             </summary>
         </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_1">
+            <summary>
+            	Mouse identifier 1.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_2">
+            <summary>
+            	Mouse identifier 2.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_3">
+            <summary>
+            	Mouse identifier 3.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_4">
+            <summary>
+            	Mouse identifier 4.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_5">
+            <summary>
+            	Mouse identifier 5.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_6">
+            <summary>
+            	Mouse identifier 6.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_7">
+            <summary>
+            	Mouse identifier 7.
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_8">
+            <summary>
+            	Mouse identifier 8.
+            </summary>
+        </member>
         <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_BUTTON_LEFT">
             <summary>
                 Left mouse button.
@@ -613,6 +664,18 @@
                 or <see cref="F:Tao.OpenGl.Gl.GL_FALSE"/>).
             </summary>
         </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_WINDOW_NO_RESIZE">
+            <summary>
+                Specify whether the window can be resized (can be <see cref="F:Tao.OpenGl.Gl.GL_TRUE"/>
+                or <see cref="F:Tao.OpenGl.Gl.GL_FALSE"/>).
+            </summary>
+        </member>
+        <member name="F:Tao.Glfw.Glfw.GLFW_FSAA_SAMPLES">
+            <summary>
+                Specify if full screen antialiasing should be supported. Zero disabless multisampling, greater
+                values define the number of samples.
+            </summary>
+        </member>
         <member name="F:Tao.Glfw.Glfw.GLFW_MOUSE_CURSOR">
             <summary>
                 Mouse cursor visibility.
@@ -693,11 +756,6 @@
         <member name="F:Tao.Glfw.Glfw.GLFW_INFINITY">
             <summary>
                 Infinite amount of time.
-            </summary>
-        </member>
-        <member name="M:Tao.Glfw.Glfw.#ctor">
-            <summary>
-                Prevents instantiation.
             </summary>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwInit">
@@ -841,13 +899,21 @@
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwCloseWindow">
             <summary>
-            
+            	The function closes an opened window and destroys the associated OpenGL context.
             </summary>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwSetWindowTitle(System.String)">
             <summary>
-            
+            	Changes the title of the opened window.
             </summary>
+            <param name="title">
+            	Pointer to a null terminated ISO 8859-1 (8-bit Latin 1) string that holds the title of the window.
+            </param>
+            <remarks>
+            	<para>
+            		The title property of a window is often used in situations other than for the window title, such as the title of an application icon when it is in iconified state.
+            	</para>
+            </remarks>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwGetWindowSize(System.Int32@,System.Int32@)">
             <summary>
@@ -894,6 +960,47 @@
             
             </summary>
         </member>
+        <member name="M:Tao.Glfw.Glfw.glfwSetWindowCloseCallback(Tao.Glfw.Glfw.GLFWwindowclosefun)">
+            <summary>
+            	Selects which function to be called upon a window close event.
+            </summary>
+            <remarks>
+            	<para>
+            		A window has to be opened for this function to have any effect.
+            	</para>
+            	<para>
+            		Window close events are recorded continuously, but only reported when glfwPollEvents, glfwWaitEvents or glfwSwapBuffers is called.
+            	</para>
+            	<para>
+            		The OpenGLTM context is still valid when this function is called.
+            	</para>
+            	<para>
+            		Note that the window close callback function is not called when glfwCloseWindow is called, but only when the close request comes from the window manager.
+            	</para>
+            	<para>
+            		Do not call glfwCloseWindow from a window close callback function. Close the window by returning GL_TRUE from the function.
+            	</para>
+            </remarks>
+            <param name="cbfun">
+            	Pointer to a callback function that will be called when a user requests that the window should be closed.
+            </param>
+        </member>
+        <member name="M:Tao.Glfw.Glfw.glfwSetWindowRefreshCallback(Tao.Glfw.Glfw.GLFWwindowrefreshfun)">
+            <summary>
+            	The function selects which function to be called upon a window refresh event, which occurs when any part of the window client area has been damaged, and needs to be repainted (for instance, if a part of the window that was previously occluded by another window has become visible).
+            </summary>
+            <remarks>
+            	<para>
+            		A window has to be opened for this function to have any effect.
+            	</para>
+            	<para>
+            		Window refresh events are recorded continuously, but only reported when glfwPollEvents, glfwWaitEvents or glfwSwapBuffers is called.
+            	</para>
+            </remarks>
+            <param name="cbfun">
+            	Pointer to a callback function that will be called when the window client area needs to be refreshed.
+            </param>
+        </member>
         <member name="M:Tao.Glfw.Glfw.glfwGetVideoModes(Tao.Glfw.Glfw.GLFWvidmode[],System.Int32)">
             <summary>
             
@@ -905,6 +1012,11 @@
             </summary>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwPollEvents">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Glfw.Glfw.glfwWaitEvents">
             <summary>
             
             </summary>
@@ -969,7 +1081,7 @@
             
             </summary>
         </member>
-        <member name="M:Tao.Glfw.Glfw.glfwGetJoystickPos(System.Int32,System.Single@,System.Int32)">
+        <member name="M:Tao.Glfw.Glfw.glfwGetJoystickPos(System.Int32,System.Single[],System.Int32)">
             <summary>
             
             </summary>
@@ -1008,6 +1120,38 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Tao.Glfw.Glfw.glfwCreateThread(Tao.Glfw.Glfw.GLFWthreadfun,System.IntPtr)">
+            <summary>
+            	The function creates a new thread, which executes within the same
+            	address space as the calling process. The thread entry point is
+            	specified with the fun argument.
+            </summary>
+            <param name="fun">
+            	A pointer to a function that acts as the entry point for the new
+            	thread.
+            </param>
+            <param name="arg">
+            	An arbitrary argument for the thread. arg will be passed as the
+            	argument to the thread function pointed to by fun. For instance,
+            	arg can point to data that is to be processed by the thread.
+            </param>
+            <returns>
+            	The function returns a thread identification number if the thread
+            	was created successfully. This number is always positive. If the
+            	function fails, a negative number is returned.
+            </returns>
+            <remarks>
+            	<para>
+            		Once the thread function fun returns, the thread dies.
+            	</para>
+            	<para>
+            		Even if the function returns a positive thread ID, indicating
+            		that the thread was created successfully, the thread may be
+            		unable to execute, for instance if the thread start address
+            		is not a valid thread entry point.
+            	</para>
+            </remarks>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwDestroyThread(System.Int32)">
             <summary>
@@ -1089,12 +1233,27 @@
             
             </summary>
         </member>
+        <member name="M:Tao.Glfw.Glfw.glfwReadMemoryImage(System.IntPtr,System.Int32,Tao.Glfw.Glfw.GLFWimage@,System.Int32)">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Tao.Glfw.Glfw.glfwFreeImage(Tao.Glfw.Glfw.GLFWimage@)">
             <summary>
             
             </summary>
         </member>
         <member name="M:Tao.Glfw.Glfw.glfwLoadTexture2D(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Glfw.Glfw.glfwLoadMemoryTexture2D(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.Glfw.Glfw.glfwLoadTextureImage2D(Tao.Glfw.Glfw.GLFWimage@,System.Int32)">
             <summary>
             
             </summary>
@@ -1164,6 +1323,16 @@
                 Callback function that will be called every time the window size changes.
             </summary>
         </member>
+        <member name="T:Tao.Glfw.Glfw.GLFWwindowclosefun">
+            <summary>
+                Callback function that will be called every time the window closes.
+            </summary>
+        </member>
+        <member name="T:Tao.Glfw.Glfw.GLFWwindowrefreshfun">
+            <summary>
+                Callback function that will be called every time the window refreshes.
+            </summary>
+        </member>
         <member name="T:Tao.Glfw.Glfw.GLFWmousebuttonfun">
             <summary>
                 Callback function that will be called every time a mouse button is pressed
@@ -1189,6 +1358,11 @@
             <summary>
                 Callback function that will be called every time a printable character is
                 generated by the keyboard.
+            </summary>
+        </member>
+        <member name="T:Tao.Glfw.Glfw.GLFWthreadfun">
+            <summary>
+                Callback function that acts as the entry point for the new thread.
             </summary>
         </member>
     </members>

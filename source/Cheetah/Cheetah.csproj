@@ -166,10 +166,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Tao.OpenGl.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.OpenGl.ExtensionLoader, Version=1.5.0.3, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Tao.OpenGl.ExtensionLoader.dll</HintPath>
-    </Reference>
     <Reference Include="Tao.Sdl, Version=1.2.11.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Tao.Sdl.dll</HintPath>

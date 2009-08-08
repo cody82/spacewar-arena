@@ -4,6 +4,835 @@
         <name>Tao.DevIl</name>
     </assembly>
     <members>
+        <member name="T:Tao.DevIl.Ilut">
+            <summary>
+                DevIL (Developer's Image Library) ILUT binding for .NET.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.CALLING_CONVENTION">
+            <summary>
+                Specifies the calling convention.
+            </summary>
+            <remarks>
+                Specifies <see cref="F:System.Runtime.InteropServices.CallingConvention.Winapi"/>.
+            </remarks>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_NATIVE_LIBRARY">
+            <summary>
+            Specifies the DevIL ILUT native library used in the bindings
+            </summary>
+            <remarks>
+            The Windows dll is specified here universally - note that
+            under Mono the non-windows native library can be mapped using
+            the ".config" file mechanism.  Kudos to the Mono team for this
+            simple yet elegant solution.
+            </remarks>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION_1_6_8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL_BIT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_BIT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_ALL_ATTRIB_BITS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_ENUM">
+            <summary>
+            An unacceptable enumerated value was passed to a function.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_OUT_OF_MEMORY">
+            <summary>
+            Could not allocate enough memory in an operation.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_VALUE">
+            <summary>
+            An invalid value was passed to a function or was in a file.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_ILLEGAL_OPERATION">
+            <summary>
+            The operation attempted is not allowable in the current state. The function returns with no ill side effects.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_PARAM">
+            <summary>
+            An invalid parameter was passed to a function, such as a NULL pointer.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_COULD_NOT_OPEN_FILE">
+            <summary>
+            Could not open the file specified. The file may already be open by another app or may not exist.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_STACK_OVERFLOW">
+            <summary>
+            One of the internal stacks was already filled, and the user tried to add on to the full stack.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_STACK_UNDERFLOW">
+            <summary>
+            One of the internal stacks was empty, and the user tried to empty the already empty stack.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_BAD_DIMENSIONS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_NOT_SUPPORTED">
+            <summary>
+            A type is valid but not supported in the current build.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_PALETTE_MODE">
+            <summary>
+            Whether ilut uses palettes or converts the image to truecolour before sending it to the renderer.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL_CONV">
+            <summary>
+            Whether to use GL_RGB8 or GL_RGB, etc. when passing data to OpenGL only.
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_MIPLEVELS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_WIDTH">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_HEIGHT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_DEPTH">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_GL_USE_S3TC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_USE_DXTC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_GL_GEN_S3TC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_GEN_DXTC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_S3TC_FORMAT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_DXTC_FORMAT">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_POOL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_ALPHA_KEY_COLOR">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_ALPHA_KEY_COLOUR">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_GL_AUTODETECT_TEXTURE_TARGET">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION_NUM">
+            <summary>
+            Returns the version number of the shared library. This can be checked against the ILUT_VERSION #define
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_VENDOR">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_ALLEGRO">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_WIN32">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_DIRECT3D8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Tao.DevIl.Ilut.ILUT_DIRECT3D9">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutDisable(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Mode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutEnable(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Mode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetBoolean(System.Int32)">
+            <summary>
+            The ilutGetBooleanv return the value of a selected mode.
+            </summary>
+            <param name="Mode">The selected mode.</param>
+            <returns>The ilutGetBoolean returns the value of a selected mode.</returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetBooleanv(System.Int32,System.Byte@)">
+            <summary>
+            The ilutGetBoolean return the value of a selected mode.
+            </summary>
+            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
+            <param name="Param">Used to store the return values.</param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetBooleanv(System.Int32,System.Byte[])">
+            <summary>
+            The ilutGetBoolean return the value of a selected mode.
+            </summary>
+            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
+            <param name="Param">Used to store the return values.</param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetInteger(System.Int32)">
+            <summary>
+            The ilutGetInteger return the value of a selected mode.
+            </summary>
+            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetIntegerv(System.Int32,System.Int32@)">
+            <summary>
+            
+            </summary>
+            <param name="Mode"></param>
+            <param name="Param"></param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetString(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="StringName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutInit">
+            <summary>
+            The ilutInit function initializes ILUT.
+            </summary>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutIsDisabled(System.Int32)">
+            <summary>
+            ilutIsDisabled returns whether the mode indicated by Mode is disabled.
+            </summary>
+            <param name="Mode">Indicates an OpenIL mode</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutIsEnabled(System.Int32)">
+            <summary>
+            ilutIsEnabled returns whether the mode indicated by Mode is enabled.
+            </summary>
+            <param name="Mode">Indicates an OpenIL mode</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutPopAttrib">
+            <summary>
+            ilutPopAttrib pops the last pushed stack entry off the stack and copies the bits specified when pushed by ilutPushAttrib to the previous set of states.
+            </summary>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutPushAttrib(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Bits"></param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSetInteger(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Mode"></param>
+            <param name="Param"></param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutRenderer(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="Renderer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLBindTexImage">
+            <summary>
+            The ilutGLBindTexImage function binds an image to a generated OpenGL texture.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLBindMipmaps">
+            <summary>
+            The ilutGLBindMipmaps function binds an image to an OpenGL texture and creates mipmaps, generates a texture via glGenTextures, binds the current OpenIL image to it, generates mipmaps via gluBuild2DMipmaps and returns the texture name. This function is a more general purpose version of ilutOglBindTexImage.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLBuildMipmaps">
+            <summary>
+            ilutGLBuildMipmaps generates mipmaps via gluBuild2DMipmaps from an image. This function is similar to ilutGLTexImage but creates mipmaps.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLLoadImage(System.String)">
+            <summary>
+            ilutGLLoadImage loads an image directly to an OpenGL texture, skipping the use of OpenIL image names.
+            </summary>
+            <param name="FileName">Name of the image to load</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLScreen">
+            <summary>
+            ilutGLScreen copies the current OpenGL window contents to the current bound image, effectively taking a screenshot. The new image attributes are that of the current OpenGL window's.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLScreenie">
+            <summary>
+            ilutGLScreen copies the current OpenGL window contents to a temporary image, effectively taking a screenshot. The screenshot image is then saved to disk as screen0.tga - screen127.tga (the lowest name it can find). This is just a convenience function that uses ilutGLScreen.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLSaveImage(System.String,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="FileName"></param>
+            <param name="TexID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLSetTex(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="TexID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLTexImage(System.Int32)">
+            <summary>
+            The ilutGLTexImage function binds an image to an OpenGL texture, simply calls glTexImage2D with the current bound image's data and attributes.
+            </summary>
+            <param name="Level">Texture level to place the image at. 0 is the base image level, and anything lower is a mipmap. Use ilActiveMipmap to access OpenIL's mipmaps.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGLSubTex(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="TexID"></param>
+            <param name="XOff"></param>
+            <param name="YOff"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutAllegLoadImage(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="FileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutConvertToAlleg(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Pal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutConvertToSDLSurface(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="flags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSDLSurfaceLoadImage(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="FileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSDLSurfaceFromBitmap(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Bitmap"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutConvertToBBitmap">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutConvertToHBitmap(System.IntPtr)">
+            <summary>
+            ilutConvertToHBitmap creates a Windows bitmap handle (HBITMAP) copy of the current image, for direct use in Windows.
+            </summary>
+            <param name="hDC">The ilutGetBoolean returns the value of a selected mode.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutConvertSliceToHBitmap(System.IntPtr,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="hDC"></param>
+            <param name="slice"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutFreePaddedData(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="Data"></param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutFreePaddedData(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Data"></param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetBmpInfo(System.IntPtr)">
+            <summary>
+            ilutGetBmpInfo fills a BITMAPINFO struct with the current image's information. The BITMAPINFO struct is used commonly used in Windows applications.
+            </summary>
+            <param name="Info">BITMAPINFO struct pointer to be filled.</param>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetHPal">
+            <summary>
+            The ilutGetHPal function returns a Windows-friendly palette. If the current bound image has a palette, ilutGetHPal returns a Windows-compatible copy of the current image's palette in HPAL format.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetPaddedData">
+            <summary>
+            ilutGetPaddedData gets a copy of the current image's data, but pads it to be DWORD-aligned, just how Windows likes it. Almost all Windows functions that use images expect the images to be DWORD-aligned. The caller is responsible for freeing the memory returned by ilutGetPaddedData.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutGetWinClipboard">
+            <summary>
+            ilutGetWinClipboard copies the contents of the Windows clipboard to the current bound image, resizing as necessary.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutLoadResource(System.IntPtr,System.Int32,System.String,System.Int32)">
+            <summary>
+            ilutLoadResource is a Windows-specific function that loads a resource as the current bound image. This feature allows you to have images directly in your .exe and not worry whether a particular file is present on the user's harddrive. An alternative, more portable solution is to use ilSave with IL_CHEAD as the Type parameter.
+            </summary>
+            <param name="hInst">The application-s HINSTANCE</param>
+            <param name="ID">The resource identifier of the resource to be loaded</param>
+            <param name="ResourceType">The type of user-defined resource (name used when creating)</param>
+            <param name="Type">The type of image to be loaded. Use IL_TYPE_UNKNOWN to let OpenIL determine the type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSetHBitmap(System.IntPtr)">
+            <summary>
+            ilutSetHBitmap copies Bitmap to the current bound image in a format OpenIL can understand. The image can then be used just as if you had loaded an image via ilLoadImage. This function is the opposite of ilutConvertToHBitmap.
+            </summary>
+            <param name="Bitmap">Bitmap to copy to the current bound image.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSetHPal(System.IntPtr)">
+            <summary>
+            ilutSetHPal sets the current iamge's palette from a logical Windows palette handle specified in Pal. If the current image is not colour-indexed, the palette is still loaded, though it will never be used.
+            </summary>
+            <param name="Pal">A Windows palette to set the palette from</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutSetWinClipboard">
+            <summary>
+            ilutSetWinClipboard copies the current bound image to the Windows clipboard.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutWinLoadImage(System.String,System.IntPtr)">
+            <summary>
+            loads an image directly to a Win32 HBITMAP, skipping the use of OpenIL image names.
+            </summary>
+            <param name="FileName">Name of the image to load</param>
+            <param name="hDC">Device context the bitmap should reside in</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutWinLoadUrl(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="Url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutWinPrint(System.Int32,System.Int32,System.Int32,System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="XPos"></param>
+            <param name="YPos"></param>
+            <param name="Width"></param>
+            <param name="Height"></param>
+            <param name="hDC"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutWinSaveImage(System.String,System.IntPtr)">
+            <summary>
+            ilutWinSaveImage saves Bitmap to FileName. This function is the complement of ilutWinLoadImage.
+            </summary>
+            <param name="FileName">Name of the image file to save to</param>
+            <param name="Bitmap">Win32 HBITMAP to save from</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8Texture(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolumeTexture(System.IntPtr)">
+            <summary>
+            The ilutD3D8VolumeTexture function creates a Direct3D 8 texture (IDirect3DVolumeTexture8) from the current bound image.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFile(System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="FileName"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFile(System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            ilutD3D8VolTexFromFile loads the file named by FileName and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but for a volume texture.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="FileName">File to create the texture from.</param>
+            <param name="Texture">Address of a pointer to an IDirect3DVolumeTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="Lump">Location of memory file.</param>
+            <param name="Size">Size of Lump in bytes</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            ilutD3D8VolTexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory but for a volume texture.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="Lump">Location of memory file.</param>
+            <param name="Size">Size of Lump in bytes</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
+            <summary>
+            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="Lump">Location of memory file.</param>
+            <param name="Size">Size of Lump in bytes</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
+            <summary>
+            ilutD3D8VolTexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory but for a volume texture.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="Lump">Location of memory file.</param>
+            <param name="Size">Size of Lump in bytes</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
+            <summary>
+            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but with a file handle.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="File">File handle containing the image file</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
+            <summary>
+            ilutD3D8VolTexFromFileHandle loads the file present in File and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but with a file handle and a volume texture.
+            </summary>
+            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
+            <param name="File">File handle containing the image file</param>
+            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="SrcModule"></param>
+            <param name="SrcResource"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="SrcModule"></param>
+            <param name="SrcResource"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D8LoadSurface(System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Surface"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9Texture(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolumeTexture(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexture(System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFile(System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="FileName"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="File"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="SrcModule"></param>
+            <param name="SrcResource"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFile(System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="FileName"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFile(System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="FileName"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Lump"></param>
+            <param name="Size"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="File"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="File"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="SrcModule"></param>
+            <param name="SrcResource"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="SrcModule"></param>
+            <param name="SrcResource"></param>
+            <param name="Texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tao.DevIl.Ilut.ilutD3D9LoadSurface(System.IntPtr,System.IntPtr)">
+            <summary>
+            
+            </summary>
+            <param name="Device"></param>
+            <param name="Surface"></param>
+            <returns></returns>
+        </member>
         <member name="T:Tao.DevIl.Il">
             <summary>
                 DevIL (Developer's Image Library) IL binding for .NET, implementing DevIL 1.6.8 RC2.
@@ -2607,835 +3436,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="T:Tao.DevIl.Ilut">
-            <summary>
-                DevIL (Developer's Image Library) ILUT binding for .NET.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.CALLING_CONVENTION">
-            <summary>
-                Specifies the calling convention.
-            </summary>
-            <remarks>
-                Specifies <see cref="F:System.Runtime.InteropServices.CallingConvention.Winapi"/>.
-            </remarks>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_NATIVE_LIBRARY">
-            <summary>
-            Specifies the DevIL ILUT native library used in the bindings
-            </summary>
-            <remarks>
-            The Windows dll is specified here universally - note that
-            under Mono the non-windows native library can be mapped using
-            the ".config" file mechanism.  Kudos to the Mono team for this
-            simple yet elegant solution.
-            </remarks>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION_1_6_8">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL_BIT">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_BIT">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_ALL_ATTRIB_BITS">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_ENUM">
-            <summary>
-            An unacceptable enumerated value was passed to a function.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_OUT_OF_MEMORY">
-            <summary>
-            Could not allocate enough memory in an operation.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_VALUE">
-            <summary>
-            An invalid value was passed to a function or was in a file.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_ILLEGAL_OPERATION">
-            <summary>
-            The operation attempted is not allowable in the current state. The function returns with no ill side effects.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_INVALID_PARAM">
-            <summary>
-            An invalid parameter was passed to a function, such as a NULL pointer.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_COULD_NOT_OPEN_FILE">
-            <summary>
-            Could not open the file specified. The file may already be open by another app or may not exist.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_STACK_OVERFLOW">
-            <summary>
-            One of the internal stacks was already filled, and the user tried to add on to the full stack.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_STACK_UNDERFLOW">
-            <summary>
-            One of the internal stacks was empty, and the user tried to empty the already empty stack.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_BAD_DIMENSIONS">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_NOT_SUPPORTED">
-            <summary>
-            A type is valid but not supported in the current build.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_PALETTE_MODE">
-            <summary>
-            Whether ilut uses palettes or converts the image to truecolour before sending it to the renderer.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL_CONV">
-            <summary>
-            Whether to use GL_RGB8 or GL_RGB, etc. when passing data to OpenGL only.
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_MIPLEVELS">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_WIDTH">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_HEIGHT">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_MAXTEX_DEPTH">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_GL_USE_S3TC">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_USE_DXTC">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_GL_GEN_S3TC">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_GEN_DXTC">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_S3TC_FORMAT">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_DXTC_FORMAT">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_POOL">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_ALPHA_KEY_COLOR">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_D3D_ALPHA_KEY_COLOUR">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_GL_AUTODETECT_TEXTURE_TARGET">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_VERSION_NUM">
-            <summary>
-            Returns the version number of the shared library. This can be checked against the ILUT_VERSION #define
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_VENDOR">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_OPENGL">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_ALLEGRO">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_WIN32">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_DIRECT3D8">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:Tao.DevIl.Ilut.ILUT_DIRECT3D9">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutDisable(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="Mode"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutEnable(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="Mode"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetBoolean(System.Int32)">
-            <summary>
-            The ilutGetBooleanv return the value of a selected mode.
-            </summary>
-            <param name="Mode">The selected mode.</param>
-            <returns>The ilutGetBoolean returns the value of a selected mode.</returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetBooleanv(System.Int32,System.Byte@)">
-            <summary>
-            The ilutGetBoolean return the value of a selected mode.
-            </summary>
-            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
-            <param name="Param">Used to store the return values.</param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetBooleanv(System.Int32,System.Byte[])">
-            <summary>
-            The ilutGetBoolean return the value of a selected mode.
-            </summary>
-            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
-            <param name="Param">Used to store the return values.</param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetInteger(System.Int32)">
-            <summary>
-            The ilutGetInteger return the value of a selected mode.
-            </summary>
-            <param name="Mode">The ilutGetBoolean returns the value of a selected mode.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetIntegerv(System.Int32,System.Int32@)">
-            <summary>
-            
-            </summary>
-            <param name="Mode"></param>
-            <param name="Param"></param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetString(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="StringName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutInit">
-            <summary>
-            The ilutInit function initializes ILUT.
-            </summary>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutIsDisabled(System.Int32)">
-            <summary>
-            ilutIsDisabled returns whether the mode indicated by Mode is disabled.
-            </summary>
-            <param name="Mode">Indicates an OpenIL mode</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutIsEnabled(System.Int32)">
-            <summary>
-            ilutIsEnabled returns whether the mode indicated by Mode is enabled.
-            </summary>
-            <param name="Mode">Indicates an OpenIL mode</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutPopAttrib">
-            <summary>
-            ilutPopAttrib pops the last pushed stack entry off the stack and copies the bits specified when pushed by ilutPushAttrib to the previous set of states.
-            </summary>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutPushAttrib(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="Bits"></param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSetInteger(System.Int32,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="Mode"></param>
-            <param name="Param"></param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutRenderer(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="Renderer"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLBindTexImage">
-            <summary>
-            The ilutGLBindTexImage function binds an image to a generated OpenGL texture.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLBindMipmaps">
-            <summary>
-            The ilutGLBindMipmaps function binds an image to an OpenGL texture and creates mipmaps, generates a texture via glGenTextures, binds the current OpenIL image to it, generates mipmaps via gluBuild2DMipmaps and returns the texture name. This function is a more general purpose version of ilutOglBindTexImage.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLBuildMipmaps">
-            <summary>
-            ilutGLBuildMipmaps generates mipmaps via gluBuild2DMipmaps from an image. This function is similar to ilutGLTexImage but creates mipmaps.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLLoadImage(System.String)">
-            <summary>
-            ilutGLLoadImage loads an image directly to an OpenGL texture, skipping the use of OpenIL image names.
-            </summary>
-            <param name="FileName">Name of the image to load</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLScreen">
-            <summary>
-            ilutGLScreen copies the current OpenGL window contents to the current bound image, effectively taking a screenshot. The new image attributes are that of the current OpenGL window's.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLScreenie">
-            <summary>
-            ilutGLScreen copies the current OpenGL window contents to a temporary image, effectively taking a screenshot. The screenshot image is then saved to disk as screen0.tga - screen127.tga (the lowest name it can find). This is just a convenience function that uses ilutGLScreen.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLSaveImage(System.String,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="FileName"></param>
-            <param name="TexID"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLSetTex(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="TexID"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLTexImage(System.Int32)">
-            <summary>
-            The ilutGLTexImage function binds an image to an OpenGL texture, simply calls glTexImage2D with the current bound image's data and attributes.
-            </summary>
-            <param name="Level">Texture level to place the image at. 0 is the base image level, and anything lower is a mipmap. Use ilActiveMipmap to access OpenIL's mipmaps.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGLSubTex(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="TexID"></param>
-            <param name="XOff"></param>
-            <param name="YOff"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutAllegLoadImage(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="FileName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutConvertToAlleg(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Pal"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutConvertToSDLSurface(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="flags"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSDLSurfaceLoadImage(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="FileName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSDLSurfaceFromBitmap(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Bitmap"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutConvertToBBitmap">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutConvertToHBitmap(System.IntPtr)">
-            <summary>
-            ilutConvertToHBitmap creates a Windows bitmap handle (HBITMAP) copy of the current image, for direct use in Windows.
-            </summary>
-            <param name="hDC">The ilutGetBoolean returns the value of a selected mode.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutConvertSliceToHBitmap(System.IntPtr,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="hDC"></param>
-            <param name="slice"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutFreePaddedData(System.Byte[])">
-            <summary>
-            
-            </summary>
-            <param name="Data"></param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutFreePaddedData(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Data"></param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetBmpInfo(System.IntPtr)">
-            <summary>
-            ilutGetBmpInfo fills a BITMAPINFO struct with the current image's information. The BITMAPINFO struct is used commonly used in Windows applications.
-            </summary>
-            <param name="Info">BITMAPINFO struct pointer to be filled.</param>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetHPal">
-            <summary>
-            The ilutGetHPal function returns a Windows-friendly palette. If the current bound image has a palette, ilutGetHPal returns a Windows-compatible copy of the current image's palette in HPAL format.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetPaddedData">
-            <summary>
-            ilutGetPaddedData gets a copy of the current image's data, but pads it to be DWORD-aligned, just how Windows likes it. Almost all Windows functions that use images expect the images to be DWORD-aligned. The caller is responsible for freeing the memory returned by ilutGetPaddedData.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutGetWinClipboard">
-            <summary>
-            ilutGetWinClipboard copies the contents of the Windows clipboard to the current bound image, resizing as necessary.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutLoadResource(System.IntPtr,System.Int32,System.String,System.Int32)">
-            <summary>
-            ilutLoadResource is a Windows-specific function that loads a resource as the current bound image. This feature allows you to have images directly in your .exe and not worry whether a particular file is present on the user's harddrive. An alternative, more portable solution is to use ilSave with IL_CHEAD as the Type parameter.
-            </summary>
-            <param name="hInst">The application-s HINSTANCE</param>
-            <param name="ID">The resource identifier of the resource to be loaded</param>
-            <param name="ResourceType">The type of user-defined resource (name used when creating)</param>
-            <param name="Type">The type of image to be loaded. Use IL_TYPE_UNKNOWN to let OpenIL determine the type</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSetHBitmap(System.IntPtr)">
-            <summary>
-            ilutSetHBitmap copies Bitmap to the current bound image in a format OpenIL can understand. The image can then be used just as if you had loaded an image via ilLoadImage. This function is the opposite of ilutConvertToHBitmap.
-            </summary>
-            <param name="Bitmap">Bitmap to copy to the current bound image.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSetHPal(System.IntPtr)">
-            <summary>
-            ilutSetHPal sets the current iamge's palette from a logical Windows palette handle specified in Pal. If the current image is not colour-indexed, the palette is still loaded, though it will never be used.
-            </summary>
-            <param name="Pal">A Windows palette to set the palette from</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutSetWinClipboard">
-            <summary>
-            ilutSetWinClipboard copies the current bound image to the Windows clipboard.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutWinLoadImage(System.String,System.IntPtr)">
-            <summary>
-            loads an image directly to a Win32 HBITMAP, skipping the use of OpenIL image names.
-            </summary>
-            <param name="FileName">Name of the image to load</param>
-            <param name="hDC">Device context the bitmap should reside in</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutWinLoadUrl(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="Url"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutWinPrint(System.Int32,System.Int32,System.Int32,System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="XPos"></param>
-            <param name="YPos"></param>
-            <param name="Width"></param>
-            <param name="Height"></param>
-            <param name="hDC"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutWinSaveImage(System.String,System.IntPtr)">
-            <summary>
-            ilutWinSaveImage saves Bitmap to FileName. This function is the complement of ilutWinLoadImage.
-            </summary>
-            <param name="FileName">Name of the image file to save to</param>
-            <param name="Bitmap">Win32 HBITMAP to save from</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8Texture(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolumeTexture(System.IntPtr)">
-            <summary>
-            The ilutD3D8VolumeTexture function creates a Direct3D 8 texture (IDirect3DVolumeTexture8) from the current bound image.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFile(System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="FileName"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFile(System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            ilutD3D8VolTexFromFile loads the file named by FileName and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but for a volume texture.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="FileName">File to create the texture from.</param>
-            <param name="Texture">Address of a pointer to an IDirect3DVolumeTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="Lump">Location of memory file.</param>
-            <param name="Size">Size of Lump in bytes</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-            ilutD3D8VolTexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory but for a volume texture.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="Lump">Location of memory file.</param>
-            <param name="Size">Size of Lump in bytes</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
-            <summary>
-            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="Lump">Location of memory file.</param>
-            <param name="Size">Size of Lump in bytes</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
-            <summary>
-            ilutD3D8VolTexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFileInMemory but for a volume texture.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="Lump">Location of memory file.</param>
-            <param name="Size">Size of Lump in bytes</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
-            <summary>
-            ilutD3D8TexFromFileInMemory loads the file present in Lump and converts it to a Direct3D 8 texture (IDirect3DTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but with a file handle.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="File">File handle containing the image file</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
-            <summary>
-            ilutD3D8VolTexFromFileHandle loads the file present in File and converts it to a Direct3D 8 volume texture (IDirect3DVolumeTexture8). This function creates the texture, so the pointer does not even have to be allocated beforehand. This function is functionally equivalent to D3DX's D3DXCreateTextureFromFile but with a file handle and a volume texture.
-            </summary>
-            <param name="Device">Pointer to an IDirect3DDevice8 interface, representing the device to be associated with the texture.</param>
-            <param name="File">File handle containing the image file</param>
-            <param name="Texture">Address of a pointer to an IDirect3DTexture8 interface, representing the created texture object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8TexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="SrcModule"></param>
-            <param name="SrcResource"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8VolTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="SrcModule"></param>
-            <param name="SrcResource"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D8LoadSurface(System.IntPtr,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Surface"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9Texture(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolumeTexture(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexture(System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFile(System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="FileName"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="File"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9CubeTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="SrcModule"></param>
-            <param name="SrcResource"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFile(System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="FileName"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFile(System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="FileName"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileInMemory(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileInMemory(System.IntPtr,System.Byte[],System.Int32,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Lump"></param>
-            <param name="Size"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="File"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromFileHandle(System.IntPtr,System.IntPtr,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="File"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9TexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="SrcModule"></param>
-            <param name="SrcResource"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9VolTexFromResource(System.IntPtr,System.IntPtr,System.String,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="SrcModule"></param>
-            <param name="SrcResource"></param>
-            <param name="Texture"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Tao.DevIl.Ilut.ilutD3D9LoadSurface(System.IntPtr,System.IntPtr)">
-            <summary>
-            
-            </summary>
-            <param name="Device"></param>
-            <param name="Surface"></param>
-            <returns></returns>
         </member>
     </members>
 </doc>
