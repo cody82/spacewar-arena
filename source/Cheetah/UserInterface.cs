@@ -561,6 +561,7 @@ namespace Cheetah
 	{
 		public VideoTexture(Stream s)
 		{
+            Avi = new AviLib.AviFile(s);
             try
             {
                 XviD = new XviD.XviD(Avi.Width, Avi.Height);
@@ -572,7 +573,6 @@ namespace Cheetah
                 return;
             }
 
-            Avi = new AviLib.AviFile(s);
 
 
 			Frame=new byte[Avi.MaxFrameSize];

@@ -62,11 +62,11 @@ namespace XviD
 	/// </summary>
 	public class XviD
 	{
-#if LINUX
-		const string XVIDLIB="libxvidcore.so";
-#else
+//#if LINUX
+//		const string XVIDLIB="libxvidcore.so";
+//#else
         const string XVIDLIB = "xvidcore.dll";
-#endif
+//#endif
 
         const int XVID_ERR_FAIL=-1;		/* general fault */
 		const int XVID_ERR_MEMORY=-2;		/* memory allocation error */

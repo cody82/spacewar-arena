@@ -195,4 +195,9 @@
       <Name>Lidgren.Library.Network</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Cheetah.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
