@@ -178,6 +178,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\csvorbis\csogg\csogg.csproj">
+      <Project>{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}</Project>
+      <Name>csogg</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lidgren.Library.Network\Lidgren.Library.Network\Lidgren.Library.Network.csproj">
       <Project>{D4592CBE-B347-4770-989A-D6FA47C5B191}</Project>
       <Name>Lidgren.Library.Network</Name>

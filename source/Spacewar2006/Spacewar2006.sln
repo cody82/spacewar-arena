@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacewar2006.Maps", "..\Spa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Library.Network", "..\Lidgren.Library.Network\Lidgren.Library.Network\Lidgren.Library.Network.csproj", "{D4592CBE-B347-4770-989A-D6FA47C5B191}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csogg", "..\csvorbis\csogg\csogg.csproj", "{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,12 @@ Global
 		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Release|x86.ActiveCfg = Release|x86
 		{D4592CBE-B347-4770-989A-D6FA47C5B191}.Release|x86.Build.0 = Release|x86
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
