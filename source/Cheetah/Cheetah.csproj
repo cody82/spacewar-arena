@@ -92,6 +92,7 @@
     <Compile Include="Matrix3.cs" />
     <Compile Include="Net.cs" />
     <Compile Include="Objects.cs" />
+    <Compile Include="Ogg.cs" />
     <Compile Include="OpenGL.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="Quaternion.cs" />
