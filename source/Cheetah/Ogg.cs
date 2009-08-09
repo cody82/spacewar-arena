@@ -5,11 +5,97 @@ using System.Text;
 using csogg;
 using System.IO;
 using oggPacket = csogg.Packet;
+using System.Runtime.InteropServices;
+using size_t=System.UInt32;
+using ogg_int64_t=System.Int64;
 
 namespace Cheetah
 {
-    public class Theora
+    public unsafe class Theora
     {
+        public struct th_info
+        {
+        }
+
+        public struct th_comment
+        {
+        }
+
+        public struct th_setup_info
+        {
+        }
+
+        public struct ogg_packet
+        {
+        }
+
+        public struct th_dec_ctx
+        {
+        }
+
+        public struct th_ycbcr_buffer
+        {
+        }
+        
+        const string LIB = "libtheora";
+
+        [DllImport(LIB)]
+        extern static public int th_decode_headerin(th_info* _info, th_comment* _tc, th_setup_info** _setup, ogg_packet* _op);
+
+
+        [DllImport(LIB)]
+        extern static public th_dec_ctx* th_decode_alloc(th_info* _info, th_setup_info* _setup);
+
+        [DllImport(LIB)]
+        extern static public void th_setup_free(th_setup_info* _setup);
+
+        [DllImport(LIB)]
+        extern static public int th_decode_ctl(th_dec_ctx* _dec, int _req, void* _buf, size_t _buf_sz);
+
+        [DllImport(LIB)]
+        extern static public int th_decode_packetin(th_dec_ctx* _dec, ogg_packet* _op, ogg_int64_t* _granpos);
+
+        [DllImport(LIB)]
+        extern static public int th_decode_ycbcr_out(th_dec_ctx* _dec, th_ycbcr_buffer _ycbcr);
+
+        [DllImport(LIB)]
+        extern static public void th_decode_free(th_dec_ctx* _dec);
+    }
+
+    public interface IOggDecoder
+    {
+        int PacketIn(oggPacket p);
+    }
+
+    public class VorbisDecoder : IOggDecoder
+    {
+        #region IOggDecoder Member
+
+        public int PacketIn(csogg.Packet p)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+
+    public class TheoraDecoder : IOggDecoder
+    {
+        bool HeadersRead = false;
+
+        #region IOggDecoder Member
+
+        public int PacketIn(csogg.Packet pp)
+        {
+            if (!HeadersRead)
+            {
+            }
+
+
+            return 0;
+        }
+
+        #endregion
     }
 
     public class OggFile : IResource
@@ -20,6 +106,7 @@ namespace Cheetah
             public string Type;
             public int Serial;
             public Stream Output;
+            public IOggDecoder Decoder;
         }
 
         Stream stream;
@@ -76,12 +163,50 @@ namespace Cheetah
                         long packetno = op.packetno;
                         byte[] data = new byte[op.bytes];
                         Array.Copy(op.packet_base, op.packet, data, 0, op.bytes);
+
                         if (packetno == 0)
                         {
                             string type = Encoding.ASCII.GetString(data, 1, 6);
                             Console.WriteLine("new ogg stream: " + type);
                             ss.Type = type;
+                            if (type == "theora")
+                            {
+                                ss.Decoder = new TheoraDecoder();
+                            }
                         }
+
+                        if (op.bytes > 0)
+                        {
+                            byte headertype = data[0];
+
+                            if ((headertype & 0x80) != 0)
+                            {
+                                //this is a header packet
+                                if (ss.Type == "theora")
+                                {
+                                    switch (headertype)
+                                    {
+                                        case 0x80:
+                                            Console.WriteLine("theora ident header");
+                                            break;
+                                        case 0x81:
+                                            Console.WriteLine("theora comment header");
+                                            break;
+                                        case 0x82:
+                                            Console.WriteLine("theora setup header");
+                                            break;
+                                    }
+                                }
+                                else
+                                    Console.WriteLine("headertype: " + headertype.ToString());
+                            }
+                        }
+
+                        if (ss.Decoder != null)
+                        {
+                            ss.Decoder.PacketIn(op);
+                        }
+
                         Console.WriteLine("stream " + serial + ": " + packetno.ToString() + ", " + op.bytes + " bytes");
                         if (op.e_o_s != 0)
                             Console.WriteLine("eos: " + op.e_o_s);
