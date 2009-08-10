@@ -173,6 +173,7 @@ namespace SpaceWar2006
             s.Close();*/
 
             //OggFile ogg = new OggFile(new FileStream(@"C:\Code\spacewar2006\dist\textures\The_Hooters_-_Satellite.ogv",FileMode.Open));
+           	//OggFile ogg = new OggFile(new FileStream(@"/home/cody/The_Hooters_-_Satellite.ogv",FileMode.Open));
 
             //return;
 
