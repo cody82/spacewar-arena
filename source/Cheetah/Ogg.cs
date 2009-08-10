@@ -71,9 +71,9 @@ namespace Cheetah
         public struct ogg_packet
         {
 			public IntPtr packet;
-			public long  bytes;
-			public long  b_o_s;
-			public long  e_o_s;
+			public int  bytes;
+			public int  b_o_s;
+			public int  e_o_s;
 			public ogg_int64_t  granulepos;
   
 			public ogg_int64_t  packetno;
@@ -101,7 +101,8 @@ namespace Cheetah
         }
 		
 		
-        const string LIB = "libtheoradec.so.1";
+        //const string LIB = "libtheoradec.so.1";
+        const string LIB = "libtheora.dll";
 
 		
 		[DllImport(LIB)]
@@ -235,10 +236,11 @@ namespace Cheetah
 			op.granulepos=pp.granulepos;
 			op.packet=Marshal.UnsafeAddrOfPinnedArrayElement(pp.packet_base,pp.packet);
 			op.packetno=pp.packetno;
-			
+
             if (!HeadersRead)
             {
-				if(Theora.th_decode_headerin(ref info,ref comment,ref setup, ref op)==0)
+                int r=Theora.th_decode_headerin(ref info,ref comment,ref setup, ref op);
+				if(r==0)
 				{
 					Console.WriteLine("header complete");
 					width=(int)info.frame_width;
