@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using size_t=System.UInt32;
 using ogg_int64_t=System.Int64;
 using ogg_uint32_t=System.UInt32;
+using System.Threading;
 
 namespace Cheetah
 {
@@ -179,6 +180,28 @@ namespace Cheetah
 		Theora.th_comment comment=new Theora.th_comment();
 		IntPtr setup;
 		IntPtr decode;
+		int frame=0;
+		int width=0;
+		int height=0;
+		public byte[] Data;
+		
+		public int FrameNumber
+		{
+			get{return frame;}
+		}
+		public int Width
+		{
+			get{return width;}
+		}
+		public int Height
+		{
+			get{return height;}
+		}
+		/*public byte[] Data
+		{
+			get{return data;}
+		}*/
+		
 		public TheoraDecoder()
 		{
 			Console.WriteLine(Theora.Version());
@@ -188,6 +211,19 @@ namespace Cheetah
 		
 			
 		}
+		
+		    public static T Clamp<T>(T value, T max, T min)
+         where T : System.IComparable<T> {     
+        T result = value;
+        if (value.CompareTo(max) > 0)
+            result = max;
+        if (value.CompareTo(min) < 0)
+            result = min;
+        return result;
+    } 
+		
+		
+		
         #region IOggDecoder Member
 
         public int PacketIn(csogg.Packet pp)
@@ -205,6 +241,10 @@ namespace Cheetah
 				if(Theora.th_decode_headerin(ref info,ref comment,ref setup, ref op)==0)
 				{
 					Console.WriteLine("header complete");
+					width=(int)info.frame_width;
+					height=(int)info.frame_height;
+					Data=new byte[width*height*3];
+					Console.WriteLine(width.ToString()+"x"+height.ToString());
 					HeadersRead=true;
 					decode=Theora.th_decode_alloc(ref info,setup);
 					if(decode==IntPtr.Zero)
@@ -215,17 +255,62 @@ namespace Cheetah
             }
 
 			ogg_int64_t granpos=0;
-			int i=Theora.th_decode_packetin(decode,ref op,ref granpos);
-			if(i==0)
+			int i;
+			if(Theora.th_decode_packetin(decode,ref op,ref granpos)==0)
 			{
-				Console.WriteLine("frame complete");
+				//Console.WriteLine("frame complete"+granpos.ToString());
 				Theora.th_ycbcr_buffer picture=new Theora.th_ycbcr_buffer();
 				i=Theora.th_decode_ycbcr_out(decode,ref picture);
 				if(i!=0)
 					throw new Exception("picture");
-				Console.WriteLine(picture.plane0.width.ToString());
-				Console.WriteLine(picture.plane0.height.ToString());
-				Console.WriteLine(picture.plane0.stride.ToString());
+				//Console.WriteLine(picture.plane0.width.ToString());
+				//Console.WriteLine(picture.plane0.height.ToString());
+				//Console.WriteLine(picture.plane0.stride.ToString());
+				
+				/*if(picture.plane0.width!=picture.plane1.width|| picture.plane0.width!=picture.plane2.width)
+					throw new Exception("width: "+picture.plane1.width.ToString() + " " + picture.plane2.width.ToString());
+				if(picture.plane0.height!=picture.plane1.height|| picture.plane0.height!=picture.plane2.height)
+					throw new Exception("height");
+				if(picture.plane0.stride!=picture.plane1.stride|| picture.plane0.stride!=picture.plane2.stride)
+					throw new Exception("height");*/
+				float xfactor1=(float)picture.plane1.width/(float)picture.plane0.width;
+				float yfactor1=(float)picture.plane1.height/(float)picture.plane0.height;
+				float xfactor2=(float)picture.plane2.width/(float)picture.plane0.width;
+				float yfactor2=(float)picture.plane2.height/(float)picture.plane0.height;
+			
+				//FileStream f=new FileStream("/home/cody/pic"+frame+".ppm",FileMode.Create,FileAccess.Write);
+				//StreamWriter w=new StreamWriter(f);
+				//w.WriteLine("P3");
+				//w.WriteLine(picture.plane0.width.ToString()+" "+picture.plane0.height.ToString());
+				//w.WriteLine("255");
+				for(int y=0;y<picture.plane0.height;++y)
+				{
+					for(int x=0;x<picture.plane0.width;++x)
+					{
+						float Y=Marshal.ReadByte(picture.plane0.data,y*picture.plane0.stride+x);
+						float Cb=Marshal.ReadByte(picture.plane1.data,(int)((float)y*yfactor1*(float)picture.plane1.stride+(float)x*xfactor1));
+						float Cr=Marshal.ReadByte(picture.plane2.data,(int)((float)y*yfactor2*(float)picture.plane2.stride+(float)x*xfactor2));
+						
+						int R=(int)(Y + 1.402f *(Cr-128.0f));
+						int G=(int)(Y - 0.34414f *(Cb-128.0f) - 0.71414f *(Cr-128.0f));
+						int B=(int)(Y + 1.772f *(Cb-128.0f));
+						
+						R=Clamp(R,255,0);
+						G=Clamp(G,255,0);
+						B=Clamp(B,255,0);
+						
+						Data[y*width*3+x*3]=(byte)B;
+						Data[y*width*3+x*3+1]=(byte)G;
+						Data[y*width*3+x*3+2]=(byte)R;
+						
+						//w.WriteLine(R.ToString()+" "+G.ToString()+" "+B.ToString());
+					}
+				}
+				
+				//w.Close();
+				//f.Close();
+				frame++;
+				return 1;
 			}
 			
             return 0;
@@ -252,7 +337,8 @@ namespace Cheetah
         Page og = new Page(); // one Ogg bitstream page.  Vorbis packets are inside
         Dictionary<int, StreamMap> streams = new Dictionary<int, StreamMap>(); // one raw packet of data for decode
         oggPacket op=new oggPacket();
-
+		public TheoraDecoder VideoDecoder;
+		
         readonly int BUFFERSIZE = 8 * 1024;
 
         public OggFile(Stream s)
@@ -260,20 +346,18 @@ namespace Cheetah
             stream = s;
             
             oy.init();
-            int r;
 
-            int bytes = 0;
+			ReadNextTheoraFrame();
+        }
+
+		public void ReadNextTheoraFrame()
+		{
+			int bytes = 0;
             int index = 0;
 
 
             while (true)
             {
-                index = oy.buffer(BUFFERSIZE);
-                bytes = stream.Read(oy.data, index, BUFFERSIZE);
-                if (bytes <= 0)
-                    break;
-
-                oy.wrote(bytes);
                 while (oy.pageout(og) == 1)
                 {
                     int serial=og.serialno();
@@ -307,7 +391,7 @@ namespace Cheetah
                             ss.Type = type;
                             if (type == "theora")
                             {
-                                ss.Decoder = new TheoraDecoder();
+                                ss.Decoder = VideoDecoder = new TheoraDecoder();
                             }
                         }
 
@@ -340,27 +424,35 @@ namespace Cheetah
                             }
                         }
 
-                        if (ss.Decoder != null)
-                        {
-                            ss.Decoder.PacketIn(op);
-                        }
-
-                        //Console.WriteLine("stream " + serial + ": " + packetno.ToString() + ", " + op.bytes + " bytes");
                         if (op.e_o_s != 0)
                             Console.WriteLine("eos: " + op.e_o_s);
                         if(ss.Output!=null)
                             ss.Output.Write(data, 0, data.Length);
+						
+						if (ss.Decoder != null)
+                        {
+                            if(ss.Decoder.PacketIn(op)==1)
+								return;
+                        }
+
+                        //Console.WriteLine("stream " + serial + ": " + packetno.ToString() + ", " + op.bytes + " bytes");
+
                     }
 
                 }
+                index = oy.buffer(BUFFERSIZE);
+                bytes = stream.Read(oy.data, index, BUFFERSIZE);
+                if (bytes <= 0)
+				{
+					Console.WriteLine("ogg stream end");
+					stream.Seek(0,SeekOrigin.Begin);
+               		bytes = stream.Read(oy.data, index, BUFFERSIZE);
+ 				}
+				oy.wrote(bytes);
             }
-            foreach (StreamMap m in streams.Values)
-            {
-                if(m.Output!=null)
-                    m.Output.Close();
-            }
-        }
 
+		}
+		
         #region IDisposable Member
 
         public void Dispose()
@@ -392,4 +484,144 @@ namespace Cheetah
 
         #endregion
     }
+	
+	public class TheoraTextureLoader : IResourceLoader
+    {
+        #region IResourceLoader Member
+
+        public IResource Load(FileSystemNode n)
+        {
+            return new TheoraTexture(n.getStream());
+        }
+
+        public Type LoadType
+        {
+            get { return typeof(Texture); }
+        }
+
+        public bool CanLoad(FileSystemNode n)
+        {
+            return n.info.Name.ToLower().EndsWith(".ogg") || n.info.Name.ToLower().EndsWith(".ogv");
+        }
+
+        #endregion
+    }
+	
+	
+	public class TheoraTexture : DynamicTexture,ITickable
+	{
+		OggFile ogg;
+		public TheoraTexture(Stream s)
+		{
+			ogg=new OggFile(s);
+			
+			int size=ogg.VideoDecoder.Width*ogg.VideoDecoder.Height*3;
+			ActiveSurface=new byte[size];
+			DecodingSurface=new byte[size];
+
+            Id=Root.Instance.UserInterface.Renderer.CreateTexture(ActiveSurface,ogg.VideoDecoder.Width,ogg.VideoDecoder.Height,false);
+            DecodedFrame = LoadedFrame = 0;
+            UpdateThread=new Thread(new ThreadStart(UpdateFunc));
+			UpdateThread.Start();
+		}
+
+		public override void Dispose()
+		{
+			if (UpdateThread!=null && !ExitThread)
+			{
+                StopThread();
+			}
+		}
+
+        protected void StopThread()
+        {
+            ExitThread = true;
+            if (Idle)
+                UpdateThread.Resume();
+            System.Console.WriteLine("stopping video update thread...");
+            UpdateThread.Join();
+            System.Console.WriteLine("video update thread ended.");
+        }
+
+
+		protected void UpdateSurface()
+		{
+			if(LoadedFrame!=DecodedFrame)
+			{
+				SwapMutex.WaitOne();
+				Root.Instance.UserInterface.Renderer.UpdateTexture(Id,ActiveSurface);
+				LoadedFrame=DecodedFrame;
+				SwapMutex.ReleaseMutex();
+			}
+		}
+
+		protected void Swap()
+		{
+			SwapMutex.WaitOne();
+			byte[] tmp=ActiveSurface;
+			ActiveSurface=DecodingSurface;
+			DecodingSurface=tmp;
+			SwapMutex.ReleaseMutex();
+		}
+
+		public void Tick(float dtime)
+		{
+
+            if (Root.Instance.Time - Id.LastBind > 5)
+            {
+                if (!Idle)
+                {
+                    Cheetah.Console.WriteLine("suspending video thread.");
+                    UpdateThread.Suspend();
+                    Idle = true;
+                }
+            }
+            else
+            {
+                if (Idle)
+                {
+                    Cheetah.Console.WriteLine("resuming video thread.");
+                    UpdateThread.Resume();
+                    Idle = false;
+                }
+                Time += dtime;
+                UpdateSurface();
+            }
+		}
+
+		protected void UpdateFunc()
+		{
+			while(!ExitThread)
+			{
+                int wantframe = (int)(25 * Time);
+                bool newframe=false;
+                //while (wantframe > DecodedFrame)
+                if (wantframe > DecodedFrame)
+                {
+					ogg.VideoDecoder.Data=DecodingSurface;
+					ogg.ReadNextTheoraFrame();
+					//Console.WriteLine("next"+DecodedFrame.ToString()+" "+LoadedFrame.ToString()+" "+ogg.VideoDecoder.FrameNumber.ToString());
+                    newframe=true;
+                    //XviD.Decode(Frame, l, DecodingSurface);
+                    DecodedFrame++;
+                }
+                if(newframe)
+                    Swap();
+                Thread.Sleep(0);
+			}
+		}
+
+        private bool Idle=false;
+		private Thread UpdateThread;
+		//private XviD.XviD XviD;
+		//private AviLib.AviFile Avi;
+		private byte[] Frame;
+		private byte[] ActiveSurface;
+		private byte[] DecodingSurface;
+		private Mutex SwapMutex=new Mutex();
+		private int LoadedFrame;
+		private int DecodedFrame;
+		private float Time;
+		private bool ExitThread=false;
+	}
 }
