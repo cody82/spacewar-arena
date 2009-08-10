@@ -1,0 +1,13 @@
+MATERIALTEXT
+diffuse: [0.133333,0.133333,0.133333]
+ambient: [0.133333,0.133333,0.133333]
+specular: [0.9,0.9,0.9]
+glossiness: 25.0
+
+diffusemap: gray05.png
+bumpmap: flat.png
+specularmap: white.png
+#emissivemap: black.png
+#reflectionmap: black.png
+#shader: bump.specular.spheremap.reflectionmap.shader
+environmentmap: wasser2.dds

@@ -1,0 +1,10 @@
+MATERIALTEXT
+diffuse: [0.588235,0.588235,0.588235]
+ambient: [0.588235,0.588235,0.588235]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+
+shader: water.shader
+diffusemap: white.png
+wireframe: true
+twosided: true

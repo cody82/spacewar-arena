@@ -1,0 +1,6 @@
+MESHTEXT
+material: default.material
+submesh: Rectangle02.submesh
+submesh: Rectangle01.submesh
+submesh: Star02.submesh
+submesh: Star01.submesh

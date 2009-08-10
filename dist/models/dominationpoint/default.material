@@ -1,0 +1,18 @@
+MATERIALTEXT
+diffuse: [0.133333,0.133333,0.133333]
+ambient: [0.133333,0.133333,0.133333]
+specular: [0.9,0.9,0.9]
+glossiness: 25.0
+
+#diffusemap: rail.dds
+#bumpmap: flat.png
+#specularmap: white.png
+emissivemap: wasser2.dds
+#reflectionmap: white.png
+additive: true
+twosided: true
+depthwrite: false
+#shader: bump.specular.spheremap.shader
+#shader: spheremap.shader
+shader: simple3d.textured.color.shader
+#environmentmap: wasser.dds

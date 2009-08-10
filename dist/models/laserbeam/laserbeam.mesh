@@ -1,0 +1,4 @@
+MESHTEXT
+material: glow.material
+submesh: Plane01.submesh
+submesh: Plane02.submesh

@@ -1,0 +1,3 @@
+MESHTEXT
+material: bumptest.material
+submesh: bumptest.submesh

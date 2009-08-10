@@ -1,0 +1,17 @@
+MATERIALTEXT
+diffuse: [0.588235,0.588235,0.588235]
+ambient: [0.588235,0.588235,0.588235]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+#diffusemap: mur_Ambiant.dds
+bumpmap: mur_NormalMap.bmp
+#bumpmap: flat.png
+#specularmap: black.png
+#emissivemap: black.png
+#reflectionmap: black.png
+#shader: bump.specular.spheremap.reflectionmap.shader
+#shader: spheremap.shader
+#shader: bump.cubemap.shader
+shader: bump.spheremap.shader
+environmentmap: wasser.jpg
+#environmentmap: SpaceSkyCubeMap.dds

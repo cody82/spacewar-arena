@@ -1,0 +1,3 @@
+MESHTEXT
+material: saturn.material
+submesh: GeoSphere01.submesh

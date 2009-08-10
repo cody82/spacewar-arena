@@ -1,0 +1,13 @@
+MESHTEXT
+material: BLAST RED.material
+submesh: Mesh9.submesh
+material: GRAY.material
+submesh: Mesh8.submesh
+material: default.material
+submesh: Mesh5.submesh
+submesh: Mesh4.submesh
+submesh: Mesh2.submesh
+submesh: Mesh6.submesh
+submesh: Mesh1.submesh
+material: solar.material
+submesh: Mesh7.submesh

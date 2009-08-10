@@ -1,0 +1,42 @@
+float4x4 mvp : ModelViewProjection;
+float4x4 mv : ModelView;
+float4x4 mvit : ModelViewIT;
+
+float4 Color = float4(0,1,0,1);
+
+float4 vertex(
+		uniform float4x4 modelViewProj,
+		uniform float4x4 modelView,
+		float4 P : POSITION,
+		float2 uvIn : TEXCOORD0,
+		out float4 CC : COLOR0,
+		out float2 uv : TEXCOORD0
+	) : POSITION
+{
+	CC = float4(1,1,1,1);
+	uv=uvIn;
+	return mul(modelViewProj, P);
+}
+
+float4 fragment(uniform float4 c,uniform sampler2D tex,float2 uv:TEXCOORD0) : COLOR 
+{
+	return c;//*tex2D(tex,uv);
+}
+
+sampler2D texture_diffuse = sampler_state
+{
+        generateMipMap = true;
+        minFilter = LinearMipMapLinear;
+        magFilter = Linear;
+        //WrapS = ClampToEdge;
+        //WrapT = ClampToEdge;
+};
+
+technique FragmentBlinnLighting
+{
+	pass p0
+	{
+		VertexProgram = compile arbvp1 vertex(mvp, mv);
+		FragmentProgram = compile arbfp1 fragment(Color,texture_diffuse);
+	}
+}

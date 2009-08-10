@@ -1,0 +1,6 @@
+MESHTEXT
+material: default.material
+submesh: Text01.submesh
+submesh: Torus01.submesh
+material: glow.material
+submesh: Plane01.submesh

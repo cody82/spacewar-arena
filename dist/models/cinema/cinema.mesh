@@ -1,0 +1,11 @@
+MESHTEXT
+material: 01 - Default.material
+submesh: Capsule01.submesh
+submesh: Cylinder01.submesh
+submesh: OilTank01.submesh
+submesh: OilTank02.submesh
+submesh: Torus01.submesh
+submesh: Torus02.submesh
+submesh: Capsule02.submesh
+material: 02 - Default.material
+submesh: Plane01.submesh 

@@ -1,0 +1,8 @@
+MESHTEXT
+material: default.material
+submesh: GeoSphere01.submesh
+submesh: GeoSphere02.submesh
+submesh: Cylinder01.submesh
+submesh: Box03.submesh
+submesh: Box01.submesh
+submesh: Box02.submesh

@@ -1,0 +1,7 @@
+MATERIALTEXT
+diffuse: [0.247059,0.211765,1.0]
+ambient: [0.247059,0.211765,1.0]
+specular: [0.9,0.9,0.9]
+glossiness: 19.0
+additive: true
+shader: simple3d.color.shader

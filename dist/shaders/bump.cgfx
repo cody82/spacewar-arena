@@ -1,0 +1,102 @@
+float4x4 mvp : ModelViewProjection;
+float4x4 mv : ModelView;
+float4x4 mvit : ModelViewIT;
+
+float4 light : LightVector;
+float4 eye : EyePosition;
+float4 ambient : Ambient;
+
+struct vertex
+{
+	float4 position : POSITION;//obj space
+	float3 normal : NORMAL;//obj space
+	float2 texcoord : TEXCOORD0;
+	float3 T : TEXCOORD5;//obj space
+	float3 B : TEXCOORD6;//obj space
+	float3 N : TEXCOORD7;//obj space
+};
+
+struct fragment
+{
+	float4 position : POSITION;//proj space
+	float4 normal : COLOR0;//tangent space
+	float4 lightvectorunsigned : COLOR1;//tangent space
+	float3 texcoord0 : TEXCOORD0;
+	float3 texcoord1 : TEXCOORD1;
+	float4 lightvector : TEXCOORD2;//tangent space
+	float4 halfanglevector : TEXCOORD3;//tangent space
+};
+
+fragment vmain(
+		vertex IN,
+		uniform float4x4 modelViewProj,
+		uniform float4x4 modelView,
+		uniform float4 lightvector,
+		uniform float4 eyeposition
+
+	)
+{
+	fragment OUT;
+
+	OUT.texcoord0.xy=IN.texcoord.xy;
+	OUT.texcoord1.xy=IN.texcoord.xy;
+	
+	float3x3 obj2tangent;
+	obj2tangent[0]=IN.T;
+	obj2tangent[1]=IN.B;
+	obj2tangent[2]=IN.N;
+
+	OUT.normal.xyz=0.5*mul(obj2tangent,IN.normal)+0.5;
+
+	float3 lightvectorintangentspace=mul(obj2tangent,lightvector.xyz);
+	OUT.lightvector.xyz=lightvectorintangentspace;
+	OUT.lightvectorunsigned.xyz=0.5*lightvectorintangentspace+0.5;
+
+	float3 viewvector=normalize(eyeposition.xyz-IN.position.xyz);
+	float3 halfanglevector=normalize(lightvector.xyz+viewvector);
+
+	OUT.halfanglevector.xyz=mul(obj2tangent,halfanglevector);
+	OUT.position=mul(modelViewProj,IN.position);
+
+	return OUT;
+}
+
+float4 fmain(fragment IN,
+	uniform sampler2D diffusemap,
+	uniform sampler2D normalmap,
+	uniform float ambient
+
+) : COLOR 
+{
+	float4 color=tex2D(diffusemap,IN.texcoord0.xy);
+	float4 bumpnormal2=2*(tex2D(normalmap,IN.texcoord1.xy)-0.5);
+	float4 bumpnormal;
+	bumpnormal.xyzw=bumpnormal2.xzyw;
+
+	float4 light=dot(IN.lightvector.xyz,bumpnormal.xyz);
+	light.w=1;
+	return light*color+ambient*color;
+}
+
+sampler2D texture_diffuse = sampler_state
+{
+        generateMipMap = true;
+        minFilter = LinearMipMapLinear;
+        magFilter = Linear;
+};
+
+sampler2D texture_bump = sampler_state
+{
+        generateMipMap = true;
+        minFilter = LinearMipMapLinear;
+        magFilter = Linear;
+};
+
+technique FragmentBlinnLighting
+{
+	pass p0
+	{
+		VertexProgram = compile arbvp1 vmain(mvp, mv, light, eye);
+		FragmentProgram = compile arbfp1 fmain(texture_diffuse,texture_bump,ambient);
+	}
+}

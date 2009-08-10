@@ -1,0 +1,4 @@
+MESHTEXT
+material: default.material
+submesh: Line09.submesh
+submesh: Line08.submesh

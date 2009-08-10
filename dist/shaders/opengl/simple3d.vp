@@ -1,0 +1,37 @@
+!!ARBvp1.0
+
+# Original Input...
+ATTRIB OriginalPos		= vertex.position;		# Input vertex position.
+ATTRIB Color=vertex.color;
+ATTRIB Tex=vertex.texcoord;
+
+# Vertex Output...
+OUTPUT OutPos			   = result.position;		# Output position.
+OUTPUT OutColor=result.color;
+OUTPUT OutTex=result.texcoord;
+
+# Constant variables...
+PARAM ModelViewProj[4]  = { state.matrix.mvp }; # Modelview Projection Matrix.
+
+TEMP temp;										         # Just a temporary variable.
+TEMP temp2;
+
+# Here each axis is transformed into clip space.
+DP4 temp.x, ModelViewProj[0], OriginalPos;
+DP4 temp.y, ModelViewProj[1], OriginalPos;
+DP4 temp.z, ModelViewProj[2], OriginalPos;
+DP4 temp.w, ModelViewProj[3], OriginalPos;
+
+MOV OutPos,temp;
+#DP3 temp,temp,temp;
+MOV result.fogcoord,temp.zzzz;
+
+MOV OutColor,Color;
+MOV OutTex,Tex;
+
+#RCP temp,temp.zzzz;
+#MUL temp,temp,{1000,1000,1000,1000};
+#MOV result.pointsize,temp;
+MOV result.pointsize,{100,100,100,100};
+
+END

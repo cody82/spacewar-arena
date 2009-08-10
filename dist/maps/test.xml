@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<map version="1.0" game="spacewar2006" name="XmlMapTest">
+  <entity class="SpaceWar2006.Effects.EclipticNode">
+    <Position>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </Position>
+    <Orientation>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <w>1</w>
+    </Orientation>
+  </entity>
+  <entity class="SpaceWar2006.GameObjects.Waypoint">
+    <Name></Name>
+    <Position>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </Position>
+    <Orientation>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <w>1</w>
+    </Orientation>
+  </entity>
+  <entity class="SpaceWar2006.GameObjects.Flag">
+    <Team>0</Team>
+    <FlagPosition>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </FlagPosition>
+    <Position>
+      <x>640</x>
+      <y>0</y>
+      <z>730</z>
+    </Position>
+    <Orientation>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <w>1</w>
+    </Orientation>
+  </entity>
+  <entity class="SpaceWar2006.Planets.Mars">
+    <Position>
+      <x>-1190</x>
+      <y>0</y>
+      <z>1680</z>
+    </Position>
+    <Orientation>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+      <w>1</w>
+    </Orientation>
+  </entity>
+</map>

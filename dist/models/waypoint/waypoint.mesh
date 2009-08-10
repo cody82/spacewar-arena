@@ -1,0 +1,4 @@
+MESHTEXT
+material: default.material
+submesh: Torus01.submesh
+submesh: Cylinder01.submesh

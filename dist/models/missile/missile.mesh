@@ -1,0 +1,9 @@
+MESHTEXT
+material: black.material
+submesh: Cone01.submesh
+material: blue.material
+submesh: Mesh01.submesh
+material: red.material
+submesh: Mesh02.submesh
+material: silver.material
+submesh: Capsule01.submesh

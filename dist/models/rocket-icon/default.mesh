@@ -1,0 +1,6 @@
+MESHTEXT
+material: wire.material
+submesh: Line02.submesh
+submesh: Line04.submesh
+submesh: Line03.submesh
+submesh: Line01.submesh

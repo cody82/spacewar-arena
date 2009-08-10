@@ -1,0 +1,10 @@
+MESHTEXT
+material: default.material
+submesh: Prism03.submesh
+submesh: Prism04.submesh
+submesh: Prism05.submesh
+submesh: Prism06.submesh
+submesh: Prism07.submesh
+submesh: Prism08.submesh
+submesh: Prism01.submesh
+submesh: Prism02.submesh

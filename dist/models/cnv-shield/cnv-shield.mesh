@@ -1,0 +1,3 @@
+MESHTEXT
+material: shield.material
+submesh: Sphere01.submesh

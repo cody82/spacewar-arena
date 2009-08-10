@@ -1,0 +1,44 @@
+!!ARBvp1.0
+
+ATTRIB VertexPos=vertex.position;#x:0-1,y:0-1
+#ATTRIB Color=vertex.color;
+#ATTRIB Tex=vertex.texcoord;
+
+OUTPUT OutPos=result.position;
+OUTPUT OutColor=result.color;
+OUTPUT OutTex=result.texcoord;
+
+PARAM Size=program.local[0];#xy
+PARAM Pos=program.local[1];#xy
+PARAM Color=program.local[2];#rgba
+PARAM CharSize=program.local[3];#x,y:1/charcount
+PARAM CharPos=program.local[4];#xy
+
+TEMP temp1;
+TEMP temp2;
+TEMP temp3;
+
+#OutPos=Pos+VertexPos*Size
+MAD temp1,VertexPos,Size,Pos;
+MUL temp2,temp1,{2,-2,0,0};
+SUB temp1,temp2,{1,-1,0,0};
+MOV temp1.zw,{0,0,0,1};
+MOV OutPos,temp1;
+
+
+
+#OutColor=Color
+MOV OutColor,Color;
+
+#OutTex=CharPos*CharSize+VertexPos*CharSize
+MUL temp1,CharPos,CharSize;
+MUL temp2,VertexPos,CharSize;
+ADD temp3,temp1,temp2;
+#MUL temp3,VertexPos,{0.5,0.5,0.5,0.5};
+#MUL temp1,VertexPos,{0.5,0.5,0,1};
+#MOV OutTex,{0,0,0,1};
+MOV temp3.zw,{0,0,0,1};
+MOV OutTex,temp3;
+#MUL OutTex.xy,VertexPos,{0.5,0.5,0.5,0.5};
+
+END

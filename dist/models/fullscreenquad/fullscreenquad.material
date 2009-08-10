@@ -1,0 +1,10 @@
+MATERIALTEXT
+diffuse: [0.588235,0.588235,0.588235]
+ambient: [0.588235,0.588235,0.588235]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+twosided: true
+shader: lensflare1.shader
+depthtest: false
+depthwrite: false
+additive: true

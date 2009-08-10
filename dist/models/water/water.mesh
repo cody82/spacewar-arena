@@ -1,0 +1,3 @@
+MESHTEXT
+material: water.material
+submesh: Plane01.submesh

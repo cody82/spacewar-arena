@@ -1,0 +1,18 @@
+MATERIALTEXT
+diffuse: [0.588235,0.588235,0.588235]
+ambient: [0.588235,0.588235,0.588235]
+specular: [0.9,0.9,0.9]
+glossiness: 20.0
+diffusemap: buildbac.bmp
+environmentmap: Wasser.bmp
+
+
+diffusemap: buildbac.jpg
+bumpmap: buildbac_normal.bmp
+specularmap: buildbac_specular.bmp
+emissivemap: black.png
+reflectionmap: black.png
+shader: bump.specular.spheremap.reflectionmap.shader
+#shader: spheremap.shader
+#shader: bump.spheremap.shader
+environmentmap: wasser2.bmp

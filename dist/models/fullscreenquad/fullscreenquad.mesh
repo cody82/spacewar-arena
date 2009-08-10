@@ -1,0 +1,3 @@
+MESHTEXT
+material: fullscreenquad.material
+submesh: fullscreenquad.submesh

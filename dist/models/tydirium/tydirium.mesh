@@ -1,0 +1,21 @@
+MESHTEXT
+material: default.material
+submesh: Mesh20.submesh
+#submesh: Mesh19.submesh
+#submesh: Mesh18.submesh
+submesh: Mesh17.submesh
+submesh: Mesh16.submesh
+submesh: Mesh15.submesh
+submesh: Mesh14.submesh
+submesh: Mesh13.submesh
+submesh: Mesh12.submesh
+submesh: Mesh11.submesh
+submesh: Mesh10.submesh
+submesh: Mesh9.submesh
+submesh: Mesh7.submesh
+submesh: Mesh6.submesh
+submesh: Mesh5.submesh
+submesh: Mesh4.submesh
+submesh: Mesh3.submesh
+submesh: Mesh2.submesh
+submesh: Mesh1.submesh

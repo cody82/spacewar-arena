@@ -1,0 +1,8 @@
+MESHTEXT
+material: default.material
+submesh: Box02.submesh
+submesh: Box03.submesh
+submesh: ChamferBox01.submesh
+submesh: Torus01.submesh
+submesh: Box01.submesh
+submesh: Box04.submesh

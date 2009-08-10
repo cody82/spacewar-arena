@@ -1,0 +1,12 @@
+MATERIALTEXT
+diffuse: [0.588235,0.588235,0.588235]
+ambient: [0.588235,0.588235,0.588235]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+diffusemap: mars_512x512.dds
+bumpmap: marsbump1024x512.jpg
+specularmap: test.jpg
+emissivemap: black.png
+#shader: bump.specular.shader
+shader: diffuse.shader
+#environmentmap: wasser.jpg

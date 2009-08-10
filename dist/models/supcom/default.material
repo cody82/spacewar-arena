@@ -1,0 +1,14 @@
+MATERIALTEXT
+diffuse: [1.0,0.0,0.0]
+ambient: [1.0,0.0,0.0]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+
+diffusemap: UAL0001_NormalsTS.dds
+#diffusemap: UAL0001_NormalsTS.dds
+
+depthwrite: true
+depthtest: true
+wire: false
+twosided: true
+shader: bones.shader

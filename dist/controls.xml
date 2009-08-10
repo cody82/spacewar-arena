@@ -1,0 +1,87 @@
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<SOAP-ENC:Array SOAP-ENC:arrayType="xsd:anyType[9]">
+<item href="#ref-2"/>
+<item href="#ref-3"/>
+<item href="#ref-4"/>
+<item href="#ref-5"/>
+<item href="#ref-6"/>
+<item href="#ref-7"/>
+<item xsi:type="xsd:boolean">true</item>
+<item href="#ref-8"/>
+<item href="#ref-9"/>
+</SOAP-ENC:Array>
+<a2:ControlInfo id="ref-2" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Keyboard</Id>
+<AxisButton1>119</AxisButton1>
+<Button2>115</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>true</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-3" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Joystick0</Id>
+<AxisButton1>0</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>true</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-4" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Keyboard</Id>
+<AxisButton1>97</AxisButton1>
+<Button2>100</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>true</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-5" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Mouse</Id>
+<AxisButton1>1</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>false</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-6" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Mouse</Id>
+<AxisButton1>2</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>false</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-7" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Mouse</Id>
+<AxisButton1>3</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>false</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-8" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Mouse</Id>
+<AxisButton1>5</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>false</IsAxis>
+</a2:ControlInfo>
+<a2:ControlInfo id="ref-9" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/Cheetah/Cheetah%2C%20Version%3D1.0.2585.37808%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Id>Mouse</Id>
+<AxisButton1>4</AxisButton1>
+<Button2>-1</Button2>
+<Sensitivity>1</Sensitivity>
+<Deadzone>0</Deadzone>
+<Invert>false</Invert>
+<IsAxis>false</IsAxis>
+</a2:ControlInfo>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

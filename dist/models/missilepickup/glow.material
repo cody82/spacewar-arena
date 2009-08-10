@@ -1,0 +1,8 @@
+MATERIALTEXT
+diffuse: [0.0705882,0.0,1.0]
+ambient: [0.0705882,0.0,1.0]
+specular: [0.9,0.9,0.9]
+glossiness: 10.0
+shader: emissivemap.shader
+emissivemap: sun.dds
+additive: true

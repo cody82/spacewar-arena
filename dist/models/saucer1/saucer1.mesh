@@ -1,0 +1,5 @@
+MESHTEXT
+material: default.material
+submesh: main.submesh
+material: glass.material
+submesh: cockpit.submesh

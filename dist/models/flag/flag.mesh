@@ -1,0 +1,5 @@
+MESHTEXT
+material: default.material
+submesh: Cylinder01.submesh
+material: flag.material
+submesh: Plane01.submesh
