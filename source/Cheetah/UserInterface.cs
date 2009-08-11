@@ -322,64 +322,6 @@ namespace Cheetah
         }
     }
 
-    public class OpenAl : IAudio
-    {
-        public OpenAl()
-        {
-            //Al.alut
-        }
-
-        public void Dispose()
-        {
-        }
-
-        #region IAudio Members
-
-        public Sound Load(Stream s)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-        public bool IsPlaying(Channel channel)
-        {
-            return true;
-        }
-        public Channel Play(Sound sound, Vector3 pos,bool loop)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetListener(Vector3 pos, Vector3 forward, Vector3 up)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetPosition(Channel channel, Vector3 pos)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Stop(Channel channel)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Free(Sound sound)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITickable Members
-
-        public void Tick(float dtime)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-    }
-
     public class FmodAudio : IAudio
     {
         public void Tick(float dtime)
