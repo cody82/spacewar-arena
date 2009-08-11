@@ -97,7 +97,7 @@ namespace SpaceWar2006.Ships
             Root.Instance.Scene.Spawn(new BigExplosion(AbsolutePosition - Direction * 300, Vector3.Zero));
          
         }
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("white.png");
+        public static string Thumbnail = "white.png";
     }
 
     [Editable]
@@ -176,7 +176,7 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = null;
+        public static string Thumbnail = null;
     }
 
 
@@ -253,7 +253,7 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = null;
+        public static string Thumbnail = null;
     }
 
     [Editable]
@@ -329,7 +329,7 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("cnv301-image.dds");
+        public static string Thumbnail = "cnv301-image.dds";
     }
 
     [Editable]
@@ -398,40 +398,40 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("borg-image.dds");
+        public static string Thumbnail = "borg-image.dds";
     }
 
     public abstract class MilleniumFalcon : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("yt1300-image.dds");
+        public static string Thumbnail = "yt1300-image.dds";
     }
     public abstract class TieInterceptor : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("tiei-image.dds");
+        public static string Thumbnail = "tiei-image.dds";
     }
     public abstract class EnterpriseE : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("ncc1701e-image.dds");
+        public static string Thumbnail = "ncc1701e-image.dds";
     }
     public abstract class Slave1 : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("slave1-image.dds");
+        public static string Thumbnail = "slave1-image.dds";
     }
     public abstract class KangKodos : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("kangkodos-image.dds");
+        public static string Thumbnail = "kangkodos-image.dds";
     }
     public abstract class Maquis : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("maquis-image.dds");
+        public static string Thumbnail = "maquis-image.dds";
     }
     public abstract class ImperialStarDestroyer : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("isd-image.dds");
+        public static string Thumbnail = "isd-image.dds";
     }
     public abstract class Voyager : SpaceShip
     {
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("voyager-image.dds");
+        public static string Thumbnail = "voyager-image.dds";
     }
     [Editable]
     public class TieFighter : SpaceShip
@@ -495,7 +495,7 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("tie-image.dds");
+        public static string Thumbnail = "tie-image.dds";
     }
 
 
@@ -559,7 +559,7 @@ namespace SpaceWar2006.Ships
             DeSerialize(context);
         }
 
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("tydirium-image.dds");
+        public static string Thumbnail = "tydirium-image.dds";
     }
 
     [Editable]
@@ -626,7 +626,7 @@ namespace SpaceWar2006.Ships
         {
             DeSerialize(context);
         }
-        public static Texture Thumbnail = Root.Instance.ResourceManager.LoadTexture("saucer1-image.dds");
+        public static string Thumbnail = "saucer1-image.dds";
 
     }
 

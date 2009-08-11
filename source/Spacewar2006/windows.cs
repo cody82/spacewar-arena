@@ -363,7 +363,8 @@ namespace SpaceWar2006.Windows
                 if (t != typeof(SpaceShip))
                 {
                     FieldInfo fi = t.GetField("Thumbnail", BindingFlags.Public | BindingFlags.Static);
-                    Texture tex = (Texture)fi.GetValue(null);
+                    string texname = (string)fi.GetValue(null);
+                    Texture tex=Root.Instance.ResourceManager.LoadTexture(texname);
                     tmp2.Add(new ListBoxItem(t, tex, t.Name));
                 }
             }
