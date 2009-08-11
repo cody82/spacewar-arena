@@ -71,9 +71,12 @@ namespace Cheetah
         public struct ogg_packet
         {
 			public IntPtr packet;
-			public int  bytes;
-			public int  b_o_s;
-			public int  e_o_s;
+			
+			//these are integers, size depends on architecture
+			public IntPtr  bytes;
+			public IntPtr  b_o_s;
+			public IntPtr  e_o_s;
+			
 			public ogg_int64_t  granulepos;
   
 			public ogg_int64_t  packetno;
@@ -102,7 +105,7 @@ namespace Cheetah
 		
 		
         //const string LIB = "libtheoradec.so.1";
-        const string LIB = "libtheora.dll";
+        public const string LIB = "libtheora.dll";
 
 		
 		[DllImport(LIB)]
@@ -149,8 +152,6 @@ namespace Cheetah
 		
 		public static string Version()
 		{
-			//byte *b=th_version_string();
-			//Console.WriteLine(((int)b).ToString());
 			return Marshal.PtrToStringAnsi(th_version_string());
 		}
     }
@@ -230,9 +231,9 @@ namespace Cheetah
         public int PacketIn(csogg.Packet pp)
         {
 			Theora.ogg_packet op=new Theora.ogg_packet();
-			op.bytes=pp.bytes;
-			op.b_o_s=pp.b_o_s;
-			op.e_o_s=pp.e_o_s;
+			op.bytes=new IntPtr(pp.bytes);
+			op.b_o_s=new IntPtr(pp.b_o_s);
+			op.e_o_s=new IntPtr(pp.e_o_s);
 			op.granulepos=pp.granulepos;
 			op.packet=Marshal.UnsafeAddrOfPinnedArrayElement(pp.packet_base,pp.packet);
 			op.packetno=pp.packetno;
@@ -515,7 +516,15 @@ namespace Cheetah
 		OggFile ogg;
 		public TheoraTexture(Stream s)
 		{
-			ogg=new OggFile(s);
+			try
+			{
+				ogg=new OggFile(s);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("cant load ogg");
+				return;
+			}
 			
 			int size=ogg.VideoDecoder.Width*ogg.VideoDecoder.Height*3;
 			ActiveSurface=new byte[size];
@@ -568,7 +577,9 @@ namespace Cheetah
 
 		public void Tick(float dtime)
 		{
-
+			if(ogg==null)
+				return;
+			
             if (Root.Instance.Time - Id.LastBind > 5)
             {
                 if (!Idle)
