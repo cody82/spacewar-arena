@@ -460,7 +460,7 @@ namespace SpaceWar2006.Flows
             //SetMesh("units/UEL0001");
             //bsp = new BSPFile("maps\\q3dm17.bsp");
             //bsp = new BSPFile("maps\\Egyptian Palace.bsp");
-            SetMesh("models/bumpcube/bumpcube.mesh");
+            SetMesh(mesh);
         }
 
         protected void SetMesh(string mesh)
