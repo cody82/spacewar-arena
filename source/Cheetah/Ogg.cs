@@ -186,6 +186,7 @@ namespace Cheetah
 		int width=0;
 		int height=0;
 		public byte[] Data;
+		public bool ConvertToRGB=false;
 		
 		public int FrameNumber
 		{
@@ -286,6 +287,7 @@ namespace Cheetah
 				//w.WriteLine("P3");
 				//w.WriteLine(picture.plane0.width.ToString()+" "+picture.plane0.height.ToString());
 				//w.WriteLine("255");
+				if(ConvertToRGB)
 				for(int y=0;y<picture.plane0.height;++y)
 				{
 					for(int x=0;x<picture.plane0.width;++x)
@@ -309,7 +311,24 @@ namespace Cheetah
 						//w.WriteLine(R.ToString()+" "+G.ToString()+" "+B.ToString());
 					}
 				}
-				
+				else
+				for(int y=0;y<picture.plane0.height;++y)
+				{
+					for(int x=0;x<picture.plane0.width;++x)
+					{
+						byte Y=Marshal.ReadByte(picture.plane0.data,y*picture.plane0.stride+x);
+						byte Cb=Marshal.ReadByte(picture.plane1.data,(int)((float)y*yfactor1*(float)picture.plane1.stride+(float)x*xfactor1));
+						byte Cr=Marshal.ReadByte(picture.plane2.data,(int)((float)y*yfactor2*(float)picture.plane2.stride+(float)x*xfactor2));
+						
+						
+						Data[y*width*3+x*3]=(byte)Y;
+						Data[y*width*3+x*3+1]=(byte)Cb;
+						Data[y*width*3+x*3+2]=(byte)Cr;
+						
+						//w.WriteLine(R.ToString()+" "+G.ToString()+" "+B.ToString());
+					}
+				}
+			
 				//w.Close();
 				//f.Close();
 				frame++;
