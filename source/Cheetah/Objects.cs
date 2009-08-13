@@ -6595,6 +6595,8 @@ using Cheetah;");
 		public void ServerOnConnect(short clientid,string name,IPEndPoint client)
 		{
             CurrentFlow.OnJoin(clientid, name);
+			//Lidgren.Library.Network.NetServer s=((UdpServer)Connection).server;
+			//Lidgren.Library.Network.NetConnection c=((UdpServer)Connection).
         }
 
         public void ServerOnDisconnect(short clientid, string name, IPEndPoint client)

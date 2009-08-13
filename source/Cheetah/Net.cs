@@ -95,6 +95,162 @@ namespace Cheetah
         public string Cmd;
     }
 
+	public class FileReceiveTask
+	{
+		bool headerread=false;
+		int length;
+		string name;
+		byte[] buffer;
+		int position=0;
+		int packetsize;
+		bool ready=false;
+		NetChannel channel;
+		
+		public byte[] Buffer
+		{
+			get{return buffer;}
+		}
+		
+		public bool Ready
+		{
+			get{return ready;}
+		}
+		
+		public FileReceiveTask(NetBase net, NetChannel channel)
+		{
+			this.channel=channel;
+		}
+		
+		void ReadPacket(NetMessage msg)
+		{
+			byte[] received=msg.ReadBytes(packetsize);
+			int size;
+			if(position+packetsize>length)
+			{
+				size=length-position+packetsize;
+				ready=true;
+				Cheetah.Console.WriteLine("file received");
+			}
+			else
+			{
+				size=packetsize;
+			}
+			
+			Array.Copy(received,0,buffer,position,size);
+			position+=size;
+		}
+		
+		void ReadHeader(NetMessage msg)
+		{
+			byte b=msg.ReadByte();
+			length=msg.ReadInt();
+			packetsize=msg.ReadInt();
+			buffer=new byte[length];
+			name=msg.ReadString();
+			Cheetah.Console.WriteLine("file header: "+length.ToString()+" "+name);
+		}
+		
+		public void PacketIn(NetMessage msg)
+		{
+			if(ready)
+				return;
+			
+			if(headerread)
+			{
+				ReadPacket(msg);
+			}
+			else
+			{
+				ReadHeader(msg);
+			}
+		}
+	}
+	
+	public class FileSendTask : ITickable
+	{
+		public float Rate=4000;//bytes per second
+		public int PacketSize=800;
+		public float PacketInterval;
+		
+		protected float time=0;
+		protected bool ready=false;
+		protected Stream stream;
+		protected string name;
+		protected bool headersent=false;
+		protected NetConnection connection;
+		protected NetChannel channel;
+		protected NetBase net;
+	
+		public bool Ready
+		{
+			get{return ready;}
+		}
+		
+		public FileSendTask(NetBase net,NetConnection connection, NetChannel channel, Stream file, string name)
+		{
+			PacketInterval=PacketSize/Rate;
+			stream=file;
+			this.name=name;
+			this.connection=connection;
+			this.channel=channel;
+			this.net=net;
+		}
+		
+		protected void Send(NetMessage msg)
+		{;
+			if(net is NetServer)
+				((NetServer)net).SendMessage(msg,connection,channel);
+			else
+				((NetClient)net).SendMessage(msg,channel);
+			
+		}
+		
+		protected void SendHeader()
+		{
+			//byte[] buffer=new byte[1+4+name.Length];
+			NetMessage msg=new NetMessage();
+			msg.Write((byte)1);
+			msg.Write(stream.Length);
+			msg.Write(PacketSize);
+			msg.Write(name);
+			Send(msg);
+			headersent=true;
+		}
+		
+		protected void SendNextPacket()
+		{
+			if(ready)
+				return;
+			
+			if(!headersent)
+			{
+				SendHeader();
+				return;
+			}
+			
+			NetMessage msg=new NetMessage();
+			byte[] buffer=new byte[PacketSize];
+			int bytes=stream.Read(buffer,0,PacketSize);
+			msg.Write(buffer,0,bytes);
+			Send(msg);
+			if(bytes<PacketSize)
+			{
+				ready=true;
+				Cheetah.Console.WriteLine("file send complete");
+			}
+		}
+		
+		public void Tick(float dtime)
+		{
+			time+=dtime;
+			if(time>PacketInterval)
+			{
+				SendNextPacket();
+				time=0;
+			}
+		}
+	}
+	
 	public class Handshake : ISerializable
 	{
 		public enum Phase
