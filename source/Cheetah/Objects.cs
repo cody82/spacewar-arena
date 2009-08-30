@@ -3716,6 +3716,8 @@ using Cheetah;");
 
     public class Factory
     {
+        public const string CLASSFILE = "system/classes.txt";
+
         public Factory()
         {
             UpdateTypeIds();
@@ -3802,9 +3804,10 @@ using Cheetah;");
             FileSystem fs = Root.Instance.FileSystem;
             //string classesfile = "config/classes.types";
 
-            if (fs.ContainsKey("classes.types"))
+            FileSystemNode n=fs.Get(CLASSFILE);
+
+            if (n!=null)
             {
-                FileSystemNode n = fs.Get("classes.types");
                 if (n.Size > 0)
                     LoadClassIds(n.getStream());
             }
@@ -3820,7 +3823,7 @@ using Cheetah;");
 
             //SaveClassIds("classes.types");
             if (modified)
-                SaveClassIds(fs.CreateFile("classes.types").getStream());
+                SaveClassIds(fs.CreateFile(CLASSFILE).getStream());
         }
 
         public object CreateInstance(string typename)
@@ -4158,7 +4161,7 @@ using Cheetah;");
             {
                 FileSystem fs = Root.Instance.FileSystem;
 
-                SaveClassIds(fs.CreateFile("classes.types").getStream());
+                SaveClassIds(fs.CreateFile(CLASSFILE).getStream());
             }
         }
         private ArrayList Assemblies = new ArrayList();
