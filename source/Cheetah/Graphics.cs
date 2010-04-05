@@ -1150,6 +1150,186 @@ namespace Cheetah
         }
     }
 
+    public class SubMeshPlyLoader : IResourceLoader
+    {
+        float GetFloatProperty(string[] split, string property)
+        {
+            return float.Parse(split[vertexproperties.FindIndex(delegate(string x) { return x == property; })]);
+        }
+
+        #region IResourceLoader Members
+
+
+        public IResource Load(FileSystemNode n)
+        {
+            Stream s = n.getStream();
+            string line;
+            string[] split;
+
+            r = new FixedStreamReader(n.getStream());
+
+
+            ReadHeader();
+
+            bool has_normals = vertexproperties.Contains("nx");
+            bool has_texcoord = vertexproperties.Contains("s");
+            bool has_position = vertexproperties.Contains("x");
+
+            if (!has_position)
+                throw new Exception("ply: no position");
+
+            List<VertexFormat.Element> elements = new List<VertexFormat.Element>();
+
+            elements.Add(new VertexFormat.Element(VertexFormat.ElementName.Position, 3));
+            if (has_normals)
+                elements.Add(new VertexFormat.Element(VertexFormat.ElementName.Normal, 3));
+            if (has_texcoord)
+                elements.Add(new VertexFormat.Element(VertexFormat.ElementName.Texture0, 2));
+
+            fmt = new VertexFormat(elements.ToArray());
+
+            float[] vertices = new float[fmt.Count];
+            int vertexfloatsize = fmt.Size/4;
+
+            for(int i=0;i<vertexcount;++i)
+            {
+                line = r.ReadLine();
+                split = line.Split(' ');
+
+                vertices[i * vertexfloatsize] = GetFloatProperty(split, "x");
+                vertices[i * vertexfloatsize + 1] = GetFloatProperty(split, "y");
+                vertices[i * vertexfloatsize + 2] = GetFloatProperty(split, "z");
+
+                if (has_normals)
+                {
+                    vertices[i * vertexfloatsize + 3] = GetFloatProperty(split, "nx");
+                    vertices[i * vertexfloatsize + 4] = GetFloatProperty(split, "ny");
+                    vertices[i * vertexfloatsize + 5] = GetFloatProperty(split, "nz");
+                }
+
+                if (has_texcoord)
+                {
+                    vertices[i * vertexfloatsize + (has_normals ? 6 : 3)] = GetFloatProperty(split, "s");
+                    vertices[i * vertexfloatsize + (has_normals ? 7 : 4)] = GetFloatProperty(split, "t");
+                }
+            }
+
+            List<int> indices = new List<int>();
+            for (int i = 0; i < facecount; ++i)
+            {
+                line = r.ReadLine();
+                split = line.Split(' ');
+
+                int c = int.Parse(split[0]);
+                if (c == 3)
+                {
+                    indices.Add(int.Parse(split[1]));
+                    indices.Add(int.Parse(split[2]));
+                    indices.Add(int.Parse(split[3]));
+                }
+                else if (c == 4)
+                {
+                    indices.Add(int.Parse(split[1]));
+                    indices.Add(int.Parse(split[2]));
+                    indices.Add(int.Parse(split[3]));
+
+                    indices.Add(int.Parse(split[2]));
+                    indices.Add(int.Parse(split[4]));
+                    indices.Add(int.Parse(split[3]));
+                }
+                else
+                {
+                    throw new Exception("ply: no triangle or quad");
+                }
+            }
+
+            SubMesh mesh = new SubMesh();
+
+            if (Root.Instance.UserInterface != null)
+                mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * 4);
+            else
+                mesh.Vertices = new VertexBuffer();
+
+            mesh.Vertices.Format = fmt;
+            mesh.Vertices.Buffer = vertices;
+            mesh.VertexCount = vertexcount;
+            mesh.Indices = new IndexBuffer();
+            mesh.Indices.buffer = indices.ToArray();
+
+            return mesh;
+        }
+
+        VertexFormat fmt;
+        StreamReader r;
+        int vertexcount=-1;
+        int facecount=-1;
+
+        List<string> vertexproperties;
+
+        private void ReadHeader()
+        {
+            string line;
+            string[] split;
+
+            line = r.ReadLine();
+            if (line != "ply")
+                throw new Exception("not ply format");
+
+            line = r.ReadLine();
+            split = line.Split(' ');
+            if (split[0] != "format" || split[1] != "ascii")
+                throw new Exception("wrong ply header");
+
+            vertexproperties = new List<string>();
+
+            while ((line = r.ReadLine()) != null)
+            {
+                if (line == "end_header")
+                    return;
+
+                split = line.Split(' ');
+                if (split[0] == "comment")
+                {
+                }
+                else if (split[0] == "element")
+                {
+                    if (split[1] == "vertex")
+                    {
+                        vertexcount = int.Parse(split[2]);
+                    }
+                    else if (split[1] == "face")
+                    {
+                        facecount = int.Parse(split[3]);
+                    }
+                }
+                else if (split[0] == "property")
+                {
+                    if (facecount == -1 && vertexcount != -1)
+                    {
+                        vertexproperties.Add(split[2]);
+                    }
+                    else if (facecount != -1)
+                    {
+                    }
+                }
+            }
+
+            throw new Exception("ply header error");
+        }
+
+        public Type LoadType
+        {
+            get { return typeof(SubMesh); }
+        }
+
+        public bool CanLoad(FileSystemNode n)
+        {
+            return n.info.Name.ToLower().EndsWith(".ply");
+        }
+
+        #endregion
+    }
+
     public class SubMeshBinLoader : IResourceLoader
     {
         #region IResourceLoader Members
@@ -6521,7 +6701,7 @@ namespace Cheetah
                 ClientList = new EntityCollection();
             }
 
-            Physics = Cheetah.Physics.Physics.Create();
+            //Physics = Cheetah.Physics.Physics.Create();
 		}
 
         public bool ServerListCheck(int id)

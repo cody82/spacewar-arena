@@ -6727,6 +6727,7 @@ using Cheetah;");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "config");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "screens");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "demos");
+                    Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "system");
                     File.Copy("config" + Path.DirectorySeparatorChar + "global.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "global.config");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "controls.xml", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "controls.xml");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "servers.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "servers.config");
@@ -6767,6 +6768,7 @@ using Cheetah;");
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            return null;
             Console.WriteLine("Resolving: " + args.Name);
             /*if (args.Name.StartsWith("game,"))
             {
@@ -6774,11 +6776,12 @@ using Cheetah;");
             }
             else*/
             {
-                string path=Directory.GetCurrentDirectory()+Path.DirectorySeparatorChar+GetAssemblyPath(args.Name.Split(',')[0]+".dll");
-                Console.WriteLine("trying to load assembly "+path);
+                //string path=Directory.GetCurrentDirectory()+Path.DirectorySeparatorChar+GetAssemblyPath(args.Name.Split(',')[0]+".dll");
+                string path = GetAssemblyPath(args.Name.Split(',')[0] + ".dll");
+                Console.WriteLine("trying to load assembly " + path);
                 try
                 {
-                    Assembly a = Assembly.LoadFile(path.ToLower());
+                    Assembly a = Assembly.LoadFile(path);
                     Factory.Add(a);
                     return a;
                 }
@@ -6786,8 +6789,8 @@ using Cheetah;");
                 {
                     try
                     {
-                        string path2 = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + GetAssemblyPath(args.Name.Split(',')[0] + ".exe");
-                        Assembly a2 = Assembly.LoadFile(path2.ToLower());
+                        string path2 = GetAssemblyPath(args.Name.Split(',')[0] + ".exe");
+                        Assembly a2 = Assembly.LoadFile(path2);
                         return a2;
                     }
                     catch (Exception e2)
