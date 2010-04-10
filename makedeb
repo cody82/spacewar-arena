@@ -1,11 +1,11 @@
 #!/bin/bash
 
-rm spacewar2006-1.1-1.deb
+rm spacewar2006-1.1-2.deb
 
 cp -r dist/* debian/opt/spacewar2006
 cp -r source/Spacewar2006/bin/Release/* debian/opt/spacewar2006/bin/
 
-dpkg-deb --build debian spacewar2006-1.1-1.deb
+dpkg-deb --build debian spacewar2006-1.1-2.deb
 
 rm -rf debian/opt/spacewar2006/*
 
