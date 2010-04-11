@@ -337,7 +337,12 @@ namespace SpaceWar2006.Flows
         }
         public override void OnLeave(short clientid, string name)
         {
-            //Stats.Players.Remove(clientid);
+            IList<Player> list = Root.Instance.Scene.FindEntitiesByType<Player>();
+            foreach (Player p in list)
+            {
+                if (p.ClientId == clientid)
+                    p.Kill = true;
+            }
         }
 
         public override void Tick(float dtime)

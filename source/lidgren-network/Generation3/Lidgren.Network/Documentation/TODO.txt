@@ -1,0 +1,17 @@
+﻿
+Completed features:
+* Message coalescing
+* Peer, connection statistics
+* Lag, loss and duplication simulation for testing
+* Connection approval
+* Throttling
+* Clock synchronization to detect jitter per packet (NetTime.RemoteNow)
+* Peer discovery
+
+Missing features:
+* Message fragmentation 50% done
+* Receipts 25% done, need design
+* Resending of lost handshake (connect/response/established) packets
+
+
+

@@ -182,9 +182,9 @@
       <Project>{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}</Project>
       <Name>csogg</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lidgren.Library.Network\Lidgren.Library.Network\Lidgren.Library.Network.csproj">
-      <Project>{D4592CBE-B347-4770-989A-D6FA47C5B191}</Project>
-      <Name>Lidgren.Library.Network</Name>
+    <ProjectReference Include="..\lidgren-network\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{BA202214-F6F8-4853-BCC9-CA4F13C5F479}</Project>
+      <Name>Lidgren.Network</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

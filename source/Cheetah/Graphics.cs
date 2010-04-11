@@ -7712,6 +7712,18 @@ namespace Cheetah
         int LastTimer=0;
 
         public Physics.IPhysicsWorld Physics;
+
+        public void KillEntitiesOfClient(short clientid)
+        {
+            foreach (KeyValuePair<int, Entity> de in ServerList)
+            {
+                Entity e = de.Value;
+                if (e.OwnerNumber==clientid)
+                {
+                    e.Kill = true;
+                }
+            }
+        }
     }
 
     public class Viewport

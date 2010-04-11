@@ -3516,7 +3516,7 @@ using Cheetah;");
             Factory = f;
             //Stream = s;
             //Writer = w;
-            Message = new Lidgren.Library.Network.NetMessage();
+            Message = new Lidgren.Network.NetBuffer();
         }
 
         public byte[] ToArray()
@@ -3524,12 +3524,12 @@ using Cheetah;");
             return Message.ToArray();
         }
 
-        public Lidgren.Library.Network.NetMessage GetMessage()
+        public Lidgren.Network.NetBuffer GetMessage()
         {
             return Message;
         }
 
-        public SerializationContext(Factory f,  Lidgren.Library.Network.NetMessage m)
+        public SerializationContext(Factory f, Lidgren.Network.NetBuffer m)
         {
             Factory = f;
             Message = m;
@@ -3537,7 +3537,7 @@ using Cheetah;");
         public SerializationContext()
         {
             Factory = Root.Instance.Factory;
-            Message = new Lidgren.Library.Network.NetMessage();
+            Message = new Lidgren.Network.NetBuffer();
         }
         public void Serialize(ISerializable s)
         {
@@ -3604,7 +3604,7 @@ using Cheetah;");
             }
         }
         public Factory Factory;
-        private Lidgren.Library.Network.NetMessage Message;
+        private Lidgren.Network.NetBuffer Message;
         //private Stream Stream;
         //private BinaryWriter Writer;
         private static float serverlatency = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetFloat("server.sendlatency");
@@ -3619,11 +3619,11 @@ using Cheetah;");
             Factory = f;
             //Stream = s;
             //Reader = r;
-            Message = new Lidgren.Library.Network.NetMessage((int)(s.Length-s.Position));
+            Message = new Lidgren.Network.NetBuffer((int)(s.Length-s.Position));
             Message.Write(r.ReadBytes((int)(s.Length-s.Position)));
             //System.Console.WriteLine("deserialization: " + s.Length);
         }
-        public DeSerializationContext(Lidgren.Library.Network.NetMessage msg)
+        public DeSerializationContext(Lidgren.Network.NetBuffer msg)
         {
 
             Factory = Root.Instance.Factory;
@@ -3658,7 +3658,7 @@ using Cheetah;");
 
         //private Stream Stream;
         //private BinaryReader Reader;
-        Lidgren.Library.Network.NetMessage Message;
+        Lidgren.Network.NetBuffer Message;
 
         public EntityFlags Flags = EntityFlags.None;
         private static float serverlatency = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetFloat("server.recvlatency");
@@ -3680,7 +3680,7 @@ using Cheetah;");
         }
         public int ReadInt(int bits)
         {
-            return Message.ReadInt(bits);
+            return Message.ReadInt32(bits);
         }
         public short ReadInt16()
         {
@@ -6272,7 +6272,7 @@ using Cheetah;");
 			}
 		}
 
-		public void ClientOnStateReceive(Lidgren.Library.Network.NetMessage msg)
+        public void ClientOnStateReceive(Lidgren.Network.NetBuffer msg)
 		{
             DeSerializationContext context = new DeSerializationContext(msg);
 
@@ -6587,9 +6587,9 @@ using Cheetah;");
             }
         }
 
-		public void ServerOnStateReceive(Lidgren.Library.Network.NetMessage msg)
+        public void ServerOnStateReceive(Lidgren.Network.NetBuffer msg, IPEndPoint ip)
         {
-            short client = ((UdpServer)Connection).GetClientNumber(msg.Sender.RemoteEndpoint);
+            short client = ((UdpServer)Connection).GetClientNumber(ip);
             DeSerializationContext context = new DeSerializationContext(msg);
 
             Scene.ServerStateReceive(context, client);
@@ -6605,6 +6605,7 @@ using Cheetah;");
         public void ServerOnDisconnect(short clientid, string name, IPEndPoint client)
         {
             CurrentFlow.OnLeave(clientid, name);
+            Scene.KillEntitiesOfClient(clientid);
         }
 
         public Thread ServerConsoleThread;
@@ -6892,8 +6893,8 @@ using Cheetah;");
             else
                 return ClientCategorizeSendEntity(serverindex, clientindex, ownernumber, sendernumber);
         }
-        
-        public void OnDatagramReceive(Lidgren.Library.Network.NetMessage msg)
+
+        public void OnDatagramReceive(Lidgren.Network.NetBuffer msg, IPEndPoint sender)
         {
             //try
             {
@@ -6926,7 +6927,7 @@ using Cheetah;");
                     //if (msg.Connected)
                     {
                         if(IsAuthoritive)
-                            ServerOnStateReceive(msg);
+                            ServerOnStateReceive(msg, sender);
                         else
                             ClientOnStateReceive(msg);
                     }
@@ -6934,7 +6935,7 @@ using Cheetah;");
                     //Packet p=(Packet)o;
                     return;
                 }
-                msg.ResetReadPointer();
+                msg.Position = 0;
                 if (type == typeof(QueryPacket) && IsAuthoritive)
                 {
                     Console.WriteLine("Query received.");
@@ -6944,7 +6945,7 @@ using Cheetah;");
                         Console.WriteLine("Query answered.");
                         ISerializable reply = ServerAnswerQuery(q);
                         if(reply!=null)
-                            ((UdpServer)Connection).Send(reply, msg.Sender.RemoteEndpoint);
+                            ((UdpServer)Connection).Send(reply, sender);
                     }
                 }
                 else if (type == typeof(Events))
@@ -6957,7 +6958,7 @@ using Cheetah;");
                             throw new Exception("");
                         if (Connection is UdpServer)
                         {
-                            ((UdpServer)Connection).SendNot(e, msg.Sender.RemoteEndpoint);
+                            ((UdpServer)Connection).SendNot(e, sender);
                         }
                         e.RaiseAll();
                         EventSendQueue.Clear();
@@ -7019,11 +7020,12 @@ using Cheetah;");
 
                 //SendUpdates();
 
-                Lidgren.Library.Network.NetMessage msg;
-                while ((msg = Connection.Receive()) != null)
+                Lidgren.Network.NetBuffer msg;
+                IPEndPoint ip;
+                while ((msg = Connection.Receive(out ip)) != null)
                 {
                     //if(Server
-                    OnDatagramReceive(msg);
+                    OnDatagramReceive(msg,ip);
                 }
             }
 
@@ -7034,9 +7036,9 @@ using Cheetah;");
                 byte[] packet;
                 while ((packet = Player.ReadPacket()) != null)
                 {
-                    Lidgren.Library.Network.NetMessage m = new Lidgren.Library.Network.NetMessage();
+                    Lidgren.Network.NetBuffer m = new Lidgren.Network.NetBuffer();
                     m.Write(packet);
-                    OnDatagramReceive(m);
+                    OnDatagramReceive(m,null);
                 }
             }
 

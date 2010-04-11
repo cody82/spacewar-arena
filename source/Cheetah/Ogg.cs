@@ -535,6 +535,9 @@ namespace Cheetah
 		OggFile ogg;
 		public TheoraTexture(Stream s)
 		{
+            if (Root.Instance.UserInterface==null)
+                return;
+
 			try
 			{
 				ogg=new OggFile(s);
@@ -565,6 +568,9 @@ namespace Cheetah
 
         protected void StopThread()
         {
+            if (UpdateThread == null)
+                return;
+
             ExitThread = true;
             if (Idle)
                 UpdateThread.Resume();
