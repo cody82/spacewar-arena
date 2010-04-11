@@ -1900,8 +1900,16 @@ namespace Cheetah
                         {
                             n = m.ReadInt16();
                             System.Console.WriteLine(n);
-                            i = 100;
+                            break;
                         }
+                        else if (m.PeekUInt32()==0xFFFFFFFF)
+                        {
+                            m.ReadUInt32();
+                            classes = m.ReadBytes(m.LengthBytes-4);
+                            System.Console.WriteLine("received class dictionary: " + classes.Length);
+                            break;
+                        }
+
                         Console.WriteLine("skip: " + m.LengthBytes);
                     }
                     /*else if (m.SequenceChannel == NetChannel.ReliableUnordered)
@@ -1910,8 +1918,8 @@ namespace Cheetah
                         System.Console.WriteLine("received class dictionary: " + classes.Length);
                     }*/
                 }
-                //if (classes != null && n != -1)
-                //    break;
+                if (classes != null && n != -1)
+                    break;
             }
             if (n == -1)
                 throw new Exception();
@@ -2009,14 +2017,15 @@ namespace Cheetah
 
                 //server.FlushMessages();
 
-                /*Stream s = Root.Instance.FileSystem.Get("system/classes.txt").getStream();
+                Stream s = Root.Instance.FileSystem.Get("system/classes.txt").getStream();
                 byte[] buf=new byte[s.Length];
                 s.Read(buf,0,buf.Length);
                 s.Close();
                 s.Dispose();
-                m = server.CreateBuffer(buf.Length);
+                m = server.CreateBuffer(4+buf.Length);
+                m.Write((uint)0xFFFFFFFF);
                 m.Write(buf);
-                server.SendMessage(m, e.Connection, NetChannel.ReliableInOrder1);*/
+                server.SendMessage(m, sender, NetChannel.ReliableInOrder1);
                 System.Console.WriteLine("sending client number " + (n+1));
         }
 
