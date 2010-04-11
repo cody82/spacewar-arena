@@ -1,0 +1,9 @@
+Package: spacewar2006
+Version: 1.1-2
+Section: base
+Priority: optional
+Architecture: all
+Depends: mono-runtime, libsdl1.2debian, libmono-winforms2.0-cil
+Maintainer: Sebastian Kotulla <sebastian.kotulla@gmail.com>
+Description: Spacewar 2006
+ Kick-ass space shooter.

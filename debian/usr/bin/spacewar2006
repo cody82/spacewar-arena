@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mono /opt/spacewar2006/bin/Spacewar2006.exe -root /opt/spacewar2006
