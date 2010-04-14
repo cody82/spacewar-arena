@@ -294,6 +294,7 @@ namespace SpaceWar2006.GameSystem
                 {
                     AssemblyResource ar = Root.Instance.ResourceManager.LoadAssembly(n.GetFullPath());
                     Root.Instance.Factory.Add(ar.Assembly);
+                    Root.Instance.Assemblies.Add(ar.Assembly);
                     Root.Instance.Script.Reference(ar.Assembly);
                 }
             }

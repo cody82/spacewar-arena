@@ -3739,6 +3739,15 @@ using Cheetah;");
 
         }
 
+        public Factory(Stream s)
+        {
+            LoadClassIds(s);
+            Add(Assembly.GetExecutingAssembly());
+            Add(Assembly.GetEntryAssembly());
+            foreach (Assembly a in Root.Instance.Assemblies)
+                Add(a);
+        }
+
         private bool UpdateTypeIds(Assembly a)
         {
             bool modified = false;
@@ -3753,9 +3762,9 @@ using Cheetah;");
                         if (ClassNames.ContainsKey(t.FullName))
                         {
                             short id = (short)ClassNames[t.FullName];
-                            object o = ClassIds[id];
+                            //object o = ClassIds[id];
 
-                            if (o is string)
+                            if (!ClassIds.ContainsKey(id))
                             {
                                 ClassIds[id] = t;
                                 //Console.WriteLine("type of new loaded assembly is already known: " + t.Name);
@@ -3817,7 +3826,7 @@ using Cheetah;");
 
             foreach (Assembly a in Assemblies)
             {
-                modified = modified || UpdateTypeIds(a);
+                modified = UpdateTypeIds(a) || modified;
             }
             //Console.WriteLine("loaded " + (id - 1) + " classes.");
 
@@ -3894,8 +3903,8 @@ using Cheetah;");
                 }
                 catch (Exception)
                 {
-                    //Console.WriteLine("problem: " + val + " not unknown.");
-                    ClassIds[id] = val;
+                    Console.WriteLine("problem: " + val + " not unknown.");
+                    //ClassIds[id] = val;
                 }
             }
             r.Close();
@@ -3913,14 +3922,11 @@ using Cheetah;");
         {
             StreamWriter w = new StreamWriter(s);
             w.WriteLine("CLASSTEXT");
-            foreach (DictionaryEntry de in ClassIds)
+            foreach (KeyValuePair<short,Type> de in ClassIds)
             {
                 w.Write((short)de.Key);
                 w.Write(": ");
-                if (de.Value is Type)
-                    w.WriteLine(((Type)de.Value).FullName);
-                else
-                    w.WriteLine((string)de.Value);
+                w.WriteLine(de.Value.FullName);
             }
             w.Flush();
             w.Close();
@@ -3930,12 +3936,10 @@ using Cheetah;");
         public short GetClassId(Type t)
         {
             //HACK very slow!
-            foreach (DictionaryEntry de in ClassIds)
+            foreach (KeyValuePair<short,Type> de in ClassIds)
             {
-                if (de.Value is string)
-                    continue;
-                if (t.FullName == ((Type)de.Value).FullName)
-                    return (short)de.Key;
+                if (t.FullName == de.Value.FullName)
+                    return de.Key;
             }
             throw new Exception("unknown type: " + t.ToString());
         }
@@ -3970,11 +3974,11 @@ using Cheetah;");
                 short id = (short)ClassNames[typename];
                 if (!ClassIds.ContainsKey(id))
                     throw new CantFindTypeException("cant find type(2) " + typename);
-                if (ClassIds[id] is string)
+                /*if (ClassIds[id] is string)
                 {
                     Console.WriteLine("wrong type: " + (string)ClassIds[id] + ", " + typename);
-                }
-                return (Type)ClassIds[id];
+                }*/
+                return ClassIds[id];
             }
             catch (CantFindTypeException e)
             {
@@ -4166,7 +4170,8 @@ using Cheetah;");
         }
         private ArrayList Assemblies = new ArrayList();
         private Hashtable ClassNames = new Hashtable();
-        private Hashtable ClassIds = new Hashtable();
+        //private Hashtable ClassIds = new Hashtable();
+        private Dictionary<short, Type> ClassIds = new Dictionary<short, Type>();
     }
 
     public class Compiler
@@ -6117,7 +6122,7 @@ using Cheetah;");
 
     public sealed class Root : IDisposable
     {
-
+        public List<Assembly> Assemblies = new List<Assembly>();
 
         /// <summary>
         /// CLIENT

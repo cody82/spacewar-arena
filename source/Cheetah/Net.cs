@@ -1926,6 +1926,8 @@ namespace Cheetah
             if (n > 16)
                 throw new Exception();
 
+            Root.Instance.Factory = new Factory(new MemoryStream(classes));
+
             Console.WriteLine("connected to server: clientnumber: " + n);
             ClientNumber = n;
         }
