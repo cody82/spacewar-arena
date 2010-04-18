@@ -311,7 +311,7 @@ namespace Cheetah
         public string Name;
         public int Version;
         public static readonly int MagicDefault=1337;
-        public static readonly int ThisVersion = 7;
+        public static readonly int ThisVersion = 8;
 	}
 
     public interface IQuery
@@ -2019,11 +2019,9 @@ namespace Cheetah
 
                 //server.FlushMessages();
 
-                Stream s = Root.Instance.FileSystem.Get("system/classes.txt").getStream();
-                byte[] buf=new byte[s.Length];
-                s.Read(buf,0,buf.Length);
-                s.Close();
-                s.Dispose();
+                MemoryStream s = new MemoryStream();
+                Root.Instance.Factory.SaveClassIds(s);
+                byte[] buf = s.ToArray();
                 m = server.CreateBuffer(4+buf.Length);
                 m.Write((uint)0xFFFFFFFF);
                 m.Write(buf);

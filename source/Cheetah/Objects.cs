@@ -3720,7 +3720,7 @@ using Cheetah;");
 
         public Factory()
         {
-            UpdateTypeIds();
+            //UpdateTypeIds();
             
             Add(Assembly.GetExecutingAssembly());
             Add(Assembly.GetEntryAssembly());
@@ -4163,9 +4163,9 @@ using Cheetah;");
 
             if (UpdateTypeIds(a))
             {
-                FileSystem fs = Root.Instance.FileSystem;
+                //FileSystem fs = Root.Instance.FileSystem;
 
-                SaveClassIds(fs.CreateFile(CLASSFILE).getStream());
+                //SaveClassIds(fs.CreateFile(CLASSFILE).getStream());
             }
         }
         private ArrayList Assemblies = new ArrayList();
@@ -6774,8 +6774,8 @@ using Cheetah;");
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            return null;
             Console.WriteLine("Resolving: " + args.Name);
+            return null;
             /*if (args.Name.StartsWith("game,"))
             {
                 return ModAssembly;
