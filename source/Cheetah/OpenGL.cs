@@ -711,8 +711,7 @@ namespace Cheetah
 
             if (ok != 1)
             {
-                int l, l2;
-                // str;
+                /*int l, l2;
                 Gl.glGetObjectParameterivARB(id, Gl.GL_OBJECT_INFO_LOG_LENGTH_ARB, l3);
                 l = l3[0];
                 StringBuilder str = new StringBuilder(l);
@@ -720,7 +719,7 @@ namespace Cheetah
                 l2 = l3[0];
                 string log = str.ToString();
 
-                System.Console.WriteLine(log);
+                System.Console.WriteLine(log);*/
                 switch (type)
                 {
                     case Gl.GL_VERTEX_SHADER_ARB:
@@ -796,8 +795,7 @@ namespace Cheetah
             ok = l3[0];
             if (ok != 1)
             {
-                int l, l2;
-                // str;
+                /*int l, l2;
                 Gl.glGetObjectParameterivARB(p, Gl.GL_OBJECT_INFO_LOG_LENGTH_ARB, l3);
                 l = l3[0];
                 StringBuilder str = new StringBuilder();
@@ -805,7 +803,7 @@ namespace Cheetah
                 l2 = l3[0];
                 string log = str.ToString();
 
-                System.Console.WriteLine(log);
+                System.Console.WriteLine(log);*/
                 throw new Exception("cant link program");
             }
 
