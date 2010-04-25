@@ -13,7 +13,6 @@ using ICSharpCode.SharpZipLib.Zip.Compression;
 using System.Drawing;
 using System.CodeDom.Compiler;
 using System.Security.Cryptography;
-using Tao.Sdl;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
@@ -22,6 +21,8 @@ using System.Web;
 using System.CodeDom;
 using Microsoft.CSharp;
 using System.Xml;
+
+using OpenTK.Input;
 
 namespace Cheetah
 {
@@ -1139,15 +1140,15 @@ namespace Cheetah
         public string NameSpace = "SpaceWar2006.Maps";
         public string Using = "SpaceWar2006.GameObjects";
 
-        public override void OnKeyPress(Key k)
+        public override void OnKeyPress(global::OpenTK.Input.Key k)
         {
             base.OnKeyPress(k);
 
-            if (k.Char == 's')
+            if (k == Key.S)
             {
                 SaveCsMap(NameSpace, MapName, Using);
             }
-            else if (k.Char == 'm')
+            else if (k == Key.M)
             {
                 LastMousePos = new Vector2(Root.Instance.UserInterface.Mouse.GetPosition(0), Root.Instance.UserInterface.Mouse.GetPosition(1));
                 if (Mode == Action.Move)
@@ -1155,15 +1156,15 @@ namespace Cheetah
                 else
                     Mode = Action.Move;
             }
-            else if (k.Code == KeyCode.PAGEUP)
+            else if (k == global::OpenTK.Input.Key.PageUp)
             {
                 cam.Position += new Vector3(0, 1000, 0);
             }
-            else if (k.Code == KeyCode.PAGEDOWN)
+            else if (k == global::OpenTK.Input.Key.PageDown)
             {
                 cam.Position += new Vector3(0, -1000, 0);
             }
-            else if (k.Code == KeyCode.DELETE)
+            else if (k == global::OpenTK.Input.Key.Delete)
             {
                 if (Select != null)
                 {
@@ -4240,7 +4241,7 @@ using Cheetah;");
             GC.Collect();
         }
 
-        public virtual void OnKeyPress(Key k)
+        public virtual void OnKeyPress(global::OpenTK.Input.Key k)
         {
         }
 
@@ -5585,10 +5586,10 @@ using Cheetah;");
                 cmdline.Position = new Vector2(0, size.y - Root.Instance.Gui.DefaultFont.size);
             }
         }
-        public override void OnChildKeyDown(Window w, Key key)
+        public override void OnChildKeyDown(Window w, global::OpenTK.Input.Key key)
         {
             base.OnChildKeyDown(w, key);
-            if (key == KeyCode.RETURN)
+            if (key == global::OpenTK.Input.Key.Enter)
             {
                 if (cmdline.GetLine(0).Length > 0)
                 {
@@ -5599,17 +5600,17 @@ using Cheetah;");
             }
         }
 
-        public override void OnKeyDown(Key key)
+        public override void OnKeyDown(global::OpenTK.Input.Key key)
         {
             base.OnKeyDown(key);
 
             //throw new Exception(key.Code.ToString());
             //int keycode=(int)key;
-            if (key.IsPrintable)
+            /*if (key.IsPrintable)
             {
                 cmdline.Append(key.GetString());
-            }
-            else if (key == KeyCode.RETURN)
+            }else*/
+            if (key == global::OpenTK.Input.Key.Enter)
             {
                 if (cmdline.GetLine(0).Length > 0)
                 {
@@ -5618,15 +5619,15 @@ using Cheetah;");
                 }
                 cmdline.Clear();
             }
-            else if (key == KeyCode.BACKSPACE)
+            else if (key == global::OpenTK.Input.Key.BackSpace)
             {
                 cmdline.OnKeyDown(key);
             }
-            else if (key == KeyCode.PAGEUP)
+            else if (key == global::OpenTK.Input.Key.PageUp)
             {
                 log.Scroll(-1);
             }
-            else if (key == KeyCode.PAGEDOWN)
+            else if (key == global::OpenTK.Input.Key.PageDown)
             {
                 log.Scroll(1);
             }
@@ -6099,9 +6100,9 @@ using Cheetah;");
             log.AppendLine("<" + e.Data.Nick + "> " + e.Data.Message);
         }
 
-        public override void OnKeyDown(Key key)
+        public override void OnKeyDown(global::OpenTK.Input.Key key)
         {
-            if (key.Code == KeyCode.RETURN)
+            if (key == global::OpenTK.Input.Key.Enter)
             {
                 Send(cmd.GetLine(0));
             }
@@ -6158,7 +6159,8 @@ using Cheetah;");
         
         public void ClientClient(string[] args)
 		{
-            ClientClient(args, new SDL_OpenGL_OpenAL_UserInterface());
+            //ClientClient(args, new SDL_OpenGL_OpenAL_UserInterface());
+            ClientClient(args, new Cheetah.OpenTK.UserInterface());
             //UserInterface.Create(fullscreen, width, height, audio);
 
 		}
@@ -6251,9 +6253,9 @@ using Cheetah;");
 			Gui.OnMouseMove(x,y);
 		}
 
-		public void ClientOnKeyDown(Key key)
+        public void ClientOnKeyDown(global::OpenTK.Input.Key key)
 		{
-			if(key==KeyCode.F1)
+            if (key == global::OpenTK.Input.Key.F1)
 			{
                 string name = string.Format("screen-{0}{1,2}{2,2}{3,2}{4,2}{5,2}.tga",
                     DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
@@ -6381,7 +6383,7 @@ using Cheetah;");
             }
 
 
-            UserInterface.Renderer.Flip();
+            UserInterface.Flip();
 
             if (ClientRecordVideo > 0)
             {
@@ -7057,14 +7059,15 @@ using Cheetah;");
         public int TickCount()
         {
             //the windows timer suxxx
-            if (IsWindows)
+            return Environment.TickCount;
+            /*if (IsWindows)
             {
                 return Sdl.SDL_GetTicks();
             }
             else
             {
                 return Environment.TickCount;
-            }
+            }*/
         }
 
         public void Update(bool server)
@@ -7174,1142 +7177,6 @@ using Cheetah;");
 
         public DemoRecorder Recorder = null;
         public DemoPlayer Player = null;
-
-    }
-
-    [Flags]
-    public enum KeyModifier
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        NONE = 0x0000,
-        /// <summary>
-        /// 
-        /// </summary>
-        LSHIFT = 0x0001,
-        /// <summary>
-        /// 
-        /// </summary>
-        RSHIFT = 0x0002,
-        /// <summary>
-        /// 
-        /// </summary>
-        LCTRL = 0x0040,
-        /// <summary>
-        /// 
-        /// </summary>
-        RCTRL = 0x0080,
-        /// <summary>
-        /// 
-        /// </summary>
-        LALT = 0x0100,
-        /// <summary>
-        /// 
-        /// </summary>
-        RALT = 0x0200,
-        /// <summary>
-        /// 
-        /// </summary>
-        LMETA = 0x0400,
-        /// <summary>
-        /// 
-        /// </summary>
-        RMETA = 0x0800,
-        /// <summary>
-        /// 
-        /// </summary>
-        NUM = 0x1000,
-        /// <summary>
-        /// 
-        /// </summary>
-        CAPS = 0x2000,
-        /// <summary>
-        /// 
-        /// </summary>
-        MODE = 0x4000,
-        /// <summary>
-        /// 
-        /// </summary>
-        RESERVED = 0x8000
-    }
-
-    public struct Key
-    {
-        public Key(KeyCode c, KeyModifier m)
-        {
-            Code = c;
-            Mod = m;
-        }
-
-        public override int GetHashCode()
-        {
-            return (int)Code ^ (int)Mod;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is Key)
-            {
-                return this == (Key)obj;
-            }
-            else if (obj is char)
-            {
-                return this == (char)obj;
-            }
-            else if (obj is int)
-            {
-                return this == (char)(int)obj;
-            }
-            return false;
-        }
-        static public bool operator ==(Key k, KeyCode c)
-        {
-            return k.Code == c;
-        }
-        static public bool operator !=(Key k, KeyCode c)
-        {
-            return !(k == c);
-        }
-        static public bool operator ==(Key k, Key k2)
-        {
-            return k.Code == k2.Code && k.Mod == k2.Mod;
-        }
-        static public bool operator !=(Key k, Key k2)
-        {
-            return !(k == k2);
-        }
-        static public bool operator >=(Key k, int c)
-        {
-            return ((int)k.Code) >= c;
-        }
-        static public bool operator <=(Key k, int c)
-        {
-            return ((int)k.Code) <= c;
-        }
-        static public bool operator ==(Key k, char c)
-        {
-            return (char)k.Code == c;
-        }
-        static public bool operator !=(Key k, char c)
-        {
-            return (char)k.Code != c;
-        }
-
-        public override string ToString()
-        {
-            return Code.ToString() + ", " + Mod.ToString();
-        }
-
-        public string GetString()
-        {
-            bool shift = false;
-            if ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0)
-            {
-                shift = true;
-            }
-            if (this == '-' && ((Mod & KeyModifier.RALT) > 0))
-                return "\\";
-            if (this == '.' && ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0))
-                return ":";
-            if (this == '8' && ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0))
-                return "(";
-            if (this == '9' && ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0))
-                return ")";
-            if (this == '2' && ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0))
-                return "\"";
-            if (this == KeyCode.SLASH && ((Mod & KeyModifier.LSHIFT) > 0 || (Mod & KeyModifier.RSHIFT) > 0))
-                return "_";
-            return new string((char)(Code + (shift ? ('A' - 'a') : 0)), 1);
-        }
-
-        public bool IsPrintable
-        {
-            get
-            {
-                return (this >= 'a' && this <= 'z') ||
-                    (this >= '0' && this <= '9')
-                    || this == '.'
-                    || this == ','
-                    || this == '+'
-                    || this == '.'
-                    || this == '/'
-                    || this == '/'
-                    || this == '"'
-                     || this == '\\'
-                     || this == '#'
-                     || this == '+'
-                     || this == '-'
-                      || this == '='
-                  || this == ' ';
-            }
-        }
-
-        public char Char
-        {
-            get
-            {
-                return (char)Code;
-            }
-        }
-
-        public KeyCode Code;
-        public KeyModifier Mod;
-    }
-
-    public enum KeyCode
-    {
-        UNKNOWN = 0,
-        /// <summary>
-        /// 
-        /// </summary>
-        FIRST = 0,
-        /// <summary>
-        /// 
-        /// </summary>
-        BACKSPACE = 8,
-        /// <summary>
-        /// 
-        /// </summary>
-        TAB = 9,
-        /// <summary>
-        /// 
-        /// </summary>
-        CLEAR = 12,
-        /// <summary>
-        /// 
-        /// </summary>
-        RETURN = 13,
-        /// <summary>
-        /// 
-        /// </summary>
-        PAUSE = 19,
-        /// <summary>
-        /// 
-        /// </summary>
-        ESCAPE = 27,
-        /// <summary>
-        /// 
-        /// </summary>
-        SPACE = 32,
-        /// <summary>
-        /// 
-        /// </summary>
-        EXCLAIM = 33,
-        /// <summary>
-        /// 
-        /// </summary>
-        QUOTEDBL = 34,
-        /// <summary>
-        /// 
-        /// </summary>
-        HASH = 35,
-        /// <summary>
-        /// 
-        /// </summary>
-        DOLLAR = 36,
-        /// <summary>
-        /// 
-        /// </summary>
-        AMPERSAND = 38,
-        /// <summary>
-        /// 
-        /// </summary>
-        QUOTE = 39,
-        /// <summary>
-        /// 
-        /// </summary>
-        LEFTPAREN = 40,
-        /// <summary>
-        /// 
-        /// </summary>
-        RIGHTPAREN = 41,
-        /// <summary>
-        /// 
-        /// </summary>
-        ASTERISK = 42,
-        /// <summary>
-        /// 
-        /// </summary>
-        PLUS = 43,
-        /// <summary>
-        /// 
-        /// </summary>
-        COMMA = 44,
-        /// <summary>
-        /// 
-        /// </summary>
-        MINUS = 45,
-        /// <summary>
-        /// 
-        /// </summary>
-        PERIOD = 46,
-        /// <summary>
-        /// 
-        /// </summary>
-        SLASH = 47,
-        /// <summary>
-        /// 
-        /// </summary>
-        _0 = 48,
-        /// <summary>
-        /// 
-        /// </summary>
-        _1 = 49,
-        /// <summary>
-        /// 
-        /// </summary>
-        _2 = 50,
-        /// <summary>
-        /// 
-        /// </summary>
-        _3 = 51,
-        /// <summary>
-        /// 
-        /// </summary>
-        _4 = 52,
-        /// <summary>
-        /// 
-        /// </summary>
-        _5 = 53,
-        /// <summary>
-        /// 
-        /// </summary>
-        _6 = 54,
-        /// <summary>
-        /// 
-        /// </summary>
-        _7 = 55,
-        /// <summary>
-        /// 
-        /// </summary>
-        _8 = 56,
-        /// <summary>
-        /// 
-        /// </summary>
-        _9 = 57,
-        /// <summary>
-        /// 
-        /// </summary>
-        COLON = 58,
-        /// <summary>
-        /// 
-        /// </summary>
-        SEMICOLON = 59,
-        /// <summary>
-        /// 
-        /// </summary>
-        LESS = 60,
-        /// <summary>
-        /// 
-        /// </summary>
-        EQUALS = 61,
-        /// <summary>
-        /// 
-        /// </summary>
-        GREATER = 62,
-        /// <summary>
-        /// 
-        /// </summary>
-        QUESTION = 63,
-        /// <summary>
-        /// 
-        /// </summary>
-        AT = 64,
-        /* 
-               Skip uppercase letters
-             */
-        /// <summary>
-        /// 
-        /// </summary>
-        LEFTBRACKET = 91,
-        /// <summary>
-        /// 
-        /// </summary>
-        BACKSLASH = 92,
-        /// <summary>
-        /// 
-        /// </summary>
-        RIGHTBRACKET = 93,
-        /// <summary>
-        /// 
-        /// </summary>
-        CARET = 94,
-        /// <summary>
-        /// 
-        /// </summary>
-        UNDERSCORE = 95,
-        /// <summary>
-        /// 
-        /// </summary>
-        BACKQUOTE = 96,
-        /// <summary>
-        /// 
-        /// </summary>
-        a = 97,
-        /// <summary>
-        /// 
-        /// </summary>
-        b = 98,
-        /// <summary>
-        /// 
-        /// </summary>
-        c = 99,
-        /// <summary>
-        /// 
-        /// </summary>
-        d = 100,
-        /// <summary>
-        /// 
-        /// </summary>
-        e = 101,
-        /// <summary>
-        /// 
-        /// </summary>
-        f = 102,
-        /// <summary>
-        /// 
-        /// </summary>
-        g = 103,
-        /// <summary>
-        /// 
-        /// </summary>
-        h = 104,
-        /// <summary>
-        /// 
-        /// </summary>
-        i = 105,
-        /// <summary>
-        /// 
-        /// </summary>
-        j = 106,
-        /// <summary>
-        /// 
-        /// </summary>
-        k = 107,
-        /// <summary>
-        /// 
-        /// </summary>
-        l = 108,
-        /// <summary>
-        /// 
-        /// </summary>
-        m = 109,
-        /// <summary>
-        /// 
-        /// </summary>
-        n = 110,
-        /// <summary>
-        /// 
-        /// </summary>
-        o = 111,
-        /// <summary>
-        /// 
-        /// </summary>
-        p = 112,
-        /// <summary>
-        /// 
-        /// </summary>
-        q = 113,
-        /// <summary>
-        /// 
-        /// </summary>
-        r = 114,
-        /// <summary>
-        /// 
-        /// </summary>
-        s = 115,
-        /// <summary>
-        /// 
-        /// </summary>
-        t = 116,
-        /// <summary>
-        /// 
-        /// </summary>
-        u = 117,
-        /// <summary>
-        /// 
-        /// </summary>
-        v = 118,
-        /// <summary>
-        /// 
-        /// </summary>
-        w = 119,
-        /// <summary>
-        /// 
-        /// </summary>
-        x = 120,
-        /// <summary>
-        /// 
-        /// </summary>
-        y = 121,
-        /// <summary>
-        /// 
-        /// </summary>
-        z = 122,
-        /// <summary>
-        /// 
-        /// </summary>
-        DELETE = 127,
-        /* End of ASCII mapped keysyms */
-
-        /* International keyboard syms */
-        /// <summary>
-        /// 0xA0
-        /// </summary>
-        WORLD_0 = 160,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_1 = 161,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_2 = 162,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_3 = 163,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_4 = 164,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_5 = 165,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_6 = 166,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_7 = 167,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_8 = 168,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_9 = 169,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_10 = 170,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_11 = 171,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_12 = 172,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_13 = 173,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_14 = 174,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_15 = 175,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_16 = 176,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_17 = 177,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_18 = 178,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_19 = 179,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_20 = 180,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_21 = 181,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_22 = 182,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_23 = 183,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_24 = 184,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_25 = 185,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_26 = 186,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_27 = 187,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_28 = 188,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_29 = 189,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_30 = 190,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_31 = 191,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_32 = 192,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_33 = 193,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_34 = 194,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_35 = 195,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_36 = 196,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_37 = 197,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_38 = 198,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_39 = 199,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_40 = 200,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_41 = 201,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_42 = 202,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_43 = 203,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_44 = 204,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_45 = 205,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_46 = 206,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_47 = 207,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_48 = 208,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_49 = 209,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_50 = 210,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_51 = 211,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_52 = 212,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_53 = 213,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_54 = 214,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_55 = 215,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_56 = 216,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_57 = 217,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_58 = 218,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_59 = 219,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_60 = 220,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_61 = 221,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_62 = 222,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_63 = 223,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_64 = 224,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_65 = 225,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_66 = 226,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_67 = 227,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_68 = 228,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_69 = 229,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_70 = 230,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_71 = 231,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_72 = 232,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_73 = 233,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_74 = 234,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_75 = 235,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_76 = 236,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_77 = 237,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_78 = 238,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_79 = 239,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_80 = 240,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_81 = 241,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_82 = 242,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_83 = 243,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_84 = 244,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_85 = 245,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_86 = 246,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_87 = 247,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_88 = 248,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_89 = 249,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_90 = 250,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_91 = 251,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_92 = 252,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_93 = 253,
-        /// <summary>
-        /// 
-        /// </summary>
-        WORLD_94 = 254,
-        /// <summary>
-        /// 0xFF
-        /// </summary>
-        WORLD_95 = 255,
-
-        /* Numeric keypad */
-        /// <summary>
-        /// 
-        /// </summary>
-        KP0 = 256,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP1 = 257,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP2 = 258,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP3 = 259,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP4 = 260,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP5 = 261,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP6 = 262,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP7 = 263,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP8 = 264,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP9 = 265,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_PERIOD = 266,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_DIVIDE = 267,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_MULTIPLY = 268,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_MINUS = 269,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_PLUS = 270,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_ENTER = 271,
-        /// <summary>
-        /// 
-        /// </summary>
-        KP_EQUALS = 272,
-
-        /* Arrows + Home/End pad */
-        /// <summary>
-        /// 
-        /// </summary>
-        UP = 273,
-        /// <summary>
-        /// 
-        /// </summary>
-        DOWN = 274,
-        /// <summary>
-        /// 
-        /// </summary>
-        RIGHT = 275,
-        /// <summary>
-        /// 
-        /// </summary>
-        LEFT = 276,
-        /// <summary>
-        /// 
-        /// </summary>
-        INSERT = 277,
-        /// <summary>
-        /// 
-        /// </summary>
-        HOME = 278,
-        /// <summary>
-        /// 
-        /// </summary>
-        END = 279,
-        /// <summary>
-        /// 
-        /// </summary>
-        PAGEUP = 280,
-        /// <summary>
-        /// 
-        /// </summary>
-        PAGEDOWN = 281,
-
-        /* Function keys */
-        /// <summary>
-        /// 
-        /// </summary>
-        F1 = 282,
-        /// <summary>
-        /// 
-        /// </summary>
-        F2 = 283,
-        /// <summary>
-        /// 
-        /// </summary>
-        F3 = 284,
-        /// <summary>
-        /// 
-        /// </summary>
-        F4 = 285,
-        /// <summary>
-        /// 
-        /// </summary>
-        F5 = 286,
-        /// <summary>
-        /// 
-        /// </summary>
-        F6 = 287,
-        /// <summary>
-        /// 
-        /// </summary>
-        F7 = 288,
-        /// <summary>
-        /// 
-        /// </summary>
-        F8 = 289,
-        /// <summary>
-        /// 
-        /// </summary>
-        F9 = 290,
-        /// <summary>
-        /// 
-        /// </summary>
-        F10 = 291,
-        /// <summary>
-        /// 
-        /// </summary>
-        F11 = 292,
-        /// <summary>
-        /// 
-        /// </summary>
-        F12 = 293,
-        /// <summary>
-        /// 
-        /// </summary>
-        F13 = 294,
-        /// <summary>
-        /// 
-        /// </summary>
-        F14 = 295,
-        /// <summary>
-        /// 
-        /// </summary>
-        F15 = 296,
-
-        /* Key state modifier keys */
-        /// <summary>
-        /// 
-        /// </summary>
-        NUMLOCK = 300,
-        /// <summary>
-        /// 
-        /// </summary>
-        CAPSLOCK = 301,
-        /// <summary>
-        /// 
-        /// </summary>
-        SCROLLOCK = 302,
-        /// <summary>
-        /// 
-        /// </summary>
-        RSHIFT = 303,
-        /// <summary>
-        /// 
-        /// </summary>
-        LSHIFT = 304,
-        /// <summary>
-        /// 
-        /// </summary>
-        RCTRL = 305,
-        /// <summary>
-        /// 
-        /// </summary>
-        LCTRL = 306,
-        /// <summary>
-        /// 
-        /// </summary>
-        RALT = 307,
-        /// <summary>
-        /// 
-        /// </summary>
-        LALT = 308,
-        /// <summary>
-        /// 
-        /// </summary>
-        RMETA = 309,
-        /// <summary>
-        /// 
-        /// </summary>
-        LMETA = 310,
-        /// <summary>
-        /// Left "Windows" key
-        /// </summary>
-        LSUPER = 311,
-        /// <summary>
-        /// Right "Windows" key
-        /// </summary>
-        RSUPER = 312,
-        /// <summary>
-        /// "Alt Gr" key
-        /// </summary>
-        MODE = 313,
-        /// <summary>
-        /// Multi-key compose key
-        /// </summary>
-        COMPOSE = 314,
-
-        // Miscellaneous function keys
-        /// <summary>
-        /// 
-        /// </summary>
-        HELP = 315,
-        /// <summary>
-        /// 
-        /// </summary>
-        PRINT = 316,
-        /// <summary>
-        /// 
-        /// </summary>
-        SYSREQ = 317,
-        /// <summary>
-        /// 
-        /// </summary>
-        BREAK = 318,
-        /// <summary>
-        /// 
-        /// </summary>
-        MENU = 319,
-        /// <summary>
-        /// Power Macintosh power key
-        /// </summary>
-        POWER = 320,
-        /// <summary>
-        /// Some european keyboards
-        /// </summary>
-        EURO = 321,
-        /// <summary>
-        /// Atari keyboard has Undo
-        /// </summary>
-        UNDO = 322,
-
-        // Add any other keys here
-        /// <summary>
-        /// 
-        /// </summary>
-        LAST
 
     }
 }

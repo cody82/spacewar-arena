@@ -15,7 +15,6 @@ void main()
 	vec4 v=vec4(gl_Vertex.x * Aspect, gl_Vertex.y, 1.0, 0.0);
 	gl_TexCoord[0] = v * gl_ModelViewMatrixInverse;
 
-
 }
 
 fragmentshader:

@@ -4995,27 +4995,27 @@ namespace Cheetah
             Color = NormalColor;
         }
 
-        public override void OnKeyDown(Key key)
+        public override void OnKeyDown(global::OpenTK.Input.Key key)
 		{
             base.OnKeyDown(key);
 
             if (ReadOnly)
                 return;
 
-			if(key.IsPrintable)
+			/*if(key.IsPrintable)
 			{
 				Append(key.GetString());
-			}
-			
-			else if(key==KeyCode.BACKSPACE)
+			}*/
+
+            else if (key == global::OpenTK.Input.Key.BackSpace)
 			{
 				RemoveChar(-1,-1);
 			}
-			else if(key==KeyCode.PAGEUP)
+            else if (key == global::OpenTK.Input.Key.PageUp)
 			{
 				Scroll(-5);
 			}
-			else if(key==KeyCode.PAGEDOWN)
+            else if (key == global::OpenTK.Input.Key.PageDown)
 			{
 				Scroll(5);
 			}
@@ -5871,11 +5871,11 @@ namespace Cheetah
         {
         }
 
-        public virtual void OnChildKeyDown(Window w, Key key)
+        public virtual void OnChildKeyDown(Window w, global::OpenTK.Input.Key key)
         {
         }
 
-        public virtual void OnKeyDown(Key key)
+        public virtual void OnKeyDown(global::OpenTK.Input.Key key)
 		{
             if (Parent != null)
             {
@@ -6429,9 +6429,9 @@ namespace Cheetah
 			}
 		}
 
-		public void OnKeyDown(Key key)
+        public void OnKeyDown(global::OpenTK.Input.Key key)
 		{
-			if(key==KeyCode.BACKQUOTE)
+            if (key == global::OpenTK.Input.Key.Quote)
 			{
 				Console.enabled=!Console.enabled;
 			}

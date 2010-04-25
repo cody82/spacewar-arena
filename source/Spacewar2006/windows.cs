@@ -22,6 +22,8 @@ using SpaceWar2006.Effects;
 using SpaceWar2006.Planets;
 using Cheetah;
 
+using OpenTK.Input;
+
 namespace SpaceWar2006.Windows
 {
 
@@ -511,7 +513,7 @@ namespace SpaceWar2006.Windows
         public void OnConfigButtonPressed(Button source,int button, float x, float y)
         {
             //Show(new ConfigMenu());
-            Show(new TabWindow(new Type[]{typeof(ConfigMenu),typeof(JoystickConfigMenu)},0));
+            //Show(new TabWindow(new Type[]{typeof(ConfigMenu),typeof(JoystickConfigMenu)},0));
         }
         public void OnExitButtonPressed(Button source,int button, float x, float y)
         {
@@ -806,7 +808,7 @@ namespace SpaceWar2006.Windows
         TextBox BotCount;
         ListBox Map;
     }
-
+    /*
     public class JoystickConfigMenu : Window
     {
         public JoystickConfigMenu()
@@ -1079,7 +1081,7 @@ namespace SpaceWar2006.Windows
 
         Button Selected;
     }
-
+    */
     public class ConfigMenu : Window
     {
         public ConfigMenu()
@@ -1118,6 +1120,7 @@ namespace SpaceWar2006.Windows
         public JoinGameMenu()
             : base(100, 400, 420, 300, new Layout(3, 2))
         {
+
             Color = new Color4f(0.0f, 0.0f, 0.0f, 1.0f);
             Center();
             Add(Host = new TextBox("localhost", false), 0, 0);
@@ -1132,7 +1135,7 @@ namespace SpaceWar2006.Windows
             Layout.Update(this.Size);
             Layout.GetCell(0, 1).Span.X = 3;
 
-            Scanner = new LanScanner();
+            Scanner = new NewLanScanner();
             Scanner.Answer += OnServerAnswer;
         }
 
@@ -1167,7 +1170,7 @@ namespace SpaceWar2006.Windows
             }
         }
     */
-        protected void OnServerAnswer(Cheetah.ISerializable p, IPEndPoint ep)
+        protected void OnServerAnswer(byte[] bla, IPEndPoint ep)
         {
             throw new Exception("NYI");//HACK
             /*
@@ -1191,7 +1194,7 @@ namespace SpaceWar2006.Windows
         }
 
         TextBox Host;
-        LanScanner Scanner;
+        NewLanScanner Scanner;
         ListBox ServerList;
         List<ListBoxItem> Servers = new List<ListBoxItem>();
         //int Count = 0;

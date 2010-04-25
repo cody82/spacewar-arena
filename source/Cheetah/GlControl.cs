@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Cheetah
 {
-    public partial class GlControl : OpenTK.GLControl, IUserInterface
+    public partial class GlControl : global::OpenTK.GLControl, IUserInterface
     {
         class MouseControl : IControl
         {
@@ -220,7 +220,7 @@ namespace Cheetah
                 m.Buttons[n] = false;
         }
 
-        KeyCode Translate(KeyEventArgs e)
+        /*KeyCode Translate(KeyEventArgs e)
         {
             if(e.KeyValue>=(int)Keys.A && e.KeyValue<=(int)Keys.Z)
             {
@@ -263,24 +263,24 @@ namespace Cheetah
                     System.Console.WriteLine("unknown key: " + e.KeyCode);
                     return KeyCode.WORLD_95;
             }
-        }
+        }*/
 
         private void GlControl_KeyDown(object sender, KeyEventArgs e)
         {
 
-            KeyCode kc = Translate(e);
+            /*KeyCode kc = Translate(e);
             System.Console.WriteLine(e.KeyValue + " " + e.KeyCode + "=>" + (int)kc + " " + kc);
 
             k.Keys[(int)kc] = true;
 
             Root.Instance.ClientOnKeyDown(new Key(kc, KeyModifier.NONE));
-
+            */
 
         }
 
         private void GlControl_KeyUp(object sender, KeyEventArgs e)
         {
-            k.Keys[(int)Translate(e)] = false;
+            //k.Keys[(int)Translate(e)] = false;
         }
 
         private void GlControl_SizeChanged(object sender, EventArgs e)

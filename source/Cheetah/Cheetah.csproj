@@ -92,6 +92,7 @@
     <Compile Include="Objects.cs" />
     <Compile Include="Ogg.cs" />
     <Compile Include="OpenGL.cs" />
+    <Compile Include="OpenTK.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="Quaternion.cs" />
     <Compile Include="SupCom.cs" />
@@ -153,10 +154,6 @@
     <Reference Include="Tao.DevIl, Version=1.6.8.3, Culture=neutral, PublicKeyToken=7ec4053013524957">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Tao.DevIl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -225,14 +222,6 @@
     </Content>
     <Content Include="..\libs\native\ode.dll">
       <Link>ode.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\libs\native\SDL.dll">
-      <Link>SDL.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\libs\native\SDL_image.dll">
-      <Link>SDL_image.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

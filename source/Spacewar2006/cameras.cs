@@ -13,6 +13,7 @@ using System.Drawing;
 
 using Cheetah;
 
+using OpenTK.Input;
 
 namespace SpaceWar2006.Cameras
 {
@@ -85,9 +86,9 @@ namespace SpaceWar2006.Cameras
             {
                 float camheight = 1000 + 2 * Target.SmoothSpeed.GetMagnitude();
                 campos = new Vector3(1000, 0, 1000);
-                if (Root.Instance.UserInterface.Keyboard.GetButtonState(' '))
+                if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Space))
                     camheight *= 4;
-                if (Root.Instance.UserInterface.Keyboard.GetButtonState('z'))
+                if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Z))
                 {
                     camheight /= 5;
                     campos /= 3;

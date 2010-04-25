@@ -15,6 +15,8 @@ using System.Runtime.Serialization.Formatters.Soap;
 using SpaceWar2006.GameObjects;
 using Cheetah;
 
+using OpenTK.Input;
+
 namespace SpaceWar2006.Controls
 {
 
@@ -229,23 +231,23 @@ namespace SpaceWar2006.Controls
 
         }
 
-        public ControlInfo Strafe = new ControlInfo(ControlID.Keyboard, 'a', 'd', 1, false);
+        public ControlInfo Strafe = new ControlInfo(ControlID.Keyboard, (int)Key.A, (int)Key.D, 1, false);
         public ControlInfo Fire = new ControlInfo(ControlID.Mouse, 1);
-        public ControlInfo Thrust = new ControlInfo(ControlID.Keyboard, 'w', 's', 1, false);
+        public ControlInfo Thrust = new ControlInfo(ControlID.Keyboard, (int)Key.W, (int)Key.S, 1, false);
         public ControlInfo Select = new ControlInfo(ControlID.Mouse, 3);
         public ControlInfo FireSecondary = new ControlInfo(ControlID.Mouse, 2);
         public ControlInfo Rotate = new ControlInfo(ControlID.Joystick0, 0, 1, false, 0);
         public ControlInfo[] Cycle = new ControlInfo[]{
-            new ControlInfo(ControlID.Keyboard, '1'),
-            new ControlInfo(ControlID.Keyboard, '2'),
-            new ControlInfo(ControlID.Keyboard, '3'),
-            new ControlInfo(ControlID.Keyboard, '4'),
-            new ControlInfo(ControlID.Keyboard, '5'),
-            new ControlInfo(ControlID.Keyboard, '6'),
-            new ControlInfo(ControlID.Keyboard, '7'),
-            new ControlInfo(ControlID.Keyboard, '8'),
-            new ControlInfo(ControlID.Keyboard, '9'),
-            new ControlInfo(ControlID.Keyboard, '0')
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number1),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number2),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number3),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number4),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number5),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number6),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number7),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number8),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number9),
+            new ControlInfo(ControlID.Keyboard, (int)Key.Number0)
         };
         public ControlInfo NextWeapon = new ControlInfo(ControlID.Mouse, 4);
         public ControlInfo PreviousWeapon = new ControlInfo(ControlID.Mouse, 5);

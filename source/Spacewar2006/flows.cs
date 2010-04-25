@@ -23,6 +23,7 @@ using SpaceWar2006.Ships;
 
 using Cheetah;
 
+using OpenTK.Input;
 
 namespace SpaceWar2006.Flows
 {
@@ -602,12 +603,12 @@ namespace SpaceWar2006.Flows
 
         bool Rotate()
         {
-            return Root.Instance.UserInterface.Keyboard.GetButtonState('r') || Root.Instance.UserInterface.Keyboard.GetButtonState('l')
+            return Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.R) || Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Number1)
                 ||Root.Instance.UserInterface.Mouse.GetButtonState(0);
         }
         bool Distance()
         {
-            return Root.Instance.UserInterface.Keyboard.GetButtonState('d') || Root.Instance.UserInterface.Keyboard.GetButtonState('k')
+            return Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.D) || Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.K)
                 || Root.Instance.UserInterface.Mouse.GetButtonState(1);
         }
 
@@ -616,7 +617,7 @@ namespace SpaceWar2006.Flows
             switch (Selection)
             {
                 case Objects.None:
-                    if (Root.Instance.UserInterface.Keyboard.GetButtonState('r') || Root.Instance.UserInterface.Keyboard.GetButtonState('d'))
+                    if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.R) || Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.D))
                     {
                         return c;
                     }
@@ -767,7 +768,7 @@ namespace SpaceWar2006.Flows
 
         public override void OnKeyPress(Key k)
         {
-            if (k.Code == KeyCode.c)
+            if (k == global::OpenTK.Input.Key.C)
             {
                 CycleCamera();
             }
@@ -988,7 +989,7 @@ namespace SpaceWar2006.Flows
                 float x = r.Size.X / 2 - f.Width / 2.0f * s.Length;
                 float y = r.Size.Y / 2 - f.size / 2.0f;
                 f.Draw(r, s, x, y);
-                r.Flip();
+                Root.Instance.UserInterface.Flip();
             }
         }
         public void PreCache()
@@ -1041,7 +1042,7 @@ namespace SpaceWar2006.Flows
         {
             base.OnKeyPress(k);
 
-            if (k.Code == KeyCode.TAB)
+            if (k == global::OpenTK.Input.Key.Tab)
             {
                 /*if (InfoWindow != null)
                 {
@@ -1054,11 +1055,11 @@ namespace SpaceWar2006.Flows
                         ToggleGameMenu();
                 }*/
             }
-            else if (k.Code == KeyCode.ESCAPE)
+            else if (k == global::OpenTK.Input.Key.Escape)
             {
                 ToggleGameMenu();
             }
-            else if (Spectate && (k.Code == KeyCode.SPACE))
+            else if (Spectate && (k == global::OpenTK.Input.Key.Space))
             {
                 IList<SpaceShip> l = Root.Instance.Scene.FindEntitiesByType<SpaceShip>();
                 SpaceShip s = MainCamera.Target as SpaceShip;
@@ -1076,11 +1077,11 @@ namespace SpaceWar2006.Flows
             else if (Spectate && Root.Instance.Player != null)
             {
                 float f = Root.Instance.Player.CurrentTime;
-                if (k.Code == KeyCode.LEFT)
+                if (k == global::OpenTK.Input.Key.Left)
                 {
                     Root.Instance.Player.GoTo(f - 10);
                 }
-                else if (k.Code == KeyCode.RIGHT)
+                else if (k == global::OpenTK.Input.Key.Right)
                 {
                     Root.Instance.Player.GoTo(f + 10);
                 }

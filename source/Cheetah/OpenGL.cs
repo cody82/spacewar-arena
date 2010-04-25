@@ -11,8 +11,6 @@ using System.Threading;
 
 using System.Text;
 
-//using Tao.Cg;
-using Tao.Sdl;
 
 namespace Cheetah
 {
@@ -719,6 +717,8 @@ namespace Cheetah
                 l2 = l3[0];
                 string log = str.ToString();
 
+                //string log = OpenTK.Graphics.GL.GetProgramInfoLog(id);
+
                 System.Console.WriteLine(log);
                 switch (type)
                 {
@@ -802,6 +802,8 @@ namespace Cheetah
                 Gl.glGetInfoLogARB(p, l, l3, str);
                 l2 = l3[0];
                 string log = str.ToString();
+
+                //string log = OpenTK.Graphics.GL.GetProgramInfoLog(p);
 
                 System.Console.WriteLine(log);
                 throw new Exception("cant link program");
@@ -1440,7 +1442,6 @@ namespace Cheetah
 		public OpenGL(int _width, int _height)
 		{
             Root.Instance.UserInterface.Renderer = this;
-
 
             System.Console.WriteLine("OpenGL Version: " + Gl.glGetString(Gl.GL_VERSION));
             System.Console.WriteLine("OpenGL Vendor: " + Gl.glGetString(Gl.GL_VENDOR));
@@ -2390,8 +2391,8 @@ namespace Cheetah
 
             if (SwapFunc != null)
                 SwapFunc();
-            else
-			    Sdl.SDL_GL_SwapBuffers();
+            //else
+			//    Sdl.SDL_GL_SwapBuffers();
 			if (WireFrameMode)
 				Clear(0, 0, 0, 1);
 		}

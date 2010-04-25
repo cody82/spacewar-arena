@@ -20,6 +20,10 @@ namespace Cheetah
             base.Dispose(disposing);
         }
 
+        public void Flip()
+        {
+        }
+
         #region Component Designer generated code
 
         /// <summary> 
