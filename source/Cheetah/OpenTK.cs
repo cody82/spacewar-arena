@@ -201,7 +201,7 @@ namespace Cheetah.OpenTK
         OpenGL gl;
         Keyboard kb;
         Mouse m;
-        DummyAudio audio;
+        IAudio audio;
 
         #region IUserInterface Members
 
@@ -212,7 +212,11 @@ namespace Cheetah.OpenTK
             gl = new OpenGL(width, height);
             m = new Mouse(window.Mouse);
             kb = new Keyboard(window.Keyboard);
-            this.audio = new DummyAudio();
+            if (audio)
+                this.audio = new FmodAudio();
+            else
+                this.audio = new DummyAudio();
+
             window.Visible = true;
         }
 
@@ -291,6 +295,7 @@ namespace Cheetah.OpenTK
 
         public void Dispose()
         {
+            audio.Dispose();
             window.Close();
             window.Dispose();
         }
