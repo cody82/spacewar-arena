@@ -206,8 +206,15 @@ namespace Cheetah
         #endregion
     }
 
-    public class Channel
+    public class Channel : IDisposable
     {
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+        }
+
+        #endregion
     }
     public class Sound : IResource
     {
@@ -219,7 +226,7 @@ namespace Cheetah
 
         #region IDisposable Members
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             
         }

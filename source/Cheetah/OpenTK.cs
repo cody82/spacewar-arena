@@ -15,6 +15,133 @@ using OpenTK.Audio;
 
 namespace Cheetah.OpenTK
 {
+
+    public class OpenTkSound : Sound
+    {
+        internal int id=-1;
+        public OpenTkSound(Stream s)
+            : base(null)
+        {
+            AudioReader sound;
+            try
+            {
+                sound = new AudioReader(s);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            AL.GenBuffers(1, out id);
+
+
+            AL.BufferData(id, sound.ReadToEnd());
+            //sound.Dispose();
+            if (AL.GetError() != ALError.NoError)
+            {
+                throw new Exception();
+            }
+        }
+
+        public override void Dispose()
+        {
+            if(id!=-1)
+                AL.DeleteBuffer(id);
+        }
+    }
+
+    public class OpenTkChannel : Channel
+    {
+        public OpenTkChannel(OpenTkSound sound, Vector3 pos, bool loop)
+        {
+            if (sound.id == -1)
+                return;
+
+            AL.GenSources(1, out id);
+
+            AL.Source(id, ALSourcei.Buffer, sound.id); // attach the buffer to a source
+
+            AL.SourcePlay(id); // start playback
+            AL.Source(id, ALSourceb.Looping, loop); // source loops infinitely
+        }
+
+        public override void Dispose()
+        {
+            if(id!=-1)
+                AL.DeleteSource(id);
+        }
+
+        internal int id=-1;
+    }
+
+    public class OpenTkAudio : IAudio
+    {
+        AudioContext context;
+
+        public OpenTkAudio()
+        {
+            context = new AudioContext();
+        }
+
+        #region IAudio Members
+
+        public Sound Load(Stream s)
+        {
+            return new OpenTkSound(s);
+        }
+
+        public Channel Play(Sound sound, Vector3 pos, bool loop)
+        {
+            OpenTkChannel c = new OpenTkChannel((OpenTkSound)sound,pos,loop);
+            return c;
+        }
+
+        public bool IsPlaying(Channel channel)
+        {
+            int id = ((OpenTkChannel)channel).id;
+            if (id != -1)
+                return AL.GetSourceState(id) == ALSourceState.Playing;
+            else return false;
+        }
+
+        public void SetListener(Vector3 pos, Vector3 forward, Vector3 up)
+        {
+        }
+
+        public void SetPosition(Channel channel, Vector3 pos)
+        {
+        }
+
+        public void Stop(Channel channel)
+        {
+            int id = ((OpenTkChannel)channel).id;
+            if(id!=-1)
+                AL.SourceStop(((OpenTkChannel)channel).id);
+        }
+
+        public void Free(Sound sound)
+        {
+            sound.Dispose();
+        }
+
+        #endregion
+
+        #region ITickable Members
+
+        public void Tick(float dtime)
+        {
+            context.Process();
+        }
+
+        #endregion
+
+        public void Dispose()
+        {
+            context.Dispose();
+        }
+    }
+
     public class Keyboard : IControl
     {
         KeyboardDevice dev;
@@ -48,66 +175,6 @@ namespace Cheetah.OpenTK
         public bool GetButtonState(int n)
         {
             return keys[n];
-        }
-
-        #endregion
-    }
-
-    public class Audio : IAudio
-    {
-        #region IAudio Members
-
-        public Sound Load(Stream s)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Channel Play(Sound sound, Vector3 pos, bool loop)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetListener(Vector3 pos, Vector3 forward, Vector3 up)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetPosition(Channel channel, Vector3 pos)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Stop(Channel channel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Free(Sound sound)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsPlaying(Channel channel)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region ITickable Members
-
-        public void Tick(float dtime)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
@@ -214,6 +281,7 @@ namespace Cheetah.OpenTK
             kb = new Keyboard(window.Keyboard);
             if (audio)
                 this.audio = new FmodAudio();
+                //this.audio = new OpenTkAudio();
             else
                 this.audio = new DummyAudio();
 
