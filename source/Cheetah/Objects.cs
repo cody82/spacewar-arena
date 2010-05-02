@@ -4254,6 +4254,12 @@ using Cheetah;");
         }
     }
 
+    public class InputEntity : Entity
+    {
+        public InputEntity()
+        {
+        }
+    }
 
     public class PlayerEntity : Entity
     {
@@ -4318,82 +4324,6 @@ using Cheetah;");
         public short RTT;
     }
 
-    /*
-    public class Compiler
-    {
-        public Compiler()
-        {
-            CsCompiler=new CSharpCodeProvider();
-            CodeCompiler=CsCompiler.CreateCompiler();
-            CompilerParams = new CompilerParameters();
-
-            CompilerParams.OutputAssembly = "CSharpFriends.dll";
-            //compilerParams.ReferencedAssemblies.Add("system.dll");
-            CompilerParams.GenerateExecutable = false;
-            //CompilerParams.GenerateInMemory = true;
-
-            //iCodeCompiler.CompileAssemblyFromFile(compilerParams,
-       // "CSharpFriends.cs");
-
-            // Load the generated assembly into the ApplicationDomain 
-           // Assembly asm = Assembly.LoadFrom("CSharpFriends.dll");
-          //  Type t = asm.GetType("CSharpFriendsRocks.CSharpFriends");
-
-
-            
-            //BindingFlags bflags = BindingFlags.DeclaredOnly | BindingFlags.Public
-            //            | BindingFlags.NonPublic | BindingFlags.Instance;
-
-            //// Construct an instance of the type and invoke the member method
-            //Object obj = t.InvokeMember("HelloWorld", bflags |
-            //    BindingFlags.CreateInstance, null, null, null);
-
-            //// Call the method
-            //t.InvokeMember("HelloWorld", bflags | BindingFlags.InvokeMethod,
-            //        null, obj, null);
-            
-
-        }
-
-        public Assembly Generate(byte[] code)
-        {
-            Results=CodeCompiler.CompileAssemblyFromSource(CompilerParams, Encoding.ASCII.GetString(code));
-            if (Results.Errors.HasErrors)
-            {
-                string s = "";
-                foreach (CompilerError e in Results.Errors)
-                    s += e.ToString();
-                throw new Exception(s);
-            }
-            return Results.CompiledAssembly;
-        }
-
-        public Assembly Generate(string code)
-        {
-            Results = CodeCompiler.CompileAssemblyFromSource(CompilerParams, code);
-            if (Results.Errors.HasErrors)
-            {
-                string s = "";
-                foreach (CompilerError e in Results.Errors)
-                    s += e.ToString();
-                throw new Exception(s);
-            }
-            return Results.CompiledAssembly;
-        }
-        
-        public Assembly Generate(Stream code)
-        {
-            byte[] buffer = new byte[code.Length];
-            code.Read(buffer, 0, (int)code.Length);
-            return Generate(buffer);
-        }
-
-        CSharpCodeProvider CsCompiler;
-        ICodeCompiler CodeCompiler;
-        CompilerParameters CompilerParams;
-        CompilerResults Results;
-    }
-    */
     public class EventReplicationInfo : ISerializable
     {
         public EventReplicationInfo(DeSerializationContext context)

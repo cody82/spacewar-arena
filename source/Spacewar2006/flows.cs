@@ -1118,6 +1118,8 @@ namespace SpaceWar2006.Flows
                 Server.Start();
             }
             MainCamera = new OverviewCamera();
+            //MainCamera = new IsoCamera();
+            //MainCamera = new TopCamera();
             MainCamera.Aspect = (float)Root.Instance.UserInterface.Renderer.Size.X / (float)Root.Instance.UserInterface.Renderer.Size.Y;
             //MainCamera.View = new Viewport(0, 0, 720, 720);
             //MainCamera = new FollowCamera();

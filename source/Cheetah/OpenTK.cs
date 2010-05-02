@@ -184,13 +184,31 @@ namespace Cheetah.OpenTK
     {
         MouseDevice dev;
         bool[] buttons;
+        int wheelup;
+        int wheeldown;
 
         public Mouse(MouseDevice dev)
         {
             this.dev = dev;
             dev.ButtonDown += new EventHandler<MouseButtonEventArgs>(dev_ButtonDown);
             dev.ButtonUp += new EventHandler<MouseButtonEventArgs>(dev_ButtonUp);
+            dev.WheelChanged += new EventHandler<MouseWheelEventArgs>(dev_WheelChanged);
+            dev.Move += new EventHandler<MouseMoveEventArgs>(dev_Move);
             buttons = new bool[dev.NumberOfButtons];
+        }
+
+        void dev_Move(object sender, MouseMoveEventArgs e)
+        {
+            Root.Instance.ClientOnMouseMove(e.X, e.Y);
+
+        }
+
+        void dev_WheelChanged(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+                wheelup += e.Delta;
+            else
+                wheeldown -= e.Delta;
         }
 
         void dev_ButtonUp(object sender, MouseButtonEventArgs e)
@@ -251,9 +269,16 @@ namespace Cheetah.OpenTK
         {
             if (n == 4 || n == 5)
             {
-                //bool b = buttons[n];
-                //buttons[n] = false;
-                //return b;
+                if (n == 4 && wheelup>0)
+                {
+                    wheelup = 0;
+                    return true;
+                }
+                else if(n == 5 &&wheeldown>0)
+                {
+                    wheeldown = 0;
+                    return true;
+                }
                 return false;
             }
             return buttons[n-1];

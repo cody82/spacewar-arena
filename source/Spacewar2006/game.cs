@@ -137,6 +137,17 @@ namespace SpaceWar2006.GameObjects
     }
 
 
+    public class SpaceShipInputEntity : InputEntity
+    {
+        public SpaceShipInputEntity()
+        {
+        }
+
+
+        SpaceWar2006.Controls.SpaceShipControlInput Input;
+        SpaceShip Target;
+    }
+
     public class Player : PlayerEntity
     {
         public Player(short clientid, string name)

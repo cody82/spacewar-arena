@@ -101,7 +101,8 @@ namespace SpaceWar2006.Controls
         public bool Fire1;
         public bool Fire2;
         public bool Select;
-        public bool[] CycleWeapon = new bool[10];
+        //public bool[] CycleWeapon = new bool[10];
+        public int CycleWeapon=-1;
         public bool NextWeapon;
         public bool PreviousWeapon;
     }
@@ -187,9 +188,13 @@ namespace SpaceWar2006.Controls
             input.Strafe = Strafe.GetAxisPosition();
             input.Thrust = Thrust.GetAxisPosition();
             input.Select = Select.GetButtonState();
-            input.CycleWeapon = new bool[Cycle.Length];
             for (int i = 0; i < Cycle.Length; ++i)
-                input.CycleWeapon[i] = Cycle[i].GetButtonState();
+            {
+                if(Cycle[i].GetButtonState())
+                {
+                    input.CycleWeapon = i;
+                }
+            }
             input.NextWeapon = NextWeapon.GetButtonState();
             input.PreviousWeapon = PreviousWeapon.GetButtonState();
             return input;
@@ -305,11 +310,11 @@ namespace SpaceWar2006.Controls
                 {
                     Target.Computer.TargetNearestToCursor(input.LookAt);
                 }
-                for (int i = 0; i < Target.Slots.Length; ++i)
+                //for (int i = 0; i < Target.Slots.Length; ++i)
                 {
-                    if (input.CycleWeapon[i])
+                    if (input.CycleWeapon >= 0 && input.CycleWeapon < Target.Slots.Length)
                     {
-                        Target.CycleWeapon(i);
+                        Target.CycleWeapon(input.CycleWeapon);
                     }
                 }
                 //float cos = Target.GetCosDirection(input.LookAt);

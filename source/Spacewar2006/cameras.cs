@@ -61,6 +61,50 @@ namespace SpaceWar2006.Cameras
         public Node Target;
     }
 
+    public class TopCamera : Camera
+    {
+        public TopCamera()
+        {
+            Fov = 45;
+        }
+
+        public override void Tick(float dtime)
+        {
+            base.Tick(dtime);
+
+            if(Target!=null)
+            {
+                Position = Target.AbsolutePosition + RelativePosition+Target.Direction*300+Target.Speed;
+                LookAt(Target.AbsolutePosition + Target.Direction*300 + Target.Speed);
+            }
+        }
+
+        Vector3 RelativePosition = new Vector3(0,2500,1);
+        public Node Target;
+    }
+
+    public class IsoCamera : Camera
+    {
+        public IsoCamera()
+        {
+            Fov = 45;
+        }
+
+        public override void Tick(float dtime)
+        {
+            base.Tick(dtime);
+
+            if(Target!=null)
+            {
+                Position = Target.AbsolutePosition + RelativePosition;
+                LookAt(Target.AbsolutePosition);
+            }
+        }
+
+        Vector3 RelativePosition = new Vector3(1000,1500,1000);
+        public Node Target;
+    }
+
     public class OverviewCamera : Camera
     {
         public OverviewCamera()
@@ -84,8 +128,8 @@ namespace SpaceWar2006.Cameras
             //}
             else
             {
-                float camheight = 1000 + 2 * Target.SmoothSpeed.GetMagnitude();
-                campos = new Vector3(1000, 0, 1000);
+                float camheight = 1500 + 2 * Target.SmoothSpeed.GetMagnitude();
+                campos = new Vector3(0, 0, 800);
                 if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Space))
                     camheight *= 4;
                 if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Z))
