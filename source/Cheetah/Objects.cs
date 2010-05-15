@@ -6541,8 +6541,10 @@ using Cheetah;");
 
         public void ServerOnDisconnect(short clientid, string name, IPEndPoint client)
         {
-            CurrentFlow.OnLeave(clientid, name);
-            Scene.KillEntitiesOfClient(clientid);
+            if(CurrentFlow!=null)
+                CurrentFlow.OnLeave(clientid, name);
+            if(Scene!=null)
+                Scene.KillEntitiesOfClient(clientid);
         }
 
         public Thread ServerConsoleThread;

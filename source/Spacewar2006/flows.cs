@@ -1088,7 +1088,7 @@ namespace SpaceWar2006.Flows
             }
         }
 
-        Sound Music = Root.Instance.ResourceManager.LoadSound("battle12.mp3");
+        Sound Music;// = Root.Instance.ResourceManager.LoadSound("battle12.mp3");
         Channel MusicChannel;
 
         public override void Start()
@@ -1125,7 +1125,8 @@ namespace SpaceWar2006.Flows
             //MainCamera = new FollowCamera();
             Root.Instance.LocalObjects.Add(MainCamera);
 
-            MusicChannel = MainCamera.PlaySound(Music, true);
+            if(Music!=null)
+                MusicChannel = MainCamera.PlaySound(Music, true);
 
             //FlyByCamera = new AdvancedCamera(CameraMode.FlyBy, null, 1000);
             //FlyByCamera.View = new Viewport(720, 0, 720, 720);
@@ -1379,7 +1380,7 @@ namespace SpaceWar2006.Flows
 
             Log.Tick(dtime);
 
-            if (MusicChannel != null)
+            if (MusicChannel != null && Music!=null)
             {
                 if (!Root.Instance.UserInterface.Audio.IsPlaying(MusicChannel))
                 {

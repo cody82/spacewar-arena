@@ -871,10 +871,6 @@ namespace Spacewar2006.Forms
             {
                 ServerList.Items.Clear();
                 InternetScanner = new InternetScanner(OnServerAnswer);
-                if (!InternetScanner.Connected)
-                {
-                    MessageBox.Show("Cant get internet server list.", "<°)))><", MessageBoxButtons.OK);
-                }
                 /*foreach (KeyValuePair<IPEndPoint, ISerializable> kv in InternetScanner.Servers)
                 {
                 }*/

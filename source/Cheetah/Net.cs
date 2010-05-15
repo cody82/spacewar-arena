@@ -429,105 +429,79 @@ namespace Cheetah
 
     public class InternetScanner : ITickable
     {
+        struct Server
+        {
+            public Server(string host, int port)
+            {
+                Host = host;
+                Port = port;
+            }
+            public string Host;
+            public int Port;
+        }
         public InternetScanner(AnswerDelegate answer)
         {
             Answer = answer;
-            string url = @"http://fch.selfkill.com/cody/spacewar2006-servers.php";
+            string url = @"http://spacewar-arena.com/spacewar-arena-servers.xml";
 
+            WebClient wclient = new WebClient();
+            XmlDocument doc = new XmlDocument();
+            Stream strm = wclient.OpenRead(url);
+            doc.Load(strm);
+
+            XmlNode list = doc.GetElementsByTagName("serverlist")[0];
+            foreach (XmlNode server in list.ChildNodes)
             {
-                WebClient wclient = new WebClient();
-                try
+                if (server.Name == "server")
                 {
-                    Stream strm = wclient.OpenRead(url);
-                    MemoryStream ms = new MemoryStream();
-                    StreamReader sr = new StreamReader(strm);
+                    string host = server.Attributes["host"].Value;
+                    string port = server.Attributes["port"].Value;
 
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        string[] s = line.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-                        Servers.Add(ep, null);
-                        if (Answer != null)
-                            Answer(null, ep);
-                    }
-                }
-                catch (Exception e2)
-                {
+                    servers.Add(new Server(host, int.Parse(port)));
                 }
             }
-            Socket Sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-//#if WINDOWS
-            Sock.EnableBroadcast = true;
-//#endif
-            Sock.Blocking = false;
+            client = new UdpClient();
 
-            //client = new UdpClient(Sock);
-
-            Connected = true;
+            SendQuery();
         }
 
 
         private void SendQuery()
         {
-            System.Console.WriteLine("sending internet");
-
-            QueryPacket q = new QueryPacket();
-            q.Type = QueryPacket.Phase.Request;
-
-            try
-            {
-                foreach(KeyValuePair<IPEndPoint,ISerializable> kv in Servers)
-                {
-                    //client.SetRemoteHost(kv.Key.Address, kv.Key.Port);
-                    //client.Send(q);
-                }
-            }
-            catch (SocketException)
-            {
-            }
+            foreach (Server ep in servers)
+                client.client.DiscoverKnownServer(ep.Host, ep.Port);
         }
 
         public void Tick(float dtime)
         {
-            //byte[] buf=new byte[1024*16];
-            NetBuffer dg;
-            IPEndPoint e;
-            int n;
-
-            //try
+            NetMessageType t;
+            NetBuffer buf = client.client.CreateBuffer();
+            while (client.client.ReadMessage(buf, out t))
             {
-                while ((dg = client.Receive(out e)) != null)
+                if (t == NetMessageType.ServerDiscovered)
                 {
-                    Console.WriteLine("answer received.");
-                    //QueryPacket p=(QueryPacket)Root.Instance.Factory.DeSerialize(new MemoryStream(buf,4,buf.Length-4));
-                    //ISerializable p = (ISerializable)Root.Instance.Factory.DeSerialize(dg.GetStream());
-
-                    //Servers[dg.Sender] = p;
-                    //if (Answer != null)
-                    //    Answer(p, dg.Sender);
+                    IPEndPoint ip = buf.ReadIPEndPoint();
+                    if (Answer != null)
+                    {
+                        Answer(Encoding.UTF8.GetBytes(
+                            "???" + "/" +
+                            "0" + "/" +
+                            "16"),
+                            ip);
+                    }
+                }
+                else if (t == NetMessageType.DebugMessage)
+                {
+                    Console.WriteLine(buf.ReadString());
                 }
             }
-            //catch (SocketException)
-            {
-            }
-
-            Timer += dtime;
-            if (Timer > QueryInterval)
-            {
-                Timer = 0;
-                SendQuery();
-            }
         }
-        public delegate void AnswerDelegate(ISerializable answer, IPEndPoint ep);
+
+        public delegate void AnswerDelegate(byte[] answer, IPEndPoint ep);
         public event AnswerDelegate Answer;
 
         UdpClient client;
-        public float QueryInterval = 5;
-        float Timer = 0;
-
-        public Dictionary<IPEndPoint, ISerializable> Servers = new Dictionary<IPEndPoint, ISerializable>();
-        public bool Connected = false;
+        List<Server> servers = new List<Server>();
     }
 
     public class NewLanScanner : ITickable
@@ -552,19 +526,6 @@ namespace Cheetah
             SendQuery();
         }
 
-        /*void OnServerDiscovered(object sender, NetServerDiscoveredEventArgs e)
-        {
-            // We found a server located at e.ServerInformation.RemoteEndpoint
-
-            if (Answer != null)
-            {
-                Answer(Encoding.UTF8.GetBytes(
-                    e.ServerInformation.ServerName+"/"+
-                    e.ServerInformation.NumConnected.ToString()+"/"+
-                    e.ServerInformation.MaxConnections.ToString()),
-                    e.ServerInformation.RemoteEndpoint);
-            }
-        }*/
 
         bool internet = false;
         private void SendQuery()
@@ -587,33 +548,10 @@ namespace Cheetah
                     //client.DiscoverKnownServer(host,
                 }
             }
-            //int n=Sock.SendTo(buf, new IPEndPoint(IPAddress.Parse("192.168.0.10"), 1337));
         }
 
         public void Tick(float dtime)
         {
-            //byte[] buf=new byte[1024*16];
-            //Datagram dg;
-            //EndPoint ep=new IPEndPoint(IPAddress.Any,0);
-            //int n;
-
-            //try
-            {
-                //  while ((dg = client.Receive())!=null)
-                {
-                    //Console.WriteLine("answer received.");
-                    //QueryPacket p=(QueryPacket)Root.Instance.Factory.DeSerialize(new MemoryStream(buf,4,buf.Length-4));
-                    //ISerializable p = (ISerializable)Root.Instance.Factory.DeSerialize(dg.GetStream());
-
-                    //Servers[dg.Sender] = p;
-                    //if (Answer!=null)
-                    //    Answer(p, dg.Sender);
-                }
-            }
-            //catch (SocketException)
-            {
-            }
-
             Timer += dtime;
             if (Timer > QueryInterval)
             {
