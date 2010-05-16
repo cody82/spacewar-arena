@@ -227,7 +227,7 @@ namespace SpaceWar2006.Rules
         public void Quit()
         {
             Flow f = Root.Instance.CurrentFlow;
-            Root.Instance.CurrentFlow = null;
+            //Root.Instance.CurrentFlow = null;
             f.Finished = true;
             f.Stop();
         }

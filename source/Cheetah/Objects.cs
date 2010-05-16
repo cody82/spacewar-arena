@@ -6437,7 +6437,7 @@ using Cheetah;");
 		{
             sleeptime = 1000.0f / ServerTickrate;
             int last = TickCount();
-			while(!Quit)
+            while (!Quit && (CurrentFlow == null || !CurrentFlow.Finished))
 			{
                 ServerConsoleMutex.WaitOne();
                 string line;
@@ -6559,7 +6559,9 @@ using Cheetah;");
             if(ResourceManager.LoadConfig("config/global.config").Exists("server.password"))
                 password=ResourceManager.LoadConfig("config/global.config").GetString("server.password");
             System.Console.WriteLine("port: " + port);
-			Connection=new UdpServer(port,16,password);
+			
+            if(Connection==null)
+                Connection=new UdpServer(port,16,password);
 
             //ServerConsoleThread = new Thread(ServerConsoleThreadStart);
             //ServerConsoleThread.Start();

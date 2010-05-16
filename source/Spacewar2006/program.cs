@@ -28,11 +28,15 @@ namespace SpaceWar2006
 
             //string entry = ((Config)Root.Instance.ResourceManager.Load("config/mod.config", typeof(Config))).GetString("mod.server.entry");
 
-            Flow f = new SpaceWar2006.Flows.GameServer();
-            r.CurrentFlow = f;
-            f.Start();
-            r.ServerRun(true);
-            f.Stop();
+            while (!Root.Instance.Quit)
+            {
+                Flow f = new SpaceWar2006.Flows.GameServer();
+                r.CurrentFlow = f;
+                f.Start();
+                r.ServerRun(true);
+                f.Stop();
+            }
+
             r.ServerStop();
             r.Dispose();
         }
