@@ -26,7 +26,7 @@ vec4 color=(gl_LightSource[i].diffuse * Diffuse * NdotL(Normal,ToLight[i]));
 float range = gl_LightSource[i].quadraticAttenuation;
 //if(gl_LightSource[i].position.w>0.0)
 //{
-if (range > 0)
+if (range > 0.0)
 {
 float dist=length(ToLight[i]);
 color *= max(0.0,range - dist) / range;

@@ -14,10 +14,10 @@ vec4 Light(int i,vec3 normal)
 
 	vec4 color = gl_LightSource[i].diffuse * diffuse * NdotL;
 
-	if(gl_LightSource[i].position.w>0)
+	if(gl_LightSource[i].position.w>0.0)
 	{
 		float range=gl_LightSource[i].quadraticAttenuation;
-		if(range>0)
+		if(range>0.0)
 		{
 			float dist=length(toLight[i]);
 			if(dist>range)
