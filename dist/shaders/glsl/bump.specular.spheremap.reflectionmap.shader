@@ -31,10 +31,10 @@ vec4 Light(vec4 diffuse,vec4 specular,vec3 normal,int i,vec3 Eye)
 
 	vec4 color = diff * diffuse + specular *spec;
 
-	if(gl_LightSource[i].position.w>0)
+	if(gl_LightSource[i].position.w>0.0)
 	{
 		float range=gl_LightSource[i].quadraticAttenuation;
-		if(range>0)
+		if(range>0.0)
 		{
 			float dist=length(toLight[i]);
 			if(dist>range)
