@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Text;
 using System.IO;
@@ -281,7 +281,9 @@ namespace Cheetah.OpenTK
                 }
                 return false;
             }
-            return buttons[n-1];
+			if(n>0&&n<=buttons.Length)
+            	return buttons[n-1];
+			return false;
         }
 
         #endregion
