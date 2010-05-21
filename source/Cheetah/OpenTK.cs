@@ -216,13 +216,16 @@ namespace Cheetah.OpenTK
             switch (e.Button)
             {
                 case MouseButton.Left:
-                    buttons[0] = false;
+					if(buttons.Length>0)
+                    	buttons[0] = false;
                     break;
                 case MouseButton.Right:
-                    buttons[1] = false;
+					if(buttons.Length>1)
+                    	buttons[1] = false;
                     break;
                 case MouseButton.Middle:
-                    buttons[2] = false;
+ 					if(buttons.Length>2)
+                   		buttons[2] = false;
                     break;
                 default:
                     break;
@@ -246,7 +249,8 @@ namespace Cheetah.OpenTK
                 default:
                     break;
             }
-            buttons[button]=true;
+			if(button>=0 && button<buttons.Length)
+            	buttons[button]=true;
             Root.Instance.ClientOnMouseDown(button + 1, e.X, e.Y);
        }
 
