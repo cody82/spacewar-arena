@@ -6658,9 +6658,19 @@ using Cheetah;");
             Args = args;
             singleton = this;
 
-            string home = IsWindows ? "Spacewar2006-User" : ".spacewar2006";
-            home = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Path.DirectorySeparatorChar + home;
-            if (!Directory.Exists(home))
+			string home;
+			int i=Array.IndexOf<string>(args, "-home");
+			if(i!=-1)
+			{
+				home = args[i+1];
+			}
+			else
+			{
+            	home = IsWindows ? "Spacewar2006-User" : ".spacewar2006";
+            	home = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Path.DirectorySeparatorChar + home;
+			}
+            
+			if (!Directory.Exists(home))
             {
                 Console.WriteLine("creating user directory: " + home);
                 try
