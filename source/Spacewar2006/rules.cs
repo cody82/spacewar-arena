@@ -869,7 +869,7 @@ namespace SpaceWar2006.Rules
                 player.Checks++;
                 Announce(player.Name + " reached " + player.Checks + ".");
 
-                if (Lap(player.Checks) >= Laps)
+                if (Lap(player.Checks) >= Laps && Laps>0)
                 {
                     Finish(player);
                 }
