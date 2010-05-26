@@ -1798,7 +1798,7 @@ namespace Cheetah
             //log=new NetLog();
             NetConfiguration c = new NetConfiguration("spacewar2006-1");
             c.Port=port;
-            c.MaxConnections = 8;
+            c.MaxConnections = maxclients;
             server = new NetServer(c);
             server.Start();
             //server.StatusChanged += new EventHandler<NetStatusEventArgs>(server_StatusChanged);
