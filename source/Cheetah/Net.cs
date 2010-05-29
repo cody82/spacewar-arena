@@ -469,7 +469,7 @@ namespace Cheetah
         private void SendQuery()
         {
             foreach (Server ep in servers)
-                client.client.DiscoverKnownServer(ep.Host, ep.Port);
+                client.client.DiscoverKnownPeer(ep.Host, ep.Port);
         }
 
         public void Tick(float dtime)
