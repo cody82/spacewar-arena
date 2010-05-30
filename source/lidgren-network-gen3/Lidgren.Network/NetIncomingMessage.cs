@@ -103,7 +103,7 @@ namespace Lidgren.Network
 		{
 		}
 
-		internal NetIncomingMessage(byte[] data, int dataLength)
+		public NetIncomingMessage(byte[] data, int dataLength)
 		{
 			m_data = data;
 			m_bitLength = dataLength * 8;

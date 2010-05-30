@@ -48,7 +48,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public bool IsSent { get { return m_numSends > 0; } }
 
-		internal NetOutgoingMessage()
+		public NetOutgoingMessage()
 		{
 			Reset();
 		}
