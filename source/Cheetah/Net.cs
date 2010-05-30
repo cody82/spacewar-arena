@@ -2026,17 +2026,13 @@ namespace Cheetah
             NetOutgoingMessage m = server.CreateMessage();
             SerializationContext c = new SerializationContext(Root.Instance.Factory,m);
             c.Serialize(obj);
-            byte[] buf = c.ToArray();
             if (Root.Instance.Recorder != null)
             {
+                byte[] buf = c.ToArray();
                 Root.Instance.Recorder.WritePacket((int)(Root.Instance.Time * 1000), buf, buf.Length);
             }
 
-            foreach (NetConnection s in Clients)
-            {
-                if (s != null)
-                    Send(c.GetMessage(), s.RemoteEndpoint);
-            }
+            Send(m);
         }
 
         public virtual void Send(ISerializable obj, IPEndPoint ep)
@@ -2065,11 +2061,7 @@ namespace Cheetah
 
         public virtual void Send(NetOutgoingMessage m)
         {
-            foreach (NetConnection s in Clients)
-            {
-                if (s != null)
-                    Send(m, s.RemoteEndpoint);
-            }
+            server.SendMessage(m, server.Connections, NetDeliveryMethod.Unreliable,0);
         }
 
         public virtual void SendNot(NetOutgoingMessage m, IPEndPoint ep)
@@ -2084,15 +2076,17 @@ namespace Cheetah
                 byte[] buf = m.PeekDataBuffer();
                 Root.Instance.Recorder.WritePacket((int)(Root.Instance.Time * 1000), buf, buf.Length);
             }
+
+            List<NetConnection> list = new List<NetConnection>();
             foreach (NetConnection s in Clients)
             {
                 if (s != null)
                 {
                     if (ep.ToString() != s.RemoteEndpoint.ToString())
-                        Send(m, s.RemoteEndpoint);
-                    //else System.Console.WriteLine("sening not to " + ep.ToString());
+                        list.Add(s);
                 }
             }
+            server.SendMessage(m, list, NetDeliveryMethod.Unreliable, 0);
         }
 
         public virtual void Send(NetOutgoingMessage m, IPEndPoint ep)
