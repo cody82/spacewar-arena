@@ -474,26 +474,36 @@ namespace Cheetah
 
         public void Tick(float dtime)
         {
-            NetMessageType t;
-            NetBuffer buf = client.client.CreateBuffer();
-            while (client.client.ReadMessage(buf, out t))
+            NetIncomingMessage msg;
+            while ((msg = client.client.ReadMessage()) != null)
             {
-                if (t == NetMessageType.ServerDiscovered)
+                switch (msg.MessageType)
                 {
-                    IPEndPoint ip = buf.ReadIPEndPoint();
-                    if (Answer != null)
-                    {
-                        Answer(Encoding.UTF8.GetBytes(
-                            "???" + "/" +
-                            "0" + "/" +
-                            "16"),
-                            ip);
-                    }
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.ErrorMessage:
+                        Console.WriteLine(msg.ReadString());
+                        break;
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        {
+                            Console.WriteLine("Found server at " + msg.SenderEndpoint);// + " name: " + msg.ReadString());
+
+                            if (Answer != null)
+                            {
+                                Answer(Encoding.UTF8.GetBytes(
+                                    "???" + "/" +
+                                    "0" + "/" +
+                                    "16"),
+                                    msg.SenderEndpoint);
+                            }
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Unhandled type: " + msg.MessageType);
+                        break;
                 }
-                else if (t == NetMessageType.DebugMessage)
-                {
-                    Console.WriteLine(buf.ReadString());
-                }
+                client.client.Recycle(msg);
             }
         }
 
@@ -537,7 +547,7 @@ namespace Cheetah
 
             for (int i = LowPort; i < HighPort; ++i)
             {
-                client.DiscoverLocalServers(i);
+                client.DiscoverLocalPeers(i);
             }
 
 
@@ -559,27 +569,38 @@ namespace Cheetah
                 //SendQuery();
             }
 
-            NetMessageType t;
-            NetBuffer buf = client.CreateBuffer();
-            while (client.ReadMessage(buf, out t))
+            NetIncomingMessage msg;
+            while ((msg = client.ReadMessage()) != null)
             {
-                if (t == NetMessageType.ServerDiscovered)
+                switch (msg.MessageType)
                 {
-                    IPEndPoint ip = buf.ReadIPEndPoint();
-                    if (Answer != null)
-                    {
-                        Answer(Encoding.UTF8.GetBytes(
-                            "???" + "/" +
-                            "0" + "/" +
-                            "16"),
-                            ip);
-                    }
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.ErrorMessage:
+                        Console.WriteLine(msg.ReadString());
+                        break;
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        {
+                            Console.WriteLine("Found server at " + msg.SenderEndpoint);// + " name: " + msg.ReadString());
+
+                            if (Answer != null)
+                            {
+                                Answer(Encoding.UTF8.GetBytes(
+                                    "???" + "/" +
+                                    "0" + "/" +
+                                    "16"),
+                                    msg.SenderEndpoint);
+                            }
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Unhandled type: " + msg.MessageType);
+                        break;
                 }
-                else if (t == NetMessageType.DebugMessage)
-                {
-                    Console.WriteLine(buf.ReadString());
-                }
+                client.Recycle(msg);
             }
+
         }
 
         public delegate void AnswerDelegate(byte[] answer, IPEndPoint ep);
@@ -779,8 +800,8 @@ namespace Cheetah
 
 	public interface IConnection
 	{
-		void Send(NetBuffer m);
-        NetBuffer Receive(out IPEndPoint sender);
+		void Send(NetOutgoingMessage m);
+        NetIncomingMessage Receive(out IPEndPoint sender);
         ConnectionStatistics Statistics
 		{
 			get;
@@ -1561,11 +1582,21 @@ namespace Cheetah
         {
             compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
             //log = new NetConfiguration();
-            client = new NetClient(new NetConfiguration("spacewar2006-1"));
+            NetPeerConfiguration config = new NetPeerConfiguration("spacewar2006-1");
+            config.EnableMessageType(NetIncomingMessageType.Data);
+            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            config.EnableMessageType(NetIncomingMessageType.Error);
+            config.EnableMessageType(NetIncomingMessageType.Receipt);
+            config.EnableMessageType(NetIncomingMessageType.StatusChanged);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.EnableMessageType(NetIncomingMessageType.ErrorMessage);
+
+            client = new NetClient(config);
             client.Start();
         }
 
-        public virtual void Send(NetBuffer m)
+        public virtual void Send(NetOutgoingMessage m)
         {
             //if (EP != null)
             /*{
@@ -1603,13 +1634,13 @@ namespace Cheetah
             //else
             //    throw new Exception();*/
 
-            client.SendMessage(m, NetChannel.Unreliable);
+            client.SendMessage(m, NetDeliveryMethod.Unreliable);
             //client.Heartbeat();
         }
 
         public virtual void Send(ISerializable obj)
         {
-            SerializationContext c = new SerializationContext();
+            SerializationContext c = new SerializationContext(Root.Instance.Factory,client.CreateMessage());
             Root.Instance.Factory.Serialize(c, obj);
             byte[] buf = c.ToArray();
             //Console.WriteLine(buf[0].ToString() +" "+ buf[1].ToString());
@@ -1617,25 +1648,34 @@ namespace Cheetah
         }
 
 
-        public NetBuffer Receive(out IPEndPoint sender)
+        public NetIncomingMessage Receive(out IPEndPoint sender)
         {
-            //return client.ReadMessage();
-            //Sock.Blocking = block;
-
-            NetMessageType t;
             NetConnection c;
-            NetBuffer m = client.CreateBuffer();
-            IPEndPoint ip;
 
-            while (client.ReadMessage(m, out t, out ip))
+
+
+            NetIncomingMessage msg;
+            while ((msg = client.ReadMessage()) != null)
             {
-                switch (t)
+                switch (msg.MessageType)
                 {
-                    case NetMessageType.Data:
-                        sender = ip;
-                        return m;
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.ErrorMessage:
+                        Console.WriteLine(msg.ReadString());
+                        break;
+                    case NetIncomingMessageType.Data:
+                        sender = msg.SenderEndpoint;
+                        return msg;
+                    default:
+                        Console.WriteLine("Unhandled type: " + msg.MessageType);
+                        break;
                 }
+                client.Recycle(msg);
             }
+
+
             sender = null;
             return null;
             //if(EP==null)
@@ -1758,12 +1798,12 @@ namespace Cheetah
 
         }
 
-        public static ConnectionStatistics Convert(NetBaseStatistics n)
+        public static ConnectionStatistics Convert(NetPeerStatistics n)
         {
             ConnectionStatistics c = new ConnectionStatistics(
-                n.PacketsReceived, n.BytesReceived,
-                n.PacketsSent, n.BytesSent,
-                n.BytesReceived, n.BytesSent);
+                n.ReceivedPackets, n.ReceivedBytes,
+                n.SentPackets, n.SentBytes,
+                n.ReceivedBytes, n.SentBytes);
             return c;
         }
 
@@ -1987,7 +2027,7 @@ namespace Cheetah
             SendNot(c.GetMessage(), ep);
         }
 
-        public virtual void Send(NetBuffer m)
+        public virtual void Send(NetOutgoingMessage m)
         {
             foreach (NetConnection s in Clients)
             {
@@ -1996,7 +2036,7 @@ namespace Cheetah
             }
         }
 
-        public virtual void SendNot(NetBuffer m, IPEndPoint ep)
+        public virtual void SendNot(NetOutgoingMessage m, IPEndPoint ep)
         {
             if (server.Connections.Count == 0 && Root.Instance.Recorder == null)
                 return;
@@ -2019,7 +2059,7 @@ namespace Cheetah
             }
         }
 
-        public virtual void Send(NetBuffer m, IPEndPoint ep)
+        public virtual void Send(NetOutgoingMessage m, IPEndPoint ep)
         {
             //return;
             /*byte[] data2 = new byte[length + 4];
@@ -2066,7 +2106,7 @@ namespace Cheetah
         }
 
         //byte[] buffer2 = new byte[8192];
-        public NetBuffer Receive(out IPEndPoint sender)
+        public NetIncomingMessage Receive(out IPEndPoint sender)
         {
             NetMessageType t;
             NetBuffer buf = server.CreateBuffer();

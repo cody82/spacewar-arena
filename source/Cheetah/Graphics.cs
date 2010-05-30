@@ -1134,7 +1134,8 @@ namespace Cheetah
             {
                 sw.Write("SUBMESHBIN001");
 
-                sm.Vertices.Format.Serialize(new SerializationContext(Root.Instance.Factory, s, sw));
+                throw new Exception("HACK");
+                //sm.Vertices.Format.Serialize(new SerializationContext(Root.Instance.Factory, s, sw));
 
                 sw.Write(sm.Vertices.Buffer.Length*4);
                 for (int i = 0; i < sm.Vertices.Buffer.Length;++i )
