@@ -3619,7 +3619,8 @@ using Cheetah;");
             Factory = f;
             //Stream = s;
             //Reader = r;
-            Message = new Lidgren.Network.NetIncomingMessage(r.ReadBytes((int)(s.Length - s.Position)), (int)(s.Length - s.Position));
+            int len = (int)(s.Length - s.Position);
+            Message = new Lidgren.Network.NetIncomingMessage(r.ReadBytes(len), len);
             //System.Console.WriteLine("deserialization: " + s.Length);
         }
 
@@ -6835,6 +6836,11 @@ using Cheetah;");
 
         public void OnDatagramReceive(Lidgren.Network.NetIncomingMessage msg, IPEndPoint sender)
         {
+            switch (msg.MessageType)
+            {
+                case Lidgren.Network.NetIncomingMessageType.DiscoveryRequest:
+                    return;
+            }
             //try
             {
                 //Stream m1 = msg.GetStream();

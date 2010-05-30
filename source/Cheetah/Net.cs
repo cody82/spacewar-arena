@@ -468,12 +468,20 @@ namespace Cheetah
 
         private void SendQuery()
         {
+            Console.WriteLine("sending");
             foreach (Server ep in servers)
                 client.client.DiscoverKnownPeer(ep.Host, ep.Port);
         }
 
         public void Tick(float dtime)
         {
+            Timer += dtime;
+            if (Timer > QueryInterval)
+            {
+                Timer = 0;
+                SendQuery();
+            }
+
             NetIncomingMessage msg;
             while ((msg = client.client.ReadMessage()) != null)
             {
@@ -509,6 +517,8 @@ namespace Cheetah
 
         public delegate void AnswerDelegate(byte[] answer, IPEndPoint ep);
         public event AnswerDelegate Answer;
+        public float QueryInterval = 5;
+        float Timer = 0;
 
         UdpClient client;
         List<Server> servers = new List<Server>();
@@ -566,7 +576,7 @@ namespace Cheetah
             if (Timer > QueryInterval)
             {
                 Timer = 0;
-                //SendQuery();
+                SendQuery();
             }
 
             NetIncomingMessage msg;
@@ -1666,6 +1676,7 @@ namespace Cheetah
                         Console.WriteLine(msg.ReadString());
                         break;
                     case NetIncomingMessageType.Data:
+                    case NetIncomingMessageType.DiscoveryResponse:
                         sender = msg.SenderEndpoint;
                         return msg;
                     default:
@@ -1777,6 +1788,17 @@ namespace Cheetah
                                 }
 
                                 Console.WriteLine("skip: " + m.LengthBytes);
+                            }
+                            break;
+                        case NetIncomingMessageType.StatusChanged:
+                            NetConnectionStatus status = (NetConnectionStatus)m.ReadByte();
+                            Console.WriteLine("status: " + status.ToString());
+                            switch (status)
+                            {
+                                case NetConnectionStatus.Connecting:
+                                    break;
+                                case NetConnectionStatus.Connected:
+                                    break;
                             }
                             break;
                         default:
@@ -2142,10 +2164,16 @@ namespace Cheetah
                     case NetIncomingMessageType.Data:
                         sender = m.SenderEndpoint;
                         return m;
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        NetOutgoingMessage m2 = server.CreateMessage();
+                        m2.Write("spacewar arena server");
+                        server.SendDiscoveryResponse(m2, m.SenderEndpoint);
+                        break;
                     case NetIncomingMessageType.StatusChanged:
                         {
-                            string statusMessage = m.ReadString();
                             NetConnectionStatus newStatus = (NetConnectionStatus)m.ReadByte();
+                            string statusMessage = m.ReadString();
+                            Console.WriteLine(statusMessage);
                             switch (newStatus)
                             {
                                 case NetConnectionStatus.Connected:
@@ -2156,6 +2184,9 @@ namespace Cheetah
                                     break;
                             }
                         }
+                        break;
+                    case NetIncomingMessageType.ConnectionApproval:
+                        m.SenderConnection.Approve();
                         break;
                     default:
                         Console.WriteLine("Unhandled type: " + m.MessageType);
