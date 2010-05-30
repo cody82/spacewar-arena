@@ -194,6 +194,7 @@ namespace Cheetah.OpenTK
             dev.ButtonUp += new EventHandler<MouseButtonEventArgs>(dev_ButtonUp);
             dev.WheelChanged += new EventHandler<MouseWheelEventArgs>(dev_WheelChanged);
             dev.Move += new EventHandler<MouseMoveEventArgs>(dev_Move);
+            Console.WriteLine("mouse:" + dev.NumberOfButtons.ToString() + " buttons.");
             buttons = new bool[dev.NumberOfButtons];
         }
 
