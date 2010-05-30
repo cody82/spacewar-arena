@@ -3613,6 +3613,16 @@ using Cheetah;");
             //System.Console.WriteLine("deserialization: " + s.Length);
             Message = msg;
         }
+
+        public DeSerializationContext(Factory f, Stream s, BinaryReader r)
+        {
+            Factory = f;
+            //Stream = s;
+            //Reader = r;
+            Message = new Lidgren.Network.NetIncomingMessage(r.ReadBytes((int)(s.Length - s.Position)), (int)(s.Length - s.Position));
+            //System.Console.WriteLine("deserialization: " + s.Length);
+        }
+
         public Vector3 ReadVector3()
         {
             return new Vector3(Message.ReadSingle(), Message.ReadSingle(), Message.ReadSingle());
@@ -6965,8 +6975,8 @@ using Cheetah;");
                 byte[] packet;
                 while ((packet = Player.ReadPacket()) != null)
                 {
-                    Lidgren.Network.NetBuffer m = new Lidgren.Network.NetBuffer();
-                    m.Write(packet);
+                    Lidgren.Network.NetIncomingMessage m = new Lidgren.Network.NetIncomingMessage(packet,packet.Length);
+                    //m.Write(packet);
                     OnDatagramReceive(m,null);
                 }
             }
