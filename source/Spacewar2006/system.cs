@@ -107,6 +107,11 @@ namespace SpaceWar2006.GameSystem
         {
             DeSerialize(context);
         }
+
+        public override string ToString()
+        {
+            return ServerName + "/" + NumPlayers + "/" + MaxPlayers + "/" + Map.Replace('/','\\') + "/" + GameType;
+        }
         public void UpdateInfos()
         {
             Root serv = Root.Instance;

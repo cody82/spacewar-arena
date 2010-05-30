@@ -6836,10 +6836,13 @@ using Cheetah;");
 
         public void OnDatagramReceive(Lidgren.Network.NetIncomingMessage msg, IPEndPoint sender)
         {
-            switch (msg.MessageType)
+            if (IsAuthoritive)
             {
-                case Lidgren.Network.NetIncomingMessageType.DiscoveryRequest:
-                    return;
+                switch (msg.MessageType)
+                {
+                    case Lidgren.Network.NetIncomingMessageType.DiscoveryRequest:
+                        return;
+                }
             }
             //try
             {

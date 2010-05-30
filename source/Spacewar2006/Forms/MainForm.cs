@@ -270,8 +270,8 @@ namespace Spacewar2006.Forms
                 info.ServerName = s[0];
                 info.NumPlayers = int.Parse(s[1]);
                 info.MaxPlayers = int.Parse(s[2]);
-                info.Map = "??";
-                info.GameType = "??";
+                info.Map = s[3];
+                info.GameType = s[4];
                 info.Password = false;
             }
             ListViewItem lvi=FindServer(ep);

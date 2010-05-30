@@ -499,10 +499,7 @@ namespace Cheetah
 
                             if (Answer != null)
                             {
-                                Answer(Encoding.UTF8.GetBytes(
-                                    "???" + "/" +
-                                    "0" + "/" +
-                                    "16"),
+                                Answer(Encoding.UTF8.GetBytes(msg.ReadString()),
                                     msg.SenderEndpoint);
                             }
                         }
@@ -596,10 +593,7 @@ namespace Cheetah
 
                             if (Answer != null)
                             {
-                                Answer(Encoding.UTF8.GetBytes(
-                                    "???" + "/" +
-                                    "0" + "/" +
-                                    "16"),
+                                Answer(Encoding.UTF8.GetBytes(msg.ReadString()),
                                     msg.SenderEndpoint);
                             }
                         }
@@ -2165,10 +2159,16 @@ namespace Cheetah
                         sender = m.SenderEndpoint;
                         return m;
                     case NetIncomingMessageType.DiscoveryRequest:
-                        NetOutgoingMessage m2 = server.CreateMessage();
-                        m2.Write("spacewar arena server");
-                        server.SendDiscoveryResponse(m2, m.SenderEndpoint);
-                        break;
+                        {
+                            ISerializable info=Root.Instance.CurrentFlow.Query();
+                            if (info != null)
+                            {
+                                NetOutgoingMessage m2 = server.CreateMessage();
+                                m2.Write(info.ToString());
+                                server.SendDiscoveryResponse(m2, m.SenderEndpoint);
+                            }
+                            break;
+                        }
                     case NetIncomingMessageType.StatusChanged:
                         {
                             NetConnectionStatus newStatus = (NetConnectionStatus)m.ReadByte();
