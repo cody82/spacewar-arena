@@ -6231,9 +6231,9 @@ using Cheetah;");
 			ClientMem=(int)GC.GetTotalMemory(false);
             if (Connection != null)
             {
-                //System.Console.WriteLine("update " + dtime.ToString());
-                DeltaConnStats = Connection.Statistics - LastConnStats;
-                LastConnStats = Connection.Statistics;
+                ConnectionStatistics stat = Connection.Statistics;
+                DeltaConnStats = stat - LastConnStats;
+                LastConnStats = stat;
             }
         }
 
@@ -6296,7 +6296,6 @@ using Cheetah;");
 			
 				if(Connection!=null)
 				{
-					//Gui.DefaultFont.Draw(UserInterface.Renderer,Connection.Statistics.ToString(),0,20);
                     Gui.DefaultFont.Draw(UserInterface.Renderer, DeltaConnStats.ToString(), 0, 20);
                 }
             }

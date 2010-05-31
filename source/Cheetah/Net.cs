@@ -715,11 +715,7 @@ namespace Cheetah
 		public int UncompressedBytesOut;
 		public int UncompressedBytesIn;
 
-        /*public int KBpsIn;
-        public int KBpsOut;
-        public int PpsIn;
-        public int PpsOut;
-*/
+        public float RoundTripTime;
 
         public ConnectionStatistics(int pi,int bi,int po,int bo,int ubi,int ubo)
 		{
@@ -729,6 +725,7 @@ namespace Cheetah
 			BytesOut=bo;
 			UncompressedBytesOut=ubo;
 			UncompressedBytesIn=ubi;
+            RoundTripTime = 0;
 		}
         public ConnectionStatistics(long pi, long bi, long po, long bo, long ubi, long ubo)
         {
@@ -738,10 +735,11 @@ namespace Cheetah
             BytesOut = (int)bo;
             UncompressedBytesOut = (int)ubo;
             UncompressedBytesIn = (int)ubi;
+            RoundTripTime = 0;
         }
         public static ConnectionStatistics operator - (ConnectionStatistics s1,ConnectionStatistics s2)
         {
-            return new ConnectionStatistics(
+            ConnectionStatistics c=new ConnectionStatistics(
                 s1.PacketsIn - s2.PacketsIn,
                 s1.BytesIn - s2.BytesIn,
                 s1.PacketsOut - s2.PacketsOut,
@@ -749,7 +747,8 @@ namespace Cheetah
                 s1.UncompressedBytesIn - s2.UncompressedBytesIn,
                 s1.UncompressedBytesOut - s2.UncompressedBytesOut
                 );
-
+            c.RoundTripTime = s1.RoundTripTime;
+            return c;
         }
 
 		public float CompressionRatioIn
@@ -797,7 +796,8 @@ namespace Cheetah
             string format = "#0.0";
             return
                 "out: " + PacketsOut + "/" + ((float)BytesOut / 1000.0f).ToString(format) + "k/" + AvgPacketSizeOut + "/" + CompressionRatioOut.ToString(format) +
-                ", in: " + PacketsIn + "/" + ((float)BytesIn / 1000.0f).ToString(format) + "k/" + AvgPacketSizeIn + "/" + CompressionRatioIn.ToString(format);
+                ", in: " + PacketsIn + "/" + ((float)BytesIn / 1000.0f).ToString(format) + "k/" + AvgPacketSizeIn + "/" + CompressionRatioIn.ToString(format) +
+                ", rtt: " + (int)(RoundTripTime*1000.0f+0.5f) + "ms";
             //", comp: "+string.Format(format,CompressionRatioOut)+"/"+string.Format(format,CompressionRatioIn)+" out/in";
 		}
 	}
@@ -1826,21 +1826,21 @@ namespace Cheetah
             client.Disconnect("");
             client = null;
             ClientNumber = -1;
-
         }
 
-        public static ConnectionStatistics Convert(NetPeerStatistics n)
+        public static ConnectionStatistics Convert(NetPeerStatistics n,float rtt)
         {
             ConnectionStatistics c = new ConnectionStatistics(
                 n.ReceivedPackets, n.ReceivedBytes,
                 n.SentPackets, n.SentBytes,
                 n.ReceivedBytes, n.SentBytes);
+            c.RoundTripTime = rtt;
             return c;
         }
 
         public ConnectionStatistics Statistics
         {
-            get { return Convert(client.Statistics); }
+            get { return Convert(client.Statistics,client.ServerConnection.AverageRoundtripTime); }
         }
 
         //protected Socket Sock;
