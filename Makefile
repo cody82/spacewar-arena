@@ -4,12 +4,13 @@ compile:
 deb: compile
 	rm -f spacewar2006-1.1-2.deb
 	rm -rf debian/opt/spacewar2006/*
+	rm -rf debian/opt
 	mkdir debian/opt
 	mkdir debian/opt/spacewar2006
 	cp -r dist/* debian/opt/spacewar2006
 	cp source/Spacewar2006/bin/Release/* debian/opt/spacewar2006/bin/
 
-	dpkg-deb --build debian spacewar2006-1.1-2.deb
+	fakeroot dpkg-deb --build debian spacewar2006-1.1-2.deb
 
 	rm -rf debian/opt/spacewar2006/*
 
