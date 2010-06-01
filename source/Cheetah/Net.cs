@@ -1569,7 +1569,30 @@ namespace Cheetah
 
     */
 
+    public static class NetCompressor
+    {
+        public static NetOutgoingMessage Compress(NetOutgoingMessage msg)
+        {
+            msg.WritePadBits();
+            byte[] input = msg.PeekDataBuffer();
+            byte[] output = new byte[input.Length*2];
+            int outlength = ZipCompressor.Instance.Compress(input, msg.LengthBytes, output);
+            msg.EnsureBufferSize(outlength*8);
+            input = msg.PeekDataBuffer();
+            Array.Copy(output, input, outlength);
+            msg.LengthBytes = outlength;
+            msg.LengthBits = outlength * 8;
+            return msg;
+        }
 
+        public static NetIncomingMessage Decompress(NetIncomingMessage msg)
+        {
+            byte[] input = msg.PeekDataBuffer();
+            byte[] output=new byte[msg.LengthBytes*10];
+            int outlength = ZipCompressor.Instance.Decompress(input, msg.LengthBytes, output);
+            return new NetIncomingMessage(output, outlength);
+        }
+    }
 
     public class UdpClient : IConnection
     {
@@ -1584,7 +1607,7 @@ namespace Cheetah
 
         public UdpClient()
         {
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
+            //compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
             //log = new NetConfiguration();
             NetPeerConfiguration config = new NetPeerConfiguration("spacewar2006-1");
             config.EnableMessageType(NetIncomingMessageType.Data);
@@ -1638,7 +1661,7 @@ namespace Cheetah
             //else
             //    throw new Exception();*/
 
-            client.SendMessage(m, NetDeliveryMethod.Unreliable);
+            client.SendMessage(compress?NetCompressor.Compress(m):m, NetDeliveryMethod.Unreliable);
             //client.Heartbeat();
         }
 
@@ -1670,9 +1693,9 @@ namespace Cheetah
                         Console.WriteLine(msg.ReadString());
                         break;
                     case NetIncomingMessageType.Data:
-                    case NetIncomingMessageType.DiscoveryResponse:
+                    //case NetIncomingMessageType.DiscoveryResponse:
                         sender = msg.SenderEndpoint;
-                        return msg;
+                        return compress?NetCompressor.Decompress(msg):msg;
                     default:
                         Console.WriteLine("Unhandled type: " + msg.MessageType);
                         break;
@@ -1779,6 +1802,12 @@ namespace Cheetah
                                     classes = m.ReadBytes(m.LengthBytes - 4);
                                     System.Console.WriteLine("received class dictionary: " + classes.Length);
                                     break;
+                                }
+                                else if (m.PeekUInt32() == 0xFFFFFFFE)
+                                {
+                                    m.ReadUInt32();
+                                    compress = m.ReadBoolean();
+                                    Console.WriteLine("compression: " + compress);
                                 }
 
                                 Console.WriteLine("skip: " + m.LengthBytes);
@@ -1912,6 +1941,11 @@ namespace Cheetah
                 int n = FindEmptySlot();
                 connections[n] = sender;
                 m.Write((short)(n+1));
+                server.SendMessage(m, sender, NetDeliveryMethod.ReliableOrdered);
+
+                m = server.CreateMessage(5);
+                m.Write((uint)0xFFFFFFFE);
+                m.Write(compress);
                 server.SendMessage(m, sender, NetDeliveryMethod.ReliableOrdered);
 
                 //server.FlushMessages();
@@ -2061,7 +2095,7 @@ namespace Cheetah
 
         public virtual void Send(NetOutgoingMessage m)
         {
-            server.SendMessage(m, server.Connections, NetDeliveryMethod.Unreliable,0);
+            server.SendMessage(compress?NetCompressor.Compress(m):m, server.Connections, NetDeliveryMethod.Unreliable,0);
         }
 
         public virtual void SendNot(NetOutgoingMessage m, IPEndPoint ep)
@@ -2086,7 +2120,7 @@ namespace Cheetah
                         list.Add(s);
                 }
             }
-            server.SendMessage(m, list, NetDeliveryMethod.Unreliable, 0);
+            server.SendMessage(compress?NetCompressor.Compress(m):m, list, NetDeliveryMethod.Unreliable, 0);
         }
 
         public virtual void Send(NetOutgoingMessage m, IPEndPoint ep)
@@ -2131,7 +2165,7 @@ namespace Cheetah
                 Console.WriteLine(i.ToString());*/
             NetConnection c = FindConnection(ep);
             if(c!=null && c.Status==NetConnectionStatus.Connected)
-                server.SendMessage(m, c, NetDeliveryMethod.Unreliable);
+                server.SendMessage(compress?NetCompressor.Compress(m):m, c, NetDeliveryMethod.Unreliable);
 
         }
 
@@ -2151,7 +2185,7 @@ namespace Cheetah
                         break;
                     case NetIncomingMessageType.Data:
                         sender = m.SenderEndpoint;
-                        return m;
+                        return compress?NetCompressor.Decompress(m):m;
                     case NetIncomingMessageType.DiscoveryRequest:
                         {
                             ISerializable info=Root.Instance.CurrentFlow.Query();

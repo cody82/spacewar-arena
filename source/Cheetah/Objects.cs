@@ -3893,7 +3893,7 @@ using Cheetah;");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("problem: " + val + " not unknown.");
+                    //Console.WriteLine("problem: " + val + " not unknown.");
                     //ClassIds[id] = val;
                 }
             }
