@@ -70,7 +70,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public int ReceivedBytes { get { return m_receivedBytes; } }
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		internal void PacketSent(int numBytes, int numMessages)
 		{
 			m_sentPackets++;
@@ -78,7 +78,7 @@ namespace Lidgren.Network
 			m_sentMessages += numMessages;
 		}
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		internal void PacketReceived(int numBytes, int numMessages)
 		{
 			m_receivedPackets++;
