@@ -118,7 +118,7 @@ namespace SpaceWar2006.GameSystem
             if (serv == null)
                 return;
 
-            UdpServer udp = (UdpServer)serv.Connection;
+            UdpServer udp = serv.Connection as UdpServer;
             if (udp == null)
                 return;
             Map map = Root.Instance.Scene.FindEntityByType<Map>();

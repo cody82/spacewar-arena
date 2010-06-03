@@ -1859,12 +1859,21 @@ namespace Cheetah
 
         public static ConnectionStatistics Convert(NetPeerStatistics n,float rtt)
         {
-            ConnectionStatistics c = new ConnectionStatistics(
-                n.ReceivedPackets, n.ReceivedBytes,
-                n.SentPackets, n.SentBytes,
-                n.ReceivedBytes, n.SentBytes);
-            c.RoundTripTime = rtt;
-            return c;
+            if (n != null)
+            {
+                ConnectionStatistics c = new ConnectionStatistics(
+                    n.ReceivedPackets, n.ReceivedBytes,
+                    n.SentPackets, n.SentBytes,
+                    n.ReceivedBytes, n.SentBytes);
+                c.RoundTripTime = rtt;
+                return c;
+            }
+            else
+            {
+                ConnectionStatistics c = new ConnectionStatistics();
+                c.RoundTripTime = rtt;
+                return c;
+            }
         }
 
         public ConnectionStatistics Statistics
