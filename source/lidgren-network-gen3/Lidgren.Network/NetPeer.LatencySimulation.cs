@@ -127,6 +127,7 @@ namespace Lidgren.Network
 			try
 			{
 				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+			    m_statistics.PacketSent(numBytes, numMessages);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 			}
@@ -136,5 +137,5 @@ namespace Lidgren.Network
 			}
 		}
 #endif
-	}
+    }
 }
