@@ -15,10 +15,9 @@ deb: compile
 	rm -rf debian/opt/spacewar2006/*
 
 zip: compile
-	rm -f spacewar-arena.zip
 	rm -rf spacewar-arena
 	mkdir spacewar-arena
 	cp -r dist/* spacewar-arena
 	cp source/Spacewar2006/bin/Release/* spacewar-arena/bin/
-	zip -r9 spacewar-arena-`date +%Y%m%d`.zip spacewar-arena
+	zip -r9 spacewar-arena-`date +%Y%m%d`-`hg identify|awk '{print $1}'`.zip spacewar-arena
 	rm -rf spacewar-arena
