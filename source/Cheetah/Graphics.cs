@@ -1163,6 +1163,14 @@ namespace Cheetah
 
         public IResource Load(FileSystemNode n)
         {
+            fmt=null;
+            r=null;
+            vertexcount = -1;
+            facecount = -1;
+            vertexproperties=null;
+
+
+
             Stream s = n.getStream();
             string line;
             string[] split;
@@ -1189,8 +1197,8 @@ namespace Cheetah
 
             fmt = new VertexFormat(elements.ToArray());
 
-            float[] vertices = new float[fmt.Count];
             int vertexfloatsize = fmt.Size/4;
+            float[] vertices = new float[vertexfloatsize * vertexcount];
 
             for(int i=0;i<vertexcount;++i)
             {
@@ -1234,9 +1242,9 @@ namespace Cheetah
                     indices.Add(int.Parse(split[2]));
                     indices.Add(int.Parse(split[3]));
 
-                    indices.Add(int.Parse(split[2]));
-                    indices.Add(int.Parse(split[4]));
+                    indices.Add(int.Parse(split[1]));
                     indices.Add(int.Parse(split[3]));
+                    indices.Add(int.Parse(split[4]));
                 }
                 else
                 {
@@ -1300,7 +1308,7 @@ namespace Cheetah
                     }
                     else if (split[1] == "face")
                     {
-                        facecount = int.Parse(split[3]);
+                        facecount = int.Parse(split[2]);
                     }
                 }
                 else if (split[0] == "property")
