@@ -3765,7 +3765,7 @@ using Cheetah;");
                         }
                         else
                         {
-                            Console.WriteLine("generating id for new type: " + t.Name);
+                            //Console.WriteLine("generating id for new type: " + t.Name);
                             while (ClassIds.ContainsKey(id))
                             {
                                 id++;
