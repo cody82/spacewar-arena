@@ -139,7 +139,7 @@ namespace SpaceWar2006.GameSystem
             Map = GetMapName(map);
             Game = "spacewar2006";
             GameType = rule!=null?rule.GetType().Name:"none";
-            Version = Handshake.ThisVersion;
+            Version = Root.Instance.Mod.Version;
             TickRate = (int)serv.ServerTickrate;
             UpdateRate = (int)(serv.ServerTickrate / (float)serv.ServerUpdateDivisor);
 
@@ -280,7 +280,7 @@ namespace SpaceWar2006.GameSystem
         }
     }
 
-    public class Mod
+    public class Mod : Cheetah.Mod
     {
         public void Init()
         {
@@ -290,6 +290,7 @@ namespace SpaceWar2006.GameSystem
                 return;
             }
 
+            Root.Instance.Mod = this;
             initialized = true;
 
             foreach (DictionaryEntry de in Root.Instance.ResourceManager.SearchFileNode("maps"))
@@ -307,9 +308,24 @@ namespace SpaceWar2006.GameSystem
             //Root.Instance.Script.Execute(FileSystem.Get("mods/" + r.Mod + "/scripts/init.boo").getStream());
             //Root.Instance.Script.Execute(Root.Instance.FileSystem.Get("mods/" + Root.Instance.Mod + "/scripts/init.boo").getStream());
             Root.Instance.Script.Execute(Root.Instance.FileSystem.Get("scripts/spacewar2006.boo").getStream());
-
         }
 
+        public override Version AssemblyVersion
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
+
+        public override int Version
+        {
+            get
+            {
+                return AssemblyVersion.Minor;
+            }
+        }
+        const int version = 1;
         bool initialized = false;
         public static Mod Instance = new Mod();
     }

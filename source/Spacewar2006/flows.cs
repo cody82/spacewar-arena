@@ -138,7 +138,7 @@ namespace SpaceWar2006.Flows
         }
         public GameServer()
         {
-            Mod.Instance.Init();
+            SpaceWar2006.GameSystem.Mod.Instance.Init();
         }
         public IrcReporter reporter;
 
@@ -1505,25 +1505,22 @@ namespace SpaceWar2006.Flows
 
     public class ClientStart : Flow
     {
-        /*public ClientStart()
-            : base("demos\\test.demo")
-        {
-            Map map = new TestSector();
-            map.SetScene(Root.Instance.Scene);
-            map.Create();
-        }
-        */
         public override void Start()
         {
             base.Start();
 
-            Mod.Instance.Init();
-
-            //Root.Instance.ResourceManager.LoadSound("music01.mp3").Play(true);
-
+            SpaceWar2006.GameSystem.Mod.Instance.Init();
             
 
             int i;
+
+            if ((i = Array.FindIndex<string>(Root.Instance.Args, new Predicate<string>(delegate(string s) { return s == "-password"; }))) != -1)
+            {
+                string password = Root.Instance.Args[i + 1];
+
+                Root.Instance.ClientPassword = password;
+            }
+
             if ((i = Array.FindIndex<string>(Root.Instance.Args, new Predicate<string>(delegate(string s) { return s == "-connect"; }))) != -1)
             {
                 string host = Root.Instance.Args[i + 1];

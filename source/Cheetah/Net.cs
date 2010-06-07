@@ -94,225 +94,6 @@ namespace Cheetah
 
         public string Cmd;
     }
-    /*
-	public class FileReceiveTask
-	{
-		bool headerread=false;
-		int length;
-		string name;
-		byte[] buffer;
-		int position=0;
-		int packetsize;
-		bool ready=false;
-		NetChannel channel;
-		
-		public byte[] Buffer
-		{
-			get{return buffer;}
-		}
-		
-		public bool Ready
-		{
-			get{return ready;}
-		}
-		
-		public FileReceiveTask(NetBase net, NetChannel channel)
-		{
-			this.channel=channel;
-		}
-		
-		void ReadPacket(NetMessage msg)
-		{
-			byte[] received=msg.ReadBytes(packetsize);
-			int size;
-			if(position+packetsize>length)
-			{
-				size=length-position+packetsize;
-				ready=true;
-				Cheetah.Console.WriteLine("file received");
-			}
-			else
-			{
-				size=packetsize;
-			}
-			
-			Array.Copy(received,0,buffer,position,size);
-			position+=size;
-		}
-		
-		void ReadHeader(NetMessage msg)
-		{
-			byte b=msg.ReadByte();
-			length=msg.ReadInt();
-			packetsize=msg.ReadInt();
-			buffer=new byte[length];
-			name=msg.ReadString();
-			Cheetah.Console.WriteLine("file header: "+length.ToString()+" "+name);
-		}
-		
-		public void PacketIn(NetMessage msg)
-		{
-			if(ready)
-				return;
-			
-			if(headerread)
-			{
-				ReadPacket(msg);
-			}
-			else
-			{
-				ReadHeader(msg);
-			}
-		}
-	}
-	
-	public class FileSendTask : ITickable
-	{
-		public float Rate=4000;//bytes per second
-		public int PacketSize=800;
-		public float PacketInterval;
-		
-		protected float time=0;
-		protected bool ready=false;
-		protected Stream stream;
-		protected string name;
-		protected bool headersent=false;
-		protected NetConnection connection;
-		protected NetChannel channel;
-		protected NetBase net;
-	
-		public bool Ready
-		{
-			get{return ready;}
-		}
-		
-		public FileSendTask(NetBase net,NetConnection connection, NetChannel channel, Stream file, string name)
-		{
-			PacketInterval=PacketSize/Rate;
-			stream=file;
-			this.name=name;
-			this.connection=connection;
-			this.channel=channel;
-			this.net=net;
-		}
-		
-		protected void Send(NetMessage msg)
-		{;
-			if(net is NetServer)
-				((NetServer)net).SendMessage(msg,connection,channel);
-			else
-				((NetClient)net).SendMessage(msg,channel);
-			
-		}
-		
-		protected void SendHeader()
-		{
-			//byte[] buffer=new byte[1+4+name.Length];
-			NetMessage msg=new NetMessage();
-			msg.Write((byte)1);
-			msg.Write(stream.Length);
-			msg.Write(PacketSize);
-			msg.Write(name);
-			Send(msg);
-			headersent=true;
-		}
-		
-		protected void SendNextPacket()
-		{
-			if(ready)
-				return;
-			
-			if(!headersent)
-			{
-				SendHeader();
-				return;
-			}
-			
-			NetMessage msg=new NetMessage();
-			byte[] buffer=new byte[PacketSize];
-			int bytes=stream.Read(buffer,0,PacketSize);
-			msg.Write(buffer,0,bytes);
-			Send(msg);
-			if(bytes<PacketSize)
-			{
-				ready=true;
-				Cheetah.Console.WriteLine("file send complete");
-			}
-		}
-		
-		public void Tick(float dtime)
-		{
-			time+=dtime;
-			if(time>PacketInterval)
-			{
-				SendNextPacket();
-				time=0;
-			}
-		}
-	}
-	*/
-	public class Handshake : ISerializable
-	{
-		public enum Phase
-		{
-			Request,Accept,Deny,Quit
-		}
-
-		public Handshake(Phase t,int m,short n,string i,string password)
-		{
-			Type=t;
-			Magic=m;
-			ClientNumber=n;
-			Info=i;
-            if (password != null)
-                Password = password;
-            else
-			    Password="";
-            Name = "";
-            Version = ThisVersion;
-        }
-        public Handshake(Phase t, int m, short n, string i)
-            :this(t,m,n,i,"")
-        {
-        }
-
-		public Handshake(DeSerializationContext context)
-		{
-			DeSerialize(context);
-		}
-
-        public void DeSerialize(DeSerializationContext context)
-        {
-            Magic = context.ReadInt32();
-            Type = (Phase)context.ReadInt32();
-            ClientNumber = context.ReadInt16();
-            Info = context.ReadString();
-            Password = context.ReadString();
-            Name = context.ReadString();
-            Version = context.ReadInt32();
-        }
-
-        public void Serialize(SerializationContext context)
-        {
-			context.Write(Magic);
-            context.Write((int)Type);
-            context.Write(ClientNumber);
-            context.Write(Info);
-            context.Write(Password);
-            context.Write(Name);
-            context.Write(Version);
-        }
-
-		public int Magic;
-		public Phase Type;
-		public short ClientNumber;
-		public string Info;
-		public string Password;
-        public string Name;
-        public int Version;
-        public static readonly int MagicDefault=1337;
-        public static readonly int ThisVersion = 8;
-	}
 
     public interface IQuery
     {
@@ -388,44 +169,6 @@ namespace Cheetah
 
         #endregion
     }
-
-	public class QueryPacket : ISerializable
-	{
-		public enum Phase
-		{
-			Request,Reply
-		}
-		
-		public QueryPacket()
-		{
-		}
-
-		public QueryPacket(DeSerializationContext context)
-		{
-            DeSerialize(context);
-        }
-
-        public void DeSerialize(DeSerializationContext context)
-        {
-			Type=(Phase)context.ReadInt32();
-            Info = context.ReadString();
-            Name = context.ReadString();
-            MaxPlayers = context.ReadInt32();
-        }
-
-        public void Serialize(SerializationContext context)
-        {
-            context.Write((int)Type);
-            context.Write(Info);
-            context.Write(Name);
-            context.Write(MaxPlayers);
-        }
-
-		public Phase Type;
-		public string Info="";
-        public string Name = "";
-        public int MaxPlayers;
-	}
 
     public class InternetScanner : ITickable
     {
@@ -822,752 +565,6 @@ namespace Cheetah
         None=0,Override,Empty,ServerNoOverride
     }
 
-    /*
-	public class UdpClient3 : IConnection
-	{
-        bool compress;
-
-		public UdpClient3(string host,int port, string name,string password)
-		{
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-			Connect(host,port,name,password);
-		}
-
-        public UdpClient3(string host, int port)
-        {
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-            SetRemoteHost(host, port);
-        }
-        public UdpClient3()
-        {
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-        }
-        public UdpClient3(Socket s)
-        {
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-            Sock = s;
-            Sock.Blocking = true;
-        }
-		public virtual void Send(byte[] data, int index, int length)
-		{
-			if(EP!=null)
-			{
-                byte[] data2 = new byte[data.Length + 4];
-                BinaryWriter w = new BinaryWriter(new MemoryStream(data2));
-                w.Write(LastServerTimeStamp);
-                w.Write(data, index, length);
-                w.Flush();
-                w.BaseStream.Flush();
-                w.Close();
-         
-                byte[] compressed;
-                int compressedlength;
-                if (compress)
-                {
-                    compressed = new byte[8192];
-                    //compressed = new byte[data2.Length];
-                    compressedlength = ZipCompressor.Instance.Compress(data2, data2.Length, compressed);
-                }
-                else
-                {
-                    compressed = data2;
-                    compressedlength = data2.Length;
-                }
-				stats.PacketsOut++;
-                stats.BytesOut += compressedlength;
-				stats.UncompressedBytesOut+=data2.Length;
-				Sock.SendTo(compressed,0,compressedlength,SocketFlags.None,EP);
-			}
-			else
-				throw new Exception();
-		}
-		
-		public virtual void Send(ISerializable obj)
-		{
-			MemoryStream m=new MemoryStream();
-			//Root.Instance.Factory.Serialize(m,obj);
-            byte[] buf = m.GetBuffer();
-            //Console.WriteLine(buf[0].ToString() +" "+ buf[1].ToString());
-			Send(buf,0,(int)m.Position);
-		}
-
-		public virtual Datagram Receive()
-		{
-			return Receive(false);
-		}
-
-		protected Datagram Receive(bool block)
-		{
-			Sock.Blocking=block;
-			
-			//if(EP==null)
-			//	throw new Exception();
-
-			byte[] buffer=new byte[8192];
-			try
-			{
-				IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-				EndPoint tempRemoteEP = (EndPoint)sender;
-				int i=Sock.ReceiveFrom(buffer,ref tempRemoteEP);
-				stats.PacketsIn++;
-				stats.BytesIn+=i;
-
-                byte[] decompressed;
-                int decompressedlength;
-                if (compress)
-                {
-                    decompressed = new byte[8192];
-                    decompressedlength = ZipCompressor.Instance.Decompress(buffer, i, decompressed);
-                }
-                else
-                {
-                    decompressedlength = i;
-                    decompressed = buffer;
-                }
-                if (decompressedlength < i)
-                    Console.WriteLine("compressor bug?!");
-
-				//Array.Copy(buffer,b,i);
-				//byte[] decompressed=Compressor.DeCompress(b);
-                stats.UncompressedBytesIn += decompressedlength;
-
-                //byte[] data2 = new byte[decompressed.Length - 4];
-                BinaryReader r = new BinaryReader(new MemoryStream(decompressed));
-                float f = r.ReadSingle();
-                LastServerTimeStamp = f;
-                //Array.Copy(decompressed, 4, data2, 0, data2.Length);
-
-                //Console.WriteLine("rcvd " + i +" "+decompressedlength);
-                //HACK
-                return new Datagram(decompressed, 4, decompressedlength - 4, (IPEndPoint)tempRemoteEP);
-			}
-			catch(Exception)
-			{
-				return null;
-			}
-		}
-
-		protected void CreateSocket()
-		{
-			Sock=new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-			Sock.Blocking=true;
-		}
-
-        public void SetRemoteHost(IPEndPoint ep)
-        {
-            if (Sock == null)
-                CreateSocket();
-
-            EP = ep;
-        }
-        public void SetRemoteHost(IPAddress ip, int port)
-        {
-            if (Sock == null)
-                CreateSocket();
-
-            EP = new IPEndPoint(ip, port);
-        }
-        public void SetRemoteHost(string host, int port)
-		{
-			if(Sock==null)
-				CreateSocket();
-
-            IPAddress ip=Dns.Resolve(host).AddressList[0];
-            EP=new IPEndPoint(ip,port);
-		}
-
-		public QueryPacket Query(string host,int port)
-		{
-			SetRemoteHost(host,port);
-
-			QueryPacket p=new QueryPacket();
-			p.Type=QueryPacket.Phase.Request;
-			Send(p);
-			Datagram d=Receive(true);
-			return (QueryPacket)Root.Instance.Factory.DeSerialize(d.GetStream());
-		}
-
-		public virtual void Connect(string host,int port,string name,string password)
-		{
-			SetRemoteHost(host,port);
-
-            Stream m=null;
-            Datagram dg=null;
-            for (int i = 0; i < 10; ++i)
-			{
-				//request
-                Handshake hs=new Handshake(Handshake.Phase.Request, Handshake.MagicDefault, 0, "Join Request",password);
-                hs.Name = name;
-                Send(hs);
-			
-				//check answer from server
-				dg=Receive(true);
-				if(dg!=null)
-				{
-					m=dg.GetStream();
-					break;
-				}
-				Thread.Sleep(5000);
-			}
-			if(m==null)
-				throw new Exception("cant connect.");
-
-            Handshake h;
-            try
-            {
-                h = (Handshake)Root.Instance.Factory.DeSerialize(m);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("exception raised while receiving handshake. packet dumped.");
-                FileStream f = new FileStream("packet.dump", FileMode.Create, FileAccess.Write);
-                byte[] data = dg.GetData();
-                f.Write(data, dg.Index, dg.Length);
-                f.Close();
-                throw e;
-
-            }
-            if (h.Type != Handshake.Phase.Accept)
-                throw new Exception("request denied");
-
-			Sock.Blocking=false;
-			//IPEndPoint LocalEP=(IPEndPoint)Sock.LocalEndPoint;
-			Console.WriteLine("connected to server: clientnumber: "+h.ClientNumber+" \""+h.Info+"\"");
-			ClientNumber=h.ClientNumber;
-			//Address=address;
-		}
-
-		public virtual void Disconnect()
-		{
-			Send(new Handshake(Handshake.Phase.Quit,Handshake.MagicDefault,ClientNumber,"Quit"));
-			Sock.Close();
-			Sock=null;
-		}
-
-		public ConnectionStatistics Statistics
-		{
-			get{return stats;}
-		}
-
-		protected Socket Sock;
-		protected IPEndPoint EP;
-		public short ClientNumber;
-        public float LastServerTimeStamp;
-
-		protected ConnectionStatistics stats;
-		//public string Address;
-	}
-     * 
-    /*
-	public class UdpServer3 : IConnection, ITickable
-	{
-		public class Slot
-		{
-			public Slot(IPEndPoint ep,short n,string name)
-			{
-				ClientEndPoint=ep;
-				ClientNumber=n;
-                Name = name;
-            }
-
-			public override string ToString()
-			{
-				return "#"+ClientNumber+":\t\""+Name+"\"\t["+ClientEndPoint.ToString()+"] RTT: "+(int)(AvgRTT*1000)+"ms";
-			}
-
-            public void OnMeasureRTT(float rtt)
-            {
-                NumRTT++;
-                RTT = rtt;
-                SumRTT += rtt;
-            }
-
-            public void UpdateRTT()
-            {
-                if (NumRTT != 0)
-                    AvgRTT = SumRTT / (float)NumRTT;
-                else
-                    AvgRTT = RTT;
-                ResetRTT();
-            }
-
-            public void ResetRTT()
-            {
-                NumRTT = 0;
-                SumRTT = 0;
-                RTT = 0;
-            }
-
-			public IPEndPoint ClientEndPoint;
-			public short ClientNumber;
-            public float LastPacketTime;
-            public string Name;
-            public float RTT;
-            public int NumRTT;
-            public float SumRTT;
-            public float AvgRTT;
-        }
-
-        bool compress;
-		public UdpServer3(int port,int maxclients,string password)
-		{
-            compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-            Password = password;
-			Clients=new Slot[maxclients];
-			Listen(port);
-		}
-
-		public override string ToString()
-		{
-			string s="Slots: "+Clients.Length+"\r\n";
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]!=null)
-				s+=i+":\t"+Clients[i].ToString()+"\r\n";
-			}
-			return s;
-		}
-
-		protected void AddClient(IPEndPoint ep,short n,string name)
-		{
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]==null)
-				{
-					Clients[i]=new Slot(ep,n,name);
-                    NumClients++;
-					return;
-				}
-			}
-		}
-
-        protected Slot GetClient(IPEndPoint ep)
-        {
-            for (int i = 0; i < Clients.Length; ++i)
-            {
-                if (Clients[i] != null && Clients[i].ClientEndPoint.ToString() == ep.ToString())
-                {
-                    return Clients[i];
-                }
-            }
-            return null;
-        }
-
-        public short GetClientNumber(IPEndPoint ep)
-		{
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]!=null&&Clients[i].ClientEndPoint.ToString()==ep.ToString())
-				{
-					return Clients[i].ClientNumber;
-				}
-			}
-			return -1;
-		}
-
-        public Slot GetClient(short id)
-        {
-            for (int i = 0; i < Clients.Length; ++i)
-            {
-                if (Clients[i] != null && Clients[i].ClientNumber == id)
-                {
-                    return Clients[i];
-                }
-            }
-            return null;
-        }
-
-		public bool ClientExists(short id)
-		{
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]!=null&&Clients[i].ClientNumber==id)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		public bool ClientExists(IPEndPoint ep)
-		{
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]!=null&&Clients[i].ClientEndPoint.ToString()==ep.ToString())
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-        public void RemoveAllClients()
-        {
-            for (int i = 0; i < Clients.Length; ++i)
-            {
-                if (Clients[i] != null)
-                {
-                    Clients[i] = null;
-                    NumClients--;
-                    return;
-                }
-            }
-        }
-
-        public void Disconnect()
-        {
-            RemoveAllClients();
-            Sock.Close();
-            Sock = null;
-        }
-
-		protected void RemoveClient(IPEndPoint ep)
-		{
-			for(int i=0;i<Clients.Length;++i)
-			{
-				if(Clients[i]!=null&&Clients[i].ClientEndPoint.ToString()==ep.ToString())
-				{
-					Clients[i]=null;
-                    NumClients--;
-					return;
-				}
-			}
-		}
-
-		protected int GenerateNumber()
-		{
-			return Root.Instance.NextIndex++;
-		}
-
-		public virtual void Listen(int port)
-		{
-			Sock=new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-			Sock.Blocking=false;
-			Sock.Bind(new IPEndPoint(IPAddress.Any,port));
-			Console.WriteLine("listening on port "+port);
-            Port = port;
-		}
-
-		public void Tick(float dtime)
-		{
-            //return;
-
-			Datagram ri;
-            Slot s1;
-            while((ri=Receive(false))!=null)
-			{
-				BinaryReader r=new BinaryReader(ri.GetStream());
-				//string s=r.ReadString();
-                short typeid = -1;// r.ReadInt16();
-                Type type = null;
-                try
-                {
-                    //float t = r.ReadSingle();
-                    typeid = r.ReadInt16();
-                    type = Root.Instance.Factory.GetType(typeid);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("received packet with wrong id: "+typeid);
-                    continue;
-                }
-
-                r.BaseStream.Position=0;
-				if(type==typeof(Handshake))
-				{
-					Handshake h=null;
-                    //try
-                    //{
-                        h=(Handshake)Root.Instance.Factory.DeSerialize(ri.GetStream());//r.BaseStream);
-                    //}
-                    //catch(EndOfStreamException)
-                    //{
-                    //}
-
-                    if (h.Magic == Handshake.MagicDefault)
-                    {
-                        if (h.Type == Handshake.Phase.Request && !ClientExists(ri.Sender))
-                        {
-                            if (h.Version != Handshake.ThisVersion)
-                            {
-                                //wrong version
-                                Console.WriteLine("client denied(wrong version): " + h.Name + " \"" + h.Info + "\"" + " [" + ri.Sender.ToString() + "]");
-                                Send(new Handshake(Handshake.Phase.Deny, Handshake.MagicDefault, -1, "Wrong Version"), ri.Sender);
-                            }
-                            else if (Password == null || Password == "" || Password == h.Password)
-                            {
-                                short n = (short)GenerateNumber();
-                                AddClient(ri.Sender, n, h.Name);
-                                GetClient(ri.Sender).LastPacketTime = Root.Instance.Time;
-                                Console.WriteLine("client connected: " + n + ": " + h.Name + " \"" + h.Info + "\"" + " [" + ri.Sender.ToString() + "]");
-                                Send(new Handshake(Handshake.Phase.Accept, Handshake.MagicDefault, n, "Join Accept"), ri.Sender);
-                                Root.Instance.ServerOnConnect(n, h.Name, ri.Sender);
-                            }
-                            else
-                            {
-                                //password wrong
-                                Console.WriteLine("client denied(wrong password): " + h.Name + " \"" + h.Info + "\"" + " [" + ri.Sender.ToString() + "]");
-                                Send(new Handshake(Handshake.Phase.Deny, Handshake.MagicDefault, -1, "Wrong Password"), ri.Sender);
-                            }
-                        }
-                        else if (h.Type == Handshake.Phase.Quit && ClientExists(ri.Sender))
-                        {
-                            Slot slot = GetClient(ri.Sender);
-                            Root.Instance.ServerOnDisconnect(slot.ClientNumber, slot.Name, ri.Sender);
-                            RemoveClient(ri.Sender);
-                            Console.WriteLine("client disconnected: " + h.ClientNumber + " \"" + h.Info + "\"" + " [" + ri.Sender.ToString() + "]");
-                        }
-                        else
-                        {
-                            //packet makes no sense - drop!
-                        }
-                    }
-                    else
-                    {
-                        //number wrong, ignore
-                    }
-				}
-                else if ((s1 = GetClient(ri.Sender)) != null)
-                {
-                    s1.LastPacketTime = Root.Instance.Time;
-                    RecvQueue.Enqueue(ri);
-                }
-                else//unconnected client
-                {
-                    RecvQueue.Enqueue(ri);
-                }
-            }
-
-            for (int i = 0; i < Clients.Length; ++i)
-            {
-                if (Clients[i] != null)
-                {
-                    if (Root.Instance.Time - Clients[i].LastPacketTime > 30)
-                    {
-                        Slot slot = Clients[i];
-                        Console.WriteLine("client timeout: " + Clients[i].ClientNumber + " [" + Clients[i].ClientEndPoint.ToString() + "]");
-                        Root.Instance.ServerOnDisconnect(slot.ClientNumber, slot.Name, slot.ClientEndPoint);
-                        RemoveClient(Clients[i].ClientEndPoint);
-                    }
-                }
-            }
-            
-            UpdateRTT += dtime;
-            if (UpdateRTT >= 3)
-            {
-                UpdateRTT = 0;
-                for (int i = 0; i < Clients.Length; ++i)
-                {
-                    if (Clients[i] != null)
-                    {
-                        Clients[i].UpdateRTT();
-                    }
-                }
-            }
-        }
-
-        public virtual void Send(ISerializable obj)
-		{
-            if (NumClients == 0 && Root.Instance.Recorder==null)
-                return;
-
-            byte[] buf = new byte[8192];
-            MemoryStream m = new MemoryStream(buf);
-
-            Root.Instance.Factory.Serialize(m, obj);
-
-            if (Root.Instance.Recorder != null)
-            {
-                Root.Instance.Recorder.WritePacket((int)(Root.Instance.Time * 1000), buf, (int)m.Position);
-            }
-
-            foreach (Slot s in Clients)
-            {
-				if(s!=null)
-					Send(buf,0,(int)m.Position,s.ClientEndPoint);
-			}
-		}
-		
-		public virtual void Send(ISerializable obj,IPEndPoint ep)
-		{
-            MemoryStream m = new MemoryStream();
-			Root.Instance.Factory.Serialize(m,obj);
-            byte[] buf = m.GetBuffer();
-			//m.Seek(0,SeekOrigin.Begin);
-			//m.Read(buf,0,(int)m.Length);
-			Send(buf,0,(int)m.Position,ep);
-		}
-        public virtual void SendNot(ISerializable obj, IPEndPoint ep)
-        {
-            if (NumClients == 0)
-                return;
-            MemoryStream m = new MemoryStream();
-            Root.Instance.Factory.Serialize(m, obj);
-            byte[] buf = m.GetBuffer();
-            //m.Seek(0, SeekOrigin.Begin);
-            //m.Read(buf, 0, (int)m.Length);
-
-            SendNot(buf, 0, (int)m.Position,ep);
-        }
-
-		public virtual void Send(byte[] data, int index, int length)
-		{
-            foreach (Slot s in Clients)
-			{
-                if(s!=null)
-				    Send(data,index,length,s.ClientEndPoint);
-			}
-		}
-
-        public virtual void SendNot(byte[] data, int index, int length, IPEndPoint ep)
-        {
-            if (NumClients == 0 && Root.Instance.Recorder==null)
-                return;
-            if (ep == null)
-                throw new Exception("ep==null");
-            if (Root.Instance.Recorder != null)
-            {
-                Root.Instance.Recorder.WritePacket((int)(Root.Instance.Time * 1000), data, length);
-            }
-            foreach (Slot s in Clients)
-            {
-                if (s != null)
-                {
-                    if (ep.ToString() != s.ClientEndPoint.ToString())
-                        Send(data, index, length, s.ClientEndPoint);
-                    //else System.Console.WriteLine("sening not to " + ep.ToString());
-                }
-            }
-        }
-
-		public virtual void Send(byte[] data,int index,int length,IPEndPoint ep)
-		{
-            //return;
-            byte[] data2 = new byte[length + 4];
-            BinaryWriter w = new BinaryWriter(new MemoryStream(data2));
-            w.Write(Root.Instance.Time);
-            w.Write(data, index, length);
-            w.Flush();
-            w.BaseStream.Flush();
-            w.Close();
-
-            stats.PacketsOut++;
-            stats.UncompressedBytesOut += length - index;
-
-            byte[] compressed;
-            int compressedlength;
-            if (compress)
-            {
-                //compressed = new byte[data2.Length];
-                compressed = new byte[8192];
-                compressedlength = ZipCompressor.Instance.Compress(data2, data2.Length, compressed);
-            }
-            else
-            {
-                compressed = data2;
-                compressedlength = data2.Length;
-            }
-
-            stats.BytesOut += compressedlength;
-
-           // Console.WriteLine("send " + compressedlength +" "+data2.Length);
-
-            //int i=Root.Instance.TickCount();
-            Sock.SendTo(compressed, 0, compressedlength, SocketFlags.None, ep);
-        }
-
-		public Datagram Receive()
-		{
-			if(RecvQueue.Count>0)
-			{
-				Datagram ri=(Datagram)RecvQueue.Dequeue();
-				return ri;
-			}
-			else
-				return null;
-		}
-
-        //byte[] buffer2 = new byte[8192];
-        byte[] buffer = new byte[8192];
-        protected Datagram Receive(bool block)
-		{
-			Sock.Blocking=block;
-
-			try
-			{
-                //byte[] buffer = new byte[8192];
-                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-				EndPoint tempRemoteEP = (EndPoint)sender;
-				int i=Sock.ReceiveFrom(buffer,ref tempRemoteEP);
-
-                stats.PacketsIn++;
-                stats.BytesIn += i;
-
-                byte[] decompressed;
-                int decompressedlength;
-                if (compress)
-                {
-                    decompressed = new byte[8192];
-                    decompressedlength = ZipCompressor.Instance.Decompress(buffer, i, decompressed);
-                }
-                else
-                {
-                    decompressedlength = i;
-                    decompressed = buffer;
-                }
-                stats.UncompressedBytesIn += decompressedlength;
-
-                BinaryReader r = new BinaryReader(new MemoryStream(decompressed));
-                float f = r.ReadSingle();
-                //Array.Copy(decompressed, 4, data2, 0, data2.Length);
-                sender=(IPEndPoint)tempRemoteEP;
-                Slot s=GetClient(sender);
-                if (s != null)
-                {
-                    s.OnMeasureRTT(Root.Instance.Time - f);
-                }
-                Datagram dg = new Datagram(decompressed, 4, decompressedlength - 4, (IPEndPoint)tempRemoteEP);
-                dg.Connected=s!=null;
-                return dg;
-            }
-			catch(Exception)
-			{
-				return null;
-			}
-		}
-		
-		public ConnectionStatistics Statistics
-		{
-			get{return stats;}
-		}
-
-        public int MaxClients
-        {
-            get
-            {
-                return Clients.Length;
-            }
-        }
-
-        public int ConnectedClients
-        {
-            get
-            {
-                return NumClients;
-            }
-        }
-
-		protected Socket Sock;
-		public Slot[] Clients;
-		protected Queue RecvQueue=new Queue();
-        public string Password;
-		protected ConnectionStatistics stats;
-        public int NumClients=0;
-        float UpdateRTT;
-        public int Port;
-	}
-
-    */
 
     public static class NetCompressor
     {
@@ -1608,7 +605,6 @@ namespace Cheetah
         public UdpClient()
         {
             //compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
-            //log = new NetConfiguration();
             NetPeerConfiguration config = new NetPeerConfiguration("spacewar2006-1");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -1625,44 +621,7 @@ namespace Cheetah
 
         public virtual void Send(NetOutgoingMessage m)
         {
-            //if (EP != null)
-            /*{
-                byte[] data2 = new byte[data.Length + 4];
-                BinaryWriter w = new BinaryWriter(new MemoryStream(data2));
-                w.Write(LastServerTimeStamp);
-                w.Write(data, index, length);
-                w.Flush();
-                w.BaseStream.Flush();
-                w.Close();
-
-                byte[] compressed;
-                int compressedlength;
-                if (compress)
-                {
-                    compressed = new byte[8192];
-                    //compressed = new byte[data2.Length];
-                    compressedlength = ZipCompressor.Instance.Compress(data2, data2.Length, compressed);
-                }
-                else
-                {
-                    compressed = data2;
-                    compressedlength = data2.Length;
-                }
-                stats.PacketsOut++;
-                stats.BytesOut += compressedlength;
-                stats.UncompressedBytesOut += data2.Length;
-
-                NetMessage m = new NetMessage(compressedlength);
-                m.Write(compressed,0,compressedlength);
-                client.SendMessage(m,NetChannel.Unreliable);
-                //System.Console.WriteLine("send: " + m.Length);
-                //Sock.SendTo(compressed, 0, compressedlength, SocketFlags.None, EP);
-            }
-            //else
-            //    throw new Exception();*/
-
             client.SendMessage(compress?NetCompressor.Compress(m):m, NetDeliveryMethod.Unreliable);
-            //client.Heartbeat();
         }
 
         public virtual void Send(ISerializable obj)
@@ -1670,7 +629,6 @@ namespace Cheetah
             SerializationContext c = new SerializationContext(Root.Instance.Factory,client.CreateMessage());
             Root.Instance.Factory.Serialize(c, obj);
             byte[] buf = c.ToArray();
-            //Console.WriteLine(buf[0].ToString() +" "+ buf[1].ToString());
             Send(c.GetMessage());
         }
 
@@ -1678,8 +636,6 @@ namespace Cheetah
         public NetIncomingMessage Receive(out IPEndPoint sender)
         {
             NetConnection c;
-
-
 
             NetIncomingMessage msg;
             while ((msg = client.ReadMessage()) != null)
@@ -1706,67 +662,22 @@ namespace Cheetah
 
             sender = null;
             return null;
-            //if(EP==null)
-            //	throw new Exception();
-
-            //byte[] buffer = new byte[8192];
-            //try
-            /*{
-                //IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-                //EndPoint tempRemoteEP = (EndPoint)sender;
-                //int i = Sock.ReceiveFrom(buffer, ref tempRemoteEP);
-                NetMessage m = client.ReadMessage();
-                if (m == null)
-                    return null;
-                byte[] buffer = m.ReadBytes(m.Length);
-                int i = m.Length;
-
-                stats.PacketsIn++;
-                stats.BytesIn += m.Length;
-
-                byte[] decompressed;
-                int decompressedlength;
-                if (compress)
-                {
-                    decompressed = new byte[8192];
-                    decompressedlength = ZipCompressor.Instance.Decompress(buffer, i, decompressed);
-                }
-                else
-                {
-                    decompressedlength = i;
-                    decompressed = buffer;
-                }
-                if (decompressedlength < i)
-                    Console.WriteLine("compressor bug?!");
-
-                //Array.Copy(buffer,b,i);
-                //byte[] decompressed=Compressor.DeCompress(b);
-                stats.UncompressedBytesIn += decompressedlength;
-
-                //byte[] data2 = new byte[decompressed.Length - 4];
-                BinaryReader r = new BinaryReader(new MemoryStream(decompressed));
-                float f = r.ReadSingle();
-                LastServerTimeStamp = f;
-                //Array.Copy(decompressed, 4, data2, 0, data2.Length);
-
-                //Console.WriteLine("rcvd " + i +" "+decompressedlength);
-                //HACK
-                return new Datagram(decompressed, 4, decompressedlength - 4, m.Sender.RemoteEndpoint);
-            }*/
-            //catch (Exception)
-            //{
-            //    return null;
-            //}
         }
-        
-        public QueryPacket Query(string host, int port)
+
+        protected NetOutgoingMessage CreateApprovalRequest(string password)
         {
-            return null;
+            NetOutgoingMessage msg = client.CreateMessage();
+
+            msg.Write(Root.Instance.Version);
+            msg.Write(Root.Instance.Mod.Version);
+            msg.Write(password);
+
+            return msg;
         }
-        
+
         public virtual void Connect(string host, int port, string name, string password)
         {
-            client.Connect(host, port);
+            client.Connect(host, port, CreateApprovalRequest(password));
 
             //read client number
             int i = 0;
@@ -1881,14 +792,12 @@ namespace Cheetah
             get { return Convert(client.Statistics,client.ServerConnection.AverageRoundtripTime); }
         }
 
-        //protected Socket Sock;
         public NetClient client;
         protected IPEndPoint EP;
         public short ClientNumber;
         public float LastServerTimeStamp;
 
         protected ConnectionStatistics stats;
-        //public string Address;
     }
 
 
@@ -1904,7 +813,6 @@ namespace Cheetah
             compress = Root.Instance.ResourceManager.LoadConfig("config/global.config").GetBool("net.compression");
             Password = password;
             connections = new NetConnection[maxclients];
-            //log=new NetLog();
             NetPeerConfiguration config = new NetPeerConfiguration("spacewar2006-1");
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -2084,8 +992,6 @@ namespace Cheetah
             SerializationContext c = new SerializationContext(Root.Instance.Factory,m);
             Root.Instance.Factory.Serialize(c, obj);
             byte[] buf = c.ToArray();
-            //m.Seek(0,SeekOrigin.Begin);
-            //m.Read(buf,0,(int)m.Length);
             Send(c.GetMessage(), ep);
         }
         public virtual void SendNot(ISerializable obj, IPEndPoint ep)
@@ -2096,8 +1002,6 @@ namespace Cheetah
             SerializationContext c = new SerializationContext(Root.Instance.Factory, m);
             Root.Instance.Factory.Serialize(c, obj);
             byte[] buf = c.ToArray();
-            //m.Seek(0, SeekOrigin.Begin);
-            //m.Read(buf, 0, (int)m.Length);
 
             SendNot(c.GetMessage(), ep);
         }
@@ -2134,51 +1038,12 @@ namespace Cheetah
 
         public virtual void Send(NetOutgoingMessage m, IPEndPoint ep)
         {
-            //return;
-            /*byte[] data2 = new byte[length + 4];
-            BinaryWriter w = new BinaryWriter(new MemoryStream(data2));
-            w.Write(Root.Instance.Time);
-            w.Write(data, index, length);
-            w.Flush();
-            w.BaseStream.Flush();
-            w.Close();
-
-            stats.PacketsOut++;
-            stats.UncompressedBytesOut += length - index;
-
-            byte[] compressed;
-            int compressedlength;
-            if (compress)
-            {
-                //compressed = new byte[data2.Length];
-                compressed = new byte[8192];
-                compressedlength = ZipCompressor.Instance.Compress(data2, data2.Length, compressed);
-            }
-            else
-            {
-                compressed = data2;
-                compressedlength = data2.Length;
-            }
-
-            stats.BytesOut += compressedlength;
-
-            // Console.WriteLine("send " + compressedlength +" "+data2.Length);
-
-            //int i=Root.Instance.TickCount();
-            //Sock.SendTo(compressed, 0, compressedlength, SocketFlags.None, ep);
-            NetMessage m=new NetMessage(compressedlength);
-            m.Write(compressed,0,compressedlength);
-            server.SendMessage(m, server.FindConnection(ep), NetChannel.Unreliable);
-            /*i=Root.Instance.TickCount() - i;
-            if (i > 0)
-                Console.WriteLine(i.ToString());*/
             NetConnection c = FindConnection(ep);
             if(c!=null && c.Status==NetConnectionStatus.Connected)
                 server.SendMessage(compress?NetCompressor.Compress(m):m, c, NetDeliveryMethod.Unreliable);
 
         }
 
-        //byte[] buffer2 = new byte[8192];
         public NetIncomingMessage Receive(out IPEndPoint sender)
         {
             NetIncomingMessage m;
@@ -2223,7 +1088,31 @@ namespace Cheetah
                         }
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
-                        m.SenderConnection.Approve();
+                        {
+                            int root_version = m.ReadInt32();
+                            if (root_version != Root.Instance.Version)
+                            {
+                                Cheetah.Console.WriteLine("Client rejected: Wrong root version.");
+                                m.SenderConnection.Deny("Wrong Root Version. Need " + Root.Instance.Version + ", got " + root_version);
+                                break;
+                            }
+                            int mod_version = m.ReadInt32();
+                            if (mod_version != Root.Instance.Mod.Version)
+                            {
+                                Cheetah.Console.WriteLine("Client rejected: Wrong mod version.");
+                                m.SenderConnection.Deny("Wrong Mod Version. Need " + Root.Instance.Mod.Version + ", got " + mod_version);
+                                break;
+                            }
+                            string password = m.ReadString();
+                            if (password != this.Password && !string.IsNullOrEmpty(Password))
+                            {
+                                Cheetah.Console.WriteLine("Client rejected: Wrong password.");
+                                m.SenderConnection.Deny("Wrong Password.");
+                                break;
+                            }
+
+                            m.SenderConnection.Approve();
+                        }
                         break;
                     default:
                         Console.WriteLine("Unhandled type: " + m.MessageType);
@@ -2233,54 +1122,6 @@ namespace Cheetah
             }
             sender = null;
             return null;
-            //try
-           /* {
-                //byte[] buffer = new byte[8192];
-                //IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-                //EndPoint tempRemoteEP = (EndPoint)sender;
-                NetMessage m = server.ReadMessage();
-                if (m == null)
-                    return null;
-
-                int i = m.Length;
-                byte[] buffer = m.ReadBytes(i);
-
-                //System.Console.WriteLine("rcvd "+i+" bytes.");
-                stats.PacketsIn++;
-                stats.BytesIn += i;
-
-                byte[] decompressed;
-                int decompressedlength;
-                if (compress)
-                {
-                    decompressed = new byte[8192];
-                    decompressedlength = ZipCompressor.Instance.Decompress(buffer, i, decompressed);
-                }
-                else
-                {
-                    decompressedlength = i;
-                    decompressed = buffer;
-                }
-                stats.UncompressedBytesIn += decompressedlength;
-
-                BinaryReader r = new BinaryReader(new MemoryStream(decompressed));
-                float f = r.ReadSingle();
-                //Array.Copy(decompressed, 4, data2, 0, data2.Length);
-                //sender = m.Sender.RemoteEndpoint;
-                /*Net s = GetClient(sender);
-                if (s != null)
-                {
-                    s.OnMeasureRTT(Root.Instance.Time - f);
-                }*/
-                //Datagram dg = new Datagram(decompressed, 4, decompressedlength - 4, m.Sender.RemoteEndpoint);
-                //Datagram dg = new Datagram(data2, 4, decompressedlength - 4, m.Sender.RemoteEndpoint);
-                //dg.Connected = true;
-                //return dg;
-            //}
-            //catch (Exception)
-            //{
-            //    return null;
-            //}
         }
 
         public ConnectionStatistics Statistics
@@ -2306,11 +1147,8 @@ namespace Cheetah
 
         public NetServer server;
         NetConnection[] connections;
-        //public Slot[] Clients;
-        //protected Queue RecvQueue = new Queue();
         public string Password;
         protected ConnectionStatistics stats;
-        //public int NumClients = 0;
         float UpdateRTT;
         public int Port;
     }

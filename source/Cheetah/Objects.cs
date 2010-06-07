@@ -6225,6 +6225,22 @@ using Cheetah;");
             Lidgren.Library.Network.NetStatistics delta = new Lidgren.Library.Network.NetStatistics(null);
         }*/
 
+        public Version AssemblyVersion
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
+
+        public int Version
+        {
+            get
+            {
+                return AssemblyVersion.Minor;
+            }
+        }
+
 		public void UpdateInfo(float dtime,int cycles)
 		{
 			ClientFps=(int)((float)cycles/dtime);
@@ -6494,23 +6510,6 @@ using Cheetah;");
 		{
 			return true;
 		}
-
-        public ISerializable ServerAnswerQuery(QueryPacket query)
-        {
-            if (CurrentFlow != null)
-            {
-                return CurrentFlow.Query();
-            }
-            else
-            {
-                QueryPacket answer = new QueryPacket();
-                answer.Type = QueryPacket.Phase.Reply;
-                answer.Info = ServerName;
-                answer.Name = ServerName;
-                answer.MaxPlayers = ServerMaxPlayers;
-                return answer;
-            }
-        }
 
         public void ServerOnStateReceive(Lidgren.Network.NetIncomingMessage msg, IPEndPoint ip)
         {
@@ -6883,19 +6882,7 @@ using Cheetah;");
                     return;
                 }
                 msg.Position = 0;
-                if (type == typeof(QueryPacket) && IsAuthoritive)
-                {
-                    Console.WriteLine("Query received.");
-                    QueryPacket q = (QueryPacket)Factory.DeSerialize(new DeSerializationContext(msg));
-                    if (q.Type == QueryPacket.Phase.Request)
-                    {
-                        Console.WriteLine("Query answered.");
-                        ISerializable reply = ServerAnswerQuery(q);
-                        if(reply!=null)
-                            ((UdpServer)Connection).Send(reply, sender);
-                    }
-                }
-                else if (type == typeof(Events))
+                if (type == typeof(Events))
                 {
                     //if (msg.Connected)
                     {
@@ -7117,6 +7104,21 @@ using Cheetah;");
 
         public DemoRecorder Recorder = null;
         public DemoPlayer Player = null;
+
+        public Mod Mod;
+    }
+
+    public abstract class Mod
+    {
+        public abstract int Version
+        {
+            get;
+        }
+
+        public abstract Version AssemblyVersion
+        {
+            get;
+        }
 
     }
 }

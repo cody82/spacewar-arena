@@ -28,6 +28,8 @@ namespace Spacewar2006.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Text = "Spacewar Arena (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
+
             Console.Lines = Cheetah.Console.History.ToArray();
 
             loading = true;
@@ -389,8 +391,12 @@ namespace Spacewar2006.Forms
             GameRunning = true;
 
             string address = IpAddress.Text;
-            string[] args = new string[] { "-connect", address};
-            
+            string[] args;
+            if(string.IsNullOrEmpty(JoinPassword.Text))
+                args = new string[] { "-connect", address};
+            else
+                args = new string[] { "-connect", address, "-password", JoinPassword.Text };
+
             Root r = Root.Instance;
             r.Args = args;
 
@@ -398,23 +404,13 @@ namespace Spacewar2006.Forms
             r.ClientClient(args);
             IUserInterface ui = r.UserInterface;
 
-            //Helper h=new Helper();
-            //Cheetah.Root.Instance.LocalObjects.Add(h);
-
-            //Cheetah.Console.ConsoleEvent += ConsoleOutput;
-
-
             Flow f = new SpaceWar2006.Flows.ClientStart();
 
             r.CurrentFlow = f;
 
-
-
             f.Start();
 
             r.ClientLoop();
-
-            //Cheetah.Root.Instance.LocalObjects.Remove(h);
 
             r.ResourceManager.UnloadAll();
             r.UserInterface.Dispose();
@@ -453,18 +449,6 @@ namespace Spacewar2006.Forms
             r.Authoritive = true;
             r.ClientClient(new string[] {});
 
-            /*Flow f;
-            if (CurrentGameSettings is IRuleCreator)
-            {
-                f = new SpaceWar2006.Flows.GameServer(
-                   ((IRuleCreator)CurrentGameSettings).CreateRule(),
-                   (Map)Root.Instance.Factory.CreateInstance((Type)HostMap.SelectedItem),
-                   (int)HostBots.Value
-                   );
-            }
-            else
-                f = new SpaceWar2006.Flows.GameServer();
-            */
 
             Flow f = new SpaceWar2006.Flows.Game(
                 ((IRuleCreator)CurrentGameSettings).CreateRule(),
@@ -472,7 +456,6 @@ namespace Spacewar2006.Forms
                 (int)HostBots.Value,
                 false
                 );
-            //Flow f = new SpaceWar2006.Flows.PhysicsTest();
 
             r.CurrentFlow = f;
 
@@ -627,6 +610,7 @@ namespace Spacewar2006.Forms
                 f = new SpaceWar2006.Flows.GameServer();
             }
 
+            Root.Instance.ResourceManager.LoadConfig("config/global.config").Set("server.password", this.HostPassword.Text);
 
             r.CurrentFlow = f;
             f.Start();

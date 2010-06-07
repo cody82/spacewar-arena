@@ -36,7 +36,7 @@ namespace Spacewar2006.Forms
             this.IpAddress = new System.Windows.Forms.TextBox();
             this.InternetButton = new System.Windows.Forms.RadioButton();
             this.LanButton = new System.Windows.Forms.RadioButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.JoinPassword = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.JoinButton = new System.Windows.Forms.Button();
             this.ServerList = new System.Windows.Forms.ListView();
@@ -182,7 +182,7 @@ namespace Spacewar2006.Forms
             this.ClientTab.Controls.Add(this.IpAddress);
             this.ClientTab.Controls.Add(this.InternetButton);
             this.ClientTab.Controls.Add(this.LanButton);
-            this.ClientTab.Controls.Add(this.textBox1);
+            this.ClientTab.Controls.Add(this.JoinPassword);
             this.ClientTab.Controls.Add(this.label7);
             this.ClientTab.Controls.Add(this.JoinButton);
             this.ClientTab.Controls.Add(this.ServerList);
@@ -234,12 +234,12 @@ namespace Spacewar2006.Forms
             this.LanButton.UseVisualStyleBackColor = true;
             this.LanButton.CheckedChanged += new System.EventHandler(this.LanButton_CheckedChanged);
             // 
-            // textBox1
+            // JoinPassword
             // 
-            this.textBox1.Location = new System.Drawing.Point(114, 320);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(110, 20);
-            this.textBox1.TabIndex = 4;
+            this.JoinPassword.Location = new System.Drawing.Point(114, 320);
+            this.JoinPassword.Name = "JoinPassword";
+            this.JoinPassword.Size = new System.Drawing.Size(110, 20);
+            this.JoinPassword.TabIndex = 4;
             // 
             // label7
             // 
@@ -1207,7 +1207,7 @@ namespace Spacewar2006.Forms
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button ServerStart;
         private System.Windows.Forms.TabPage AboutTab;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox JoinPassword;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage PlayerTab;
         private System.Windows.Forms.TabPage WelcomeTab;
