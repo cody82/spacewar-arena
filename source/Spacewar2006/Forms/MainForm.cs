@@ -17,8 +17,7 @@ namespace Spacewar2006.Forms
 {
     public partial class MainForm : Form
     {
-        NewLanScanner LanScanner;
-        InternetScanner InternetScanner;
+        ServerFinder InternetScanner;
         
         public MainForm()
         {
@@ -28,7 +27,7 @@ namespace Spacewar2006.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Text = "Spacewar Arena (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
+            Text = Root.Instance.Mod.GameString;
 
             Console.Lines = Cheetah.Console.History.ToArray();
 
@@ -261,34 +260,28 @@ namespace Spacewar2006.Forms
             }
             return null;
         }
-        protected void OnServerAnswer(object p, IPEndPoint ep)
+        protected void OnServerAnswer(Lidgren.Network.NetIncomingMessage msg)
         {
-            SpaceWar2006.GameSystem.GameServerInfo info = p as SpaceWar2006.GameSystem.GameServerInfo;
-
-            if (info == null)
+            //SpaceWar2006.GameSystem.GameServerInfo info = p as SpaceWar2006.GameSystem.GameServerInfo;
+            SpaceWar2006.GameSystem.GameServerInfo info;
+            //if (info == null)
             {
-                info = new SpaceWar2006.GameSystem.GameServerInfo();
-                string[] s = (Encoding.UTF8.GetString((byte[])p)).Split('/');
-                info.ServerName = s[0];
-                info.NumPlayers = int.Parse(s[1]);
-                info.MaxPlayers = int.Parse(s[2]);
-                info.Map = s[3];
-                info.GameType = s[4];
-                info.Password = false;
+                string p = msg.ReadString();
+                info = new SpaceWar2006.GameSystem.GameServerInfo(p);
             }
-            ListViewItem lvi=FindServer(ep);
+            ListViewItem lvi=FindServer(msg.SenderEndpoint);
             bool add = false;
 
             string[] subitems = new string[6];
             if (lvi == null)
             {
                 lvi = new ListViewItem();
-                lvi.Tag = ep.ToString();
+                lvi.Tag = msg.SenderEndpoint.ToString();
                 add = true;
             }
 
 
-            subitems[1] = ep.ToString();
+            subitems[1] = msg.SenderEndpoint.ToString();
 
             if (info != null)
             {
@@ -362,10 +355,6 @@ namespace Spacewar2006.Forms
         private void timer1_Tick(object sender, EventArgs e)
         {
             //HACK
-            if (LanScanner!=null && !GameRunning && tabControl1.SelectedTab.Text == "Join")
-            {
-                LanScanner.Tick(0.5f);
-            }
             if (InternetScanner != null && !GameRunning && tabControl1.SelectedTab.Text == "Join")
             {
                 InternetScanner.Tick(0.5f);
@@ -840,12 +829,7 @@ namespace Spacewar2006.Forms
             if (LanButton.Checked)
             {
                 ServerList.Items.Clear();
-                LanScanner = new NewLanScanner();
-                LanScanner.Answer += OnServerAnswer;
-            }
-            else
-            {
-                LanScanner = null;
+                InternetScanner = new ServerFinder(OnServerAnswer,true,false);
             }
         }
 
@@ -854,14 +838,7 @@ namespace Spacewar2006.Forms
             if (InternetButton.Checked)
             {
                 ServerList.Items.Clear();
-                InternetScanner = new InternetScanner(OnServerAnswer);
-                /*foreach (KeyValuePair<IPEndPoint, ISerializable> kv in InternetScanner.Servers)
-                {
-                }*/
-            }
-            else
-            {
-                InternetScanner = null;
+                InternetScanner = new ServerFinder(OnServerAnswer, false, true);
             }
         }
 

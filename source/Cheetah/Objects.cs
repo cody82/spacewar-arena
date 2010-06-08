@@ -7119,6 +7119,10 @@ using Cheetah;");
         {
             get;
         }
+        public abstract string GameString
+        {
+            get;
+        }
 
     }
 }

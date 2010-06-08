@@ -170,7 +170,7 @@ namespace Cheetah
         #endregion
     }
 
-    public class InternetScanner : ITickable
+    public class ServerFinder : ITickable
     {
         struct Server
         {
@@ -182,10 +182,11 @@ namespace Cheetah
             public string Host;
             public int Port;
         }
-        public InternetScanner(AnswerDelegate answer)
+
+        List<Server> GetInternetServerList()
         {
-            Answer = answer;
             string url = @"http://spacewar-arena.com/spacewar-arena-servers.xml";
+            List<Server> servers = new List<Server>();
 
             WebClient wclient = new WebClient();
             XmlDocument doc = new XmlDocument();
@@ -203,9 +204,24 @@ namespace Cheetah
                     servers.Add(new Server(host, int.Parse(port)));
                 }
             }
+            return servers;
+        }
 
-            LowPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanstart");
-            HighPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanend");
+        public ServerFinder(AnswerDelegate answer, bool local, bool internet)
+        {
+            Answer = answer;
+
+            if(internet)
+                servers = GetInternetServerList();
+
+            if (local)
+            {
+                LowPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanstart");
+                HighPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanend");
+            }
+
+            DiscoverInternetServers = internet;
+            DiscoverLocalServers = local;
 
             client = new UdpClient();
 
@@ -218,13 +234,16 @@ namespace Cheetah
         private void SendQuery()
         {
             Console.WriteLine("sending");
-            foreach (Server ep in servers)
-                client.client.DiscoverKnownPeer(ep.Host, ep.Port);
 
-            for (int i = LowPort; i < HighPort; ++i)
-            {
-                client.client.DiscoverLocalPeers(i);
-            }
+            if(DiscoverInternetServers)
+                foreach (Server ep in servers)
+                    client.client.DiscoverKnownPeer(ep.Host, ep.Port);
+
+            if(DiscoverLocalServers)
+                for (int i = LowPort; i < HighPort; ++i)
+                {
+                    client.client.DiscoverLocalPeers(i);
+                }
 
         }
 
@@ -254,8 +273,7 @@ namespace Cheetah
 
                             if (Answer != null)
                             {
-                                Answer(Encoding.UTF8.GetBytes(msg.ReadString()),
-                                    msg.SenderEndpoint);
+                                Answer(msg);
                             }
                         }
                         break;
@@ -267,113 +285,16 @@ namespace Cheetah
             }
         }
 
-        public delegate void AnswerDelegate(byte[] answer, IPEndPoint ep);
+        public delegate void AnswerDelegate(NetIncomingMessage msg);
         public event AnswerDelegate Answer;
         public float QueryInterval = 5;
         float Timer = 0;
 
         UdpClient client;
-        List<Server> servers = new List<Server>();
-    }
+        List<Server> servers;
 
-    public class NewLanScanner : ITickable
-    {
-        public NewLanScanner()
-        {
-            LowPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanstart");
-            HighPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanend");
-
-            string hostlist = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetString("lanscanner.search");
-            //Hosts = hostlist.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            Hosts = hostlist.Split(new char[] { ',' });
-            for (int i = 0; i < Hosts.Length; ++i)
-            {
-                Hosts[i] = Hosts[i].Trim();
-            }
-
-            UdpClient udp = new UdpClient();
-            client = udp.client;
-            //client.ServerDiscovered += new EventHandler<NetServerDiscoveredEventArgs>(OnServerDiscovered);
-
-            SendQuery();
-        }
-
-
-        bool internet = false;
-        private void SendQuery()
-        {
-            System.Console.WriteLine("sending");
-
-            int from = LowPort;
-            int to = HighPort;
-
-            for (int i = LowPort; i < HighPort; ++i)
-            {
-                client.DiscoverLocalPeers(i);
-            }
-
-
-            if (internet)
-            {
-                foreach (string host in Hosts)
-                {
-                    //client.DiscoverKnownServer(host,
-                }
-            }
-        }
-
-        public void Tick(float dtime)
-        {
-            Timer += dtime;
-            if (Timer > QueryInterval)
-            {
-                Timer = 0;
-                SendQuery();
-            }
-
-            NetIncomingMessage msg;
-            while ((msg = client.ReadMessage()) != null)
-            {
-                switch (msg.MessageType)
-                {
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                    case NetIncomingMessageType.DebugMessage:
-                    case NetIncomingMessageType.WarningMessage:
-                    case NetIncomingMessageType.ErrorMessage:
-                        Console.WriteLine(msg.ReadString());
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        {
-                            Console.WriteLine("Found server at " + msg.SenderEndpoint);// + " name: " + msg.ReadString());
-
-                            if (Answer != null)
-                            {
-                                Answer(Encoding.UTF8.GetBytes(msg.ReadString()),
-                                    msg.SenderEndpoint);
-                            }
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("Unhandled type: " + msg.MessageType);
-                        break;
-                }
-                client.Recycle(msg);
-            }
-
-        }
-
-        public delegate void AnswerDelegate(byte[] answer, IPEndPoint ep);
-        public event AnswerDelegate Answer;
-
-        public Hashtable Servers = new Hashtable();
-        NetClient client;
-        public float QueryInterval = 5;
-        float Timer = 0;
-
-        int LowPort;
-        int HighPort;
-
-        string[] Hosts;
+        bool DiscoverLocalServers = true;
+        bool DiscoverInternetServers = true;
     }
 
     public class Events : Packet

@@ -99,6 +99,18 @@ namespace SpaceWar2006.GameSystem
 
     public class GameServerInfo : ISerializable
     {
+        public GameServerInfo(string p)
+        {
+            string[] s = p.Split('/');
+            ServerName = s[0];
+            NumPlayers = int.Parse(s[1]);
+            MaxPlayers = int.Parse(s[2]);
+            Map = s[3];
+            GameType = s[4];
+
+            if(s.Length>5)
+                Password = bool.Parse(s[5]);
+        }
         public GameServerInfo()
         {
             UpdateInfos();
@@ -110,7 +122,7 @@ namespace SpaceWar2006.GameSystem
 
         public override string ToString()
         {
-            return ServerName + "/" + NumPlayers + "/" + MaxPlayers + "/" + Map.Replace('/','\\') + "/" + GameType;
+            return ServerName + "/" + NumPlayers + "/" + MaxPlayers + "/" + Map.Replace('/','\\') + "/" + GameType + "/" + Password.ToString();
         }
         public void UpdateInfos()
         {
@@ -293,6 +305,8 @@ namespace SpaceWar2006.GameSystem
             Root.Instance.Mod = this;
             initialized = true;
 
+            System.Console.WriteLine(GameString);
+
             foreach (DictionaryEntry de in Root.Instance.ResourceManager.SearchFileNode("maps"))
             {
                 FileSystemNode n = ((FileSystemNode)de.Value);
@@ -325,6 +339,16 @@ namespace SpaceWar2006.GameSystem
                 return AssemblyVersion.Minor;
             }
         }
+
+        public override string GameString
+        {
+            get
+            {
+                return "Spacewar Arena (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
+            }
+        }
+
+        
         const int version = 1;
         bool initialized = false;
         public static Mod Instance = new Mod();

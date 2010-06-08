@@ -1135,8 +1135,7 @@ namespace SpaceWar2006.Windows
             Layout.Update(this.Size);
             Layout.GetCell(0, 1).Span.X = 3;
 
-            Scanner = new NewLanScanner();
-            Scanner.Answer += OnServerAnswer;
+            Scanner = new ServerFinder(OnServerAnswer,true,true);
         }
 
         void ServerList_SelectionChangedEvent(ListBox lb)
@@ -1170,7 +1169,7 @@ namespace SpaceWar2006.Windows
             }
         }
     */
-        protected void OnServerAnswer(byte[] bla, IPEndPoint ep)
+        protected void OnServerAnswer(Lidgren.Network.NetIncomingMessage msg)
         {
             throw new Exception("NYI");//HACK
             /*
@@ -1194,7 +1193,7 @@ namespace SpaceWar2006.Windows
         }
 
         TextBox Host;
-        NewLanScanner Scanner;
+        ServerFinder Scanner;
         ListBox ServerList;
         List<ListBoxItem> Servers = new List<ListBoxItem>();
         //int Count = 0;

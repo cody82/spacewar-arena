@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 using Cheetah;
 
@@ -18,15 +19,10 @@ namespace SpaceWar2006
     {
         static void ServerMain(string[] args)
         {
-
-
             Root r = new Root(args, true);
             r.ServerServer(args);
 
             r.NextIndex += 10;
-
-
-            //string entry = ((Config)Root.Instance.ResourceManager.Load("config/mod.config", typeof(Config))).GetString("mod.server.entry");
 
             while (!Root.Instance.Quit)
             {
@@ -41,27 +37,60 @@ namespace SpaceWar2006
             r.Dispose();
         }
 
-        public static void Answer(byte[] data, IPEndPoint ip)
+        static Dictionary<IPEndPoint, GameSystem.GameServerInfo> servers = new Dictionary<IPEndPoint, SpaceWar2006.GameSystem.GameServerInfo>();
+
+        public static void Answer(Lidgren.Network.NetIncomingMessage msg)
         {
-            System.Console.WriteLine("server found: " + ip.ToString());
+            GameSystem.GameServerInfo info = new SpaceWar2006.GameSystem.GameServerInfo(msg.ReadString());
+            servers[msg.SenderEndpoint] = info;
         }
 
         public static void ConsoleMain(string[] args)
         {
-            //Root r = new Root(args, false);
+            Root r = new Root(args, false);
+            SpaceWar2006.GameSystem.Mod.Instance.Init();
 
-            InternetScanner scanner = new InternetScanner(Answer);
+            ServerFinder scanner = new ServerFinder(Answer,true,true);
 
-            for (int i = 0; i < 100; ++i)
+            for (int i = 0; i < 50; ++i)
             {
                 scanner.Tick(0.1f);
                 Thread.Sleep(100);
             }
 
-            System.Console.Write("select server: ");
-            System.Console.ReadLine();
+            System.Console.WriteLine("---------SERVERS----------");
 
-            //r.Dispose();
+            List<IPEndPoint> list = new List<IPEndPoint>();
+            int j = 0;
+            foreach (KeyValuePair<IPEndPoint, GameSystem.GameServerInfo> kv in servers)
+            {
+                list.Add(kv.Key);
+                j++;
+                System.Console.Write("["+ j.ToString()+"] "+kv.Key.ToString()+": ");
+                System.Console.WriteLine(kv.Value.ToString());
+            }
+
+            System.Console.WriteLine("--------------------------");
+            System.Console.Write("select server: ");
+            int select = int.Parse(System.Console.ReadLine()) - 1;
+
+            IPEndPoint connect = list[select];
+
+            System.Console.WriteLine("Connecting to "+connect.ToString()+"...");
+
+            args = new string[] { "client", "-connect", connect.ToString() };
+            Root.Instance.Args = args;
+            r.ClientClient(args);
+
+            Flow f = new SpaceWar2006.Flows.ClientStart();
+
+            r.CurrentFlow = f;
+
+            f.Start();
+
+            r.ClientLoop();
+
+            r.Dispose();
         }
 
         public static void ClientMain(string[] args)
@@ -69,16 +98,10 @@ namespace SpaceWar2006
             Root r = new Root(args, false);
             r.ClientClient(args);
             IUserInterface ui = r.UserInterface;
-            //Root.Instance.ResourceManager.LoadMesh("fighter01.POF");
-
-            //string entry = ((Config)Root.Instance.ResourceManager.Load("config/mod.config", typeof(Config))).GetString("mod.client.entry");
-            //Flow f = (Flow)r.Factory.CreateInstance(entry);
 
             Flow f = new SpaceWar2006.Flows.ClientStart();
 
             r.CurrentFlow = f;
-
-
 
             f.Start();
 
@@ -178,30 +201,7 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
-
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-
-            /*ShaderManager man = new ShaderManager(null);
-            ShaderManager.Entry e=man.Get(new ShaderConfig());
-            string v=e.VertexProgram, f=e.FragmentProgram;
-
-            FileStream s = new FileStream("c:\\test.frag.txt", FileMode.Create, FileAccess.Write);
-            StreamWriter w = new StreamWriter(s);
-            w.Write(f);
-            w.Close();
-            s.Close();
-
-            s = new FileStream("c:\\test.vert.txt", FileMode.Create, FileAccess.Write);
-            w = new StreamWriter(s);
-            w.Write(v);
-            w.Close();
-            s.Close();*/
-
-            //OggFile ogg = new OggFile(new FileStream(@"C:\Code\spacewar2006\dist\textures\The_Hooters_-_Satellite.ogv",FileMode.Open));
-           	//OggFile ogg = new OggFile(new FileStream(@"/home/cody/The_Hooters_-_Satellite.ogv",FileMode.Open));
-
-            //return;
-
 
             Spacewar2006.Forms.LoadForm load=null;
             /*if (args.Length == 0)
@@ -211,13 +211,9 @@ namespace SpaceWar2006
                 System.Windows.Forms.Application.DoEvents();
             }*/
 
-            //string dir = Assembly.GetEntryAssembly().Location;
             string dir = Directory.GetCurrentDirectory();
             Assembly a = Assembly.GetEntryAssembly();
             System.Console.WriteLine("assembly path:"+a.Location);
-            //dir = Path.GetDirectoryName(dir);
-            //Directory.SetCurrentDirectory(dir);
-            //Directory.SetCurrentDirectory(a.Location);
 
             int i=Array.IndexOf<string>(args,"-root");
             if (i != -1)
@@ -240,11 +236,6 @@ namespace SpaceWar2006
                 System.Console.WriteLine("root directory: " + current.FullName);
             }
 
-
-            //COLLADA.Document collada = new COLLADA.Document("cube_triangulate.dae");
-
-                //string[] newargs = new string[args.Length - 1];
-                //Array.Copy(args, 1, newargs, 0, newargs.Length);
 
                 if (Array.IndexOf<string>(args, "server")!=-1)
                 {
@@ -281,7 +272,7 @@ namespace SpaceWar2006
                 {
                     ConvertModel(args);
                 }
-                else if (Array.IndexOf<string>(args, "console") != -1)
+                else if (Array.IndexOf<string>(args, "search") != -1)
                 {
                     ConsoleMain(args);
                 }
@@ -289,11 +280,7 @@ namespace SpaceWar2006
                 {
                     Root r = new Root(args, false);
 
-                    //r.ResourceManager.LoadMesh("cube_triangulate.dae");
-
                     SpaceWar2006.GameSystem.Mod.Instance.Init();
-                    //load.Close();
-                    //load.Dispose();
                     load = null;
                     new Spacewar2006.Forms.MainForm().ShowDialog();
 
