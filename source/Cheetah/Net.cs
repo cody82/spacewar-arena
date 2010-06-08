@@ -203,17 +203,29 @@ namespace Cheetah
                     servers.Add(new Server(host, int.Parse(port)));
                 }
             }
+
+            LowPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanstart");
+            HighPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanend");
+
             client = new UdpClient();
 
             SendQuery();
         }
 
+        int LowPort;
+        int HighPort;
 
         private void SendQuery()
         {
             Console.WriteLine("sending");
             foreach (Server ep in servers)
                 client.client.DiscoverKnownPeer(ep.Host, ep.Port);
+
+            for (int i = LowPort; i < HighPort; ++i)
+            {
+                client.client.DiscoverLocalPeers(i);
+            }
+
         }
 
         public void Tick(float dtime)
