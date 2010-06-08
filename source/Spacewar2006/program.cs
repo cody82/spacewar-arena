@@ -41,7 +41,28 @@ namespace SpaceWar2006
             r.Dispose();
         }
 
+        public static void Answer(byte[] data, IPEndPoint ip)
+        {
+            System.Console.WriteLine("server found: " + ip.ToString());
+        }
 
+        public static void ConsoleMain(string[] args)
+        {
+            //Root r = new Root(args, false);
+
+            InternetScanner scanner = new InternetScanner(Answer);
+
+            for (int i = 0; i < 100; ++i)
+            {
+                scanner.Tick(0.1f);
+                Thread.Sleep(100);
+            }
+
+            System.Console.Write("select server: ");
+            System.Console.ReadLine();
+
+            //r.Dispose();
+        }
 
         public static void ClientMain(string[] args)
         {
@@ -259,6 +280,10 @@ namespace SpaceWar2006
                 else if (Array.IndexOf<string>(args, "convertmodel") != -1)
                 {
                     ConvertModel(args);
+                }
+                else if (Array.IndexOf<string>(args, "console") != -1)
+                {
+                    ConsoleMain(args);
                 }
                 else
                 {
