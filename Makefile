@@ -3,6 +3,8 @@ check:
 	zip --version
 	fakeroot -v
 	dpkg-deb --version
+	hg --version
+	awk --version
 
 compile: check
 	mdtool build -c:Release source/Spacewar2006/Spacewar2006.sln
