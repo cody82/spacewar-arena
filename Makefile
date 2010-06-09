@@ -1,4 +1,10 @@
-compile:
+check:
+	mdtool --help
+	zip --version
+	fakeroot -v
+	dpkg-deb --version
+
+compile: check
 	mdtool build -c:Release source/Spacewar2006/Spacewar2006.sln
 
 deb: compile
