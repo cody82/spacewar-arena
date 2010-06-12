@@ -9,7 +9,9 @@ using System.Text;
 using System.Drawing;
 using System.Collections.Generic;
 
-namespace Cheetah
+using Cheetah.Graphics;
+
+namespace Cheetah.Doom3
 {
 	public class Doom3Parser
 	{

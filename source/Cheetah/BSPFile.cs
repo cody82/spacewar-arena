@@ -6,11 +6,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-//OpenGL
-//using Tao.OpenGl;
-//using Tao.Platform.Windows;
+using Cheetah.Graphics;
 
-namespace Cheetah
+
+namespace Cheetah.Quake
 {
 	/// <summary>
 	/// Summary description for BSPFile.
@@ -1227,8 +1226,8 @@ namespace Cheetah
 			}
 		}
 
-        VertexBuffer VertexBuffer;
-        IndexBuffer IndexBuffer;
+        Cheetah.Graphics.VertexBuffer VertexBuffer;
+        Cheetah.Graphics.IndexBuffer IndexBuffer;
         private void BuildBuffers()
         {
             if (Vertices.Length/3 != TextureCoords.Length/2)

@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 
 using Cheetah;
+using Cheetah.Graphics;
+
 using SpaceWar2006.Flows;
 
 namespace Spacewar2006.Forms

@@ -12,6 +12,7 @@ using System.Text;
 using System.Drawing;
 
 using Cheetah;
+using Cheetah.Graphics;
 
 using OpenTK.Input;
 

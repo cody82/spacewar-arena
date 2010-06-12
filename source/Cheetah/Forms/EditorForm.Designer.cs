@@ -1,3 +1,5 @@
+using Cheetah.Graphics;
+
 namespace Cheetah.Forms
 {
     partial class EditorForm
@@ -47,7 +49,7 @@ namespace Cheetah.Forms
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.glControl1 = new Cheetah.GlControl();
+            this.glControl1 = new Cheetah.Graphics.GlControl();
             this.mapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();

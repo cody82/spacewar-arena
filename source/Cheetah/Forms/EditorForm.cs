@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.IO;
+using Cheetah.Graphics;
+
 
 namespace Cheetah.Forms
 {

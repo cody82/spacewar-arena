@@ -10,6 +10,8 @@ using System.Collections;
 using System.IO;
 
 using Cheetah;
+using Cheetah.Graphics;
+
 using SpaceWar2006.Rules;
 using SpaceWar2006.GameObjects;
 

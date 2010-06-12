@@ -6,9 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-//using OpenTK.OpenGL;
-
-namespace Cheetah
+namespace Cheetah.Graphics
 {
     public partial class GlControl : global::OpenTK.GLControl, IUserInterface
     {

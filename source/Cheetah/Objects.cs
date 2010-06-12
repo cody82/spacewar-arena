@@ -10,7 +10,7 @@ using System.Threading;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 //using OpenDe;
-using System.Drawing;
+//using System.Drawing;
 using System.CodeDom.Compiler;
 using System.Security.Cryptography;
 using System.Collections.Generic;
@@ -23,6 +23,7 @@ using Microsoft.CSharp;
 using System.Xml;
 
 using OpenTK.Input;
+using Cheetah.Graphics;
 
 namespace Cheetah
 {
@@ -5450,7 +5451,7 @@ using Cheetah;");
     {
         public InGameConsole(Gui gui)
         {
-            Point s = Root.Instance.UserInterface.Renderer.Size;
+            System.Drawing.Point s = Root.Instance.UserInterface.Renderer.Size;
             Size = new Vector2(s.X, s.Y / 2);
             float f = s.Y / 2 - gui.DefaultFont.size;
             log = new TextBox(0, 0, s.X, f);
@@ -5475,7 +5476,7 @@ using Cheetah;");
         {
             Fade = -1;
 
-            Point s = Root.Instance.UserInterface.Renderer.Size;
+            System.Drawing.Point s = Root.Instance.UserInterface.Renderer.Size;
             //float f = s.Y / 2 - gui.DefaultFont.size;
             log = new TextBox(0, 0, w, h - Root.Instance.Gui.DefaultFont.size);
             cmdline = new TextBox(0, h - Root.Instance.Gui.DefaultFont.size, w, Root.Instance.Gui.DefaultFont.size);
@@ -5889,14 +5890,6 @@ using Cheetah;");
             public Lua lua;
         }
     */
-    public class Access
-    {
-        public Root GetRoot()
-        {
-            Console.WriteLine("aaaahh");
-            return Root.Instance;
-        }
-    }
 
 
     public class IrcBot : ITickable, IDisposable

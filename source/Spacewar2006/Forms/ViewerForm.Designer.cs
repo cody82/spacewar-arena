@@ -28,7 +28,7 @@ namespace Spacewar2006.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.glControl1 = new Cheetah.GlControl();
+            this.glControl1 = new Cheetah.Graphics.GlControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.SelectLight = new System.Windows.Forms.RadioButton();
             this.SelectCamera = new System.Windows.Forms.RadioButton();
@@ -171,7 +171,7 @@ namespace Spacewar2006.Forms
 
         #endregion
 
-        public Cheetah.GlControl glControl1;
+        public Cheetah.Graphics.GlControl glControl1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton SelectCamera;
         private System.Windows.Forms.RadioButton SelectLight;

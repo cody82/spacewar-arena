@@ -1,6 +1,6 @@
-namespace Cheetah
+namespace Cheetah.Graphics
 {
-    partial class GlControl
+    public partial class GlControl
     {
         /// <summary> 
         /// Required designer variable.

@@ -12,6 +12,7 @@ using System.Text;
 using System.Collections.Generic;
 
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006
 {

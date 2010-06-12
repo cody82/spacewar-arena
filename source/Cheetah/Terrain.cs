@@ -3,8 +3,9 @@ using System.Drawing;
 using System.Collections;
 using System.IO;
 //using OpenDe;
+using Cheetah.Graphics;
 
-namespace Cheetah
+namespace Cheetah.Graphics
 {
 	public class QuadTree
 	{
@@ -120,7 +121,7 @@ namespace Cheetah
 
 	public class HeightMapImage : IHeightMap, IResource
 	{
-		public HeightMapImage(Image _img)
+        public HeightMapImage(Cheetah.Graphics.Image _img)
 		{
 			size=new Point(_img.Width,_img.Width);
 			img=_img;
@@ -141,7 +142,7 @@ namespace Cheetah
 			get{return size;}
 		}
 
-		Image img;
+		Cheetah.Graphics.Image img;
 		Point size;
 	}
 

@@ -19,6 +19,7 @@ using SpaceWar2006.Planets;
 using SpaceWar2006.Pickups;
 
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006.GameObjects
 {

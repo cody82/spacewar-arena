@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using Lidgren.Network;
 
+using Cheetah.Graphics;
+
 namespace Cheetah
 {
 	public class Datagram

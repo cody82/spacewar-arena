@@ -16,6 +16,7 @@ using SpaceWar2006.Weapons;
 using SpaceWar2006.Effects;
 
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006.Ships
 {

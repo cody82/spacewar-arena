@@ -11,7 +11,7 @@ using ogg_int64_t=System.Int64;
 using ogg_uint32_t=System.UInt32;
 using System.Threading;
 
-namespace Cheetah
+namespace Cheetah.Graphics
 {
     public unsafe class Theora
     {

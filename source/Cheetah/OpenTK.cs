@@ -8,6 +8,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Collections;
 
+using Cheetah.Graphics;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;

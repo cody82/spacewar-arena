@@ -14,7 +14,7 @@ using System.Globalization;
 //using OpenDe;
 using System.Collections.Generic;
 
-namespace Cheetah
+namespace Cheetah.Graphics
 {
 	/// <summary>
 	/// Summary description for Graphics.
@@ -8663,7 +8663,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 		{
 			Tiles=tiles;
 			CreateVertexBuffer();
-			Material=Cheetah.Material.CreateSimpleMaterial(null);
+			Material=Cheetah.Graphics.Material.CreateSimpleMaterial(null);
             Shader = Root.Instance.ResourceManager.LoadShader("emissivemap.shader");
         }
 
@@ -8677,7 +8677,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             Front = front;
             Back = back;
             CreateVertexBuffer();
-            Material = Cheetah.Material.CreateSimpleMaterial(null);
+            Material = Cheetah.Graphics.Material.CreateSimpleMaterial(null);
             Shader = Root.Instance.ResourceManager.LoadShader("emissivemap.shader");
         }
         

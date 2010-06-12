@@ -22,6 +22,7 @@ using SpaceWar2006.Weapons;
 using SpaceWar2006.Ships;
 
 using Cheetah;
+using Cheetah.Graphics;
 
 using OpenTK.Input;
 
@@ -981,7 +982,7 @@ namespace SpaceWar2006.Flows
             if (Root.Instance.UserInterface != null)
             {
                 IRenderer r = Root.Instance.UserInterface.Renderer;
-                Cheetah.Font f = Root.Instance.Gui.DefaultFont;
+                Cheetah.Graphics.Font f = Root.Instance.Gui.DefaultFont;
                 r.Clear(0, 0, 0, 1);
                 r.SetMode(RenderMode.Draw2D);
 

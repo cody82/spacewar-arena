@@ -8,6 +8,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Collections;
 //using Tao.OpenAl;
+using Cheetah.Graphics;
 
 namespace Cheetah
 {
@@ -110,7 +111,7 @@ namespace Cheetah
 		void Draw(VertexBuffer vertices,PrimitiveType type,int offset,int count,IndexBuffer ib);
 		void Draw(string text,float x,float y,float sx,float sy,Cheetah.Texture t,Color4f c,float width);
         void Draw(string text, float x, float y, float sx, float sy, Cheetah.Texture t, Color4f c, float width,RectangleF scissor);
-        void Draw(Cheetah.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib, int indexoffset);
+        void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib, int indexoffset);
 
 		//texture functions
         TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec, int w, int h);
@@ -159,7 +160,7 @@ namespace Cheetah
         float[] UnProject(float[] winxyz,float[] model,float[] proj,int[] viewport);
 
         System.Drawing.Bitmap Screenshot();
-        Image Screenshot2();
+        Cheetah.Graphics.Image Screenshot2();
 
         Point WindowSize
         {

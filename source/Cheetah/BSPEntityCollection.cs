@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Cheetah
+namespace Cheetah.Quake
 {
 	/// <summary>
 	/// Summary description for EntityCollection.

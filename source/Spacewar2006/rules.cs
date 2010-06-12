@@ -14,6 +14,7 @@ using System.Drawing;
 using SpaceWar2006.GameObjects;
 using SpaceWar2006.Weapons;
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006.Rules
 {

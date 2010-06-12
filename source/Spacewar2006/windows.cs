@@ -21,6 +21,7 @@ using SpaceWar2006.Weapons;
 using SpaceWar2006.Effects;
 using SpaceWar2006.Planets;
 using Cheetah;
+using Cheetah.Graphics;
 
 using OpenTK.Input;
 
@@ -248,7 +249,7 @@ namespace SpaceWar2006.Windows
 
         public override void Draw(IRenderer r, RectangleF rect)
         {
-            Cheetah.Font f = Root.Instance.Gui.DefaultFont;
+            Cheetah.Graphics.Font f = Root.Instance.Gui.DefaultFont;
             Color4f c = f.color;
             f.color = new Color4f(0, 1, 0, 1);
             base.Draw(r, rect);

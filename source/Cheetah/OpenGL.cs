@@ -10,9 +10,10 @@ using System.Drawing.Imaging;
 using System.Threading;
 
 using System.Text;
+using Cheetah.Graphics;
 
 
-namespace Cheetah
+namespace Cheetah.Graphics
 {
     public class ShaderManager
     {
@@ -552,7 +553,7 @@ namespace Cheetah
             public bool cube;
 		}
 
-        public void UseShader(Cheetah.Shader s)
+        public void UseShader(Cheetah.Graphics.Shader s)
         {
             if (s != null)
             {
@@ -733,7 +734,7 @@ namespace Cheetah
             return id;
         }
 
-        public Cheetah.Shader CreateShader(string vertex, string fragment, string geometry, PrimitiveType input, PrimitiveType output)
+        public Cheetah.Graphics.Shader CreateShader(string vertex, string fragment, string geometry, PrimitiveType input, PrimitiveType output)
         {
             int vertexid = 0;
             if (vertex != null)
@@ -762,7 +763,7 @@ namespace Cheetah
             return new Shader(vertex, fragment, vertexid, fragmentid, p, geometry, geometryid);
         }
 
-        public Cheetah.Shader CreateShader(string vertex, string fragment)
+        public Cheetah.Graphics.Shader CreateShader(string vertex, string fragment)
         {
             return CreateShader(vertex, fragment, null, (PrimitiveType)0,(PrimitiveType)0);
         }
@@ -872,7 +873,7 @@ namespace Cheetah
             Gl.glProgramParameteriEXT(p, Gl.GL_GEOMETRY_OUTPUT_TYPE_EXT, GlPrimitiveOutputType(output));
         }
 
-        public void FreeShader(Cheetah.Shader s)
+        public void FreeShader(Cheetah.Graphics.Shader s)
         {
         }
 
@@ -887,7 +888,7 @@ namespace Cheetah
             public int id;
         }
 
-        protected class Shader : Cheetah.Shader
+        protected class Shader : Cheetah.Graphics.Shader
         {
             public Shader(string vertex, string fragment, int vertexid, int fragmentid, int p, string geometry, int geometryid)
             {
@@ -990,7 +991,7 @@ namespace Cheetah
 			}
 		}
 
-		protected class VertexBuffer : Cheetah.VertexBuffer
+        protected class VertexBuffer : Cheetah.Graphics.VertexBuffer
 		{
 			public int id;
 			~VertexBuffer()
@@ -1002,7 +1003,7 @@ namespace Cheetah
 			{
 			}
 		}
-		protected class SlowVertexBuffer : Cheetah.VertexBuffer
+        protected class SlowVertexBuffer : Cheetah.Graphics.VertexBuffer
 		{
 			/*public unsafe void Lock(LockDelegate lockfunc,object context)
 				{
@@ -1016,7 +1017,7 @@ namespace Cheetah
 			public object data;
 		}
 
-		protected class DynamicVertexBuffer : Cheetah.DynamicVertexBuffer
+        protected class DynamicVertexBuffer : Cheetah.Graphics.DynamicVertexBuffer
 		{
 			public DynamicVertexBuffer(OpenGL _gl)
 			{
@@ -1172,7 +1173,7 @@ namespace Cheetah
             Dictionary<int,bool> boolstate=new Dictionary<int,bool>();
         }
 
-		protected class SlowDynamicVertexBuffer : Cheetah.DynamicVertexBuffer
+        protected class SlowDynamicVertexBuffer : Cheetah.Graphics.DynamicVertexBuffer
 		{
 			public SlowDynamicVertexBuffer(OpenGL _gl)
 			{
@@ -1503,8 +1504,8 @@ namespace Cheetah
 				//r = new StreamReader(path + "terrain.fp");
 				//terrain = CreateFragmentProgram(r.ReadToEnd());
 
-                TextShader = (Shader)Root.Instance.ResourceManager.Load(path + "text.shader", typeof(Cheetah.Shader));
-                pointsprite = (Shader)Root.Instance.ResourceManager.Load(path + "pointsprite.shader", typeof(Cheetah.Shader));
+                TextShader = (Shader)Root.Instance.ResourceManager.Load(path + "text.shader", typeof(Cheetah.Graphics.Shader));
+                pointsprite = (Shader)Root.Instance.ResourceManager.Load(path + "pointsprite.shader", typeof(Cheetah.Graphics.Shader));
                 
                 
                 States.Enable(Gl.GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
@@ -1677,11 +1678,11 @@ namespace Cheetah
                 return b;
             }
 		}
-        public Image Screenshot2()
+        public Cheetah.Graphics.Image Screenshot2()
         {
             byte[] rgb = new byte[Size.X * Size.Y * 3];
             Gl.glReadPixels(0, 0, Size.X, Size.Y, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, rgb);
-            return new Image(Size.X, Size.Y, rgb, false);
+            return new Cheetah.Graphics.Image(Size.X, Size.Y, rgb, false);
         }
 
 		public void UpdateTexture(Cheetah.TextureId t, byte[] rgba)
@@ -2173,7 +2174,7 @@ namespace Cheetah
 				States.Disable(Gl.GL_LIGHTING);
 		}
 
-		public Cheetah.VertexBuffer CreateStaticVertexBuffer(object data, int length)
+		public Cheetah.Graphics.VertexBuffer CreateStaticVertexBuffer(object data, int length)
 		{
 			//if (SlowVertexBuffers || CompabilityMode)
 			//	return CreateSlowVertexBuffer(data, length);
@@ -2202,7 +2203,7 @@ namespace Cheetah
 			return vb;
 		}
 
-		public Cheetah.VertexBuffer CreateSlowVertexBuffer(object data, int length)
+		public Cheetah.Graphics.VertexBuffer CreateSlowVertexBuffer(object data, int length)
 		{
 			SlowVertexBuffer vb = new SlowVertexBuffer();
 			vb.data = data;
@@ -2210,7 +2211,7 @@ namespace Cheetah
 			return vb;
 		}
 
-		private Cheetah.DynamicVertexBuffer CreateSlowDynamicVertexBuffer(int length)
+        private Cheetah.Graphics.DynamicVertexBuffer CreateSlowDynamicVertexBuffer(int length)
 		{
 			SlowDynamicVertexBuffer vb = new SlowDynamicVertexBuffer(this);
 			vb.Size = length;
@@ -2218,7 +2219,7 @@ namespace Cheetah
 			return vb;
 		}
 
-		public Cheetah.DynamicVertexBuffer CreateDynamicVertexBuffer(int length)
+        public Cheetah.Graphics.DynamicVertexBuffer CreateDynamicVertexBuffer(int length)
 		{
 			//if (SlowVertexBuffers || CompabilityMode)
 			//	return CreateSlowDynamicVertexBuffer(length);
@@ -2236,7 +2237,7 @@ namespace Cheetah
 			return vb;
 		}
 
-		public void FreeVertexBuffer(Cheetah.VertexBuffer b)
+        public void FreeVertexBuffer(Cheetah.Graphics.VertexBuffer b)
 		{
 			FreeQueue.Enqueue(b);
 		}
@@ -2399,7 +2400,7 @@ namespace Cheetah
         public delegate void VoidDelegate();
         public VoidDelegate SwapFunc;
 
-		unsafe protected void DrawSlow(Cheetah.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
+        unsafe protected void DrawSlow(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
 		{
 			VertexFormat format = vertices.Format;
 			//DrawContext c=(DrawContext)context;
@@ -2508,7 +2509,7 @@ namespace Cheetah
             States.DisableClientState(Gl.GL_NORMAL_ARRAY);
 		}
 
-        public void Draw(Cheetah.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
+        public void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
         {
             Draw(vertices, type, offset, count, ib, 0);
         }
@@ -2516,7 +2517,7 @@ namespace Cheetah
         //VertexFormat lastformat = null;
         //Cheetah.VertexBuffer lastbuffer = null;
         //Cheetah.Shader lastshader = null;
-		public void Draw(Cheetah.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib, int indexoffset)
+        public void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib, int indexoffset)
 		{
 			if (vertices is SlowVertexBuffer || vertices is SlowDynamicVertexBuffer)
 			{

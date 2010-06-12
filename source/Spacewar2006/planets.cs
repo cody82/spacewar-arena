@@ -13,6 +13,7 @@ using System.Drawing;
 
 using SpaceWar2006.GameObjects;
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006.Planets
 {

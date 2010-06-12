@@ -66,6 +66,7 @@ using System.Diagnostics;				// mostly for Debug.Assert(...)
 using System.Runtime.InteropServices;	// for StructLayoutAttribute
 using System.Xml.Serialization;			// for various Xml attributes
 
+using Cheetah.Graphics;
 
 namespace Cheetah {
     public class Matrix
