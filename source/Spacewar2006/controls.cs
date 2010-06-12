@@ -162,13 +162,11 @@ namespace SpaceWar2006.Controls
             : base(s)
         {
             Cursor = cursor;
-            Load();
         }
 
         public SpaceShipControl()
             :base(null)
         {
-            Load();
         }
 
         public override float GetRotation(SpaceShipControlInput input)
@@ -239,8 +237,8 @@ namespace SpaceWar2006.Controls
         public ControlInfo Strafe = new ControlInfo(ControlID.Keyboard, (int)Key.A, (int)Key.D, 1, false);
         public ControlInfo Fire = new ControlInfo(ControlID.Mouse, 1);
         public ControlInfo Thrust = new ControlInfo(ControlID.Keyboard, (int)Key.W, (int)Key.S, 1, false);
-        public ControlInfo Select = new ControlInfo(ControlID.Mouse, 3);
-        public ControlInfo FireSecondary = new ControlInfo(ControlID.Mouse, 2);
+        public ControlInfo Select = new ControlInfo(ControlID.Mouse, 2);
+        public ControlInfo FireSecondary = new ControlInfo(ControlID.Mouse, 3);
         public ControlInfo Rotate = new ControlInfo(ControlID.Joystick0, 0, 1, false, 0);
         public ControlInfo[] Cycle = new ControlInfo[]{
             new ControlInfo(ControlID.Keyboard, (int)Key.Number1),
