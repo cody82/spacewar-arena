@@ -1,3 +1,3 @@
 MESHTEXT
 material: default.material
-submesh: Line01.submesh
+submesh: arrow1.ply

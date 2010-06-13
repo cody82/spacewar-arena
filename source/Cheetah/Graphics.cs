@@ -16,59 +16,127 @@ using System.Collections.Generic;
 
 namespace Cheetah.Graphics
 {
-	/// <summary>
-	/// Summary description for Graphics.
-	/// </summary>
-/*	public class Sprite : IDrawable
-	{
-		public Sprite()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
+    public struct NormalMappingVertex
+    {
+        public Vector3 Position;
+        public Vector2 Texture0;
+        public Vector3 Normal;
+        public Vector3 Tangent;
+        public Vector3 BiNormal;
 
-		public void Draw(IRenderer r)
-		{
-		}
+        public static float[] ToFloatArray(NormalMappingVertex[] v)
+        {
+            int vertexfloatsize=Format.Size / 4;
+            if (vertexfloatsize != 14)
+                throw new Exception();
+            float[] f = new float[v.Length * vertexfloatsize];
+            for (int i = 0; i < v.Length; ++i)
+            {
+                f[i * vertexfloatsize + 0] = v[i].Position.X;
+                f[i * vertexfloatsize + 1] = v[i].Position.Y;
+                f[i * vertexfloatsize + 2] = v[i].Position.Z;
+                f[i * vertexfloatsize + 3] = v[i].Texture0.x;
+                f[i * vertexfloatsize + 4] = v[i].Texture0.y;
+                f[i * vertexfloatsize + 5] = v[i].Normal.X;
+                f[i * vertexfloatsize + 6] = v[i].Normal.Y;
+                f[i * vertexfloatsize + 7] = v[i].Normal.Z;
+                f[i * vertexfloatsize + 8] = v[i].Tangent.X;
+                f[i * vertexfloatsize + 9] = v[i].Tangent.Y;
+                f[i * vertexfloatsize + 10] = v[i].Tangent.Z;
+                f[i * vertexfloatsize + 11] = v[i].BiNormal.X;
+                f[i * vertexfloatsize + 12] = v[i].BiNormal.Y;
+                f[i * vertexfloatsize + 13] = v[i].BiNormal.Z;
+            }
 
-		public static IVertexBuffer CreateVB()
-		{
-			ManagedVertexBuffer vb=new ManagedVertexBuffer();
-			UniversalVertexFormat format=new UniversalVertexFormat();
-			format.elements=new ArrayList();
-			format.elements.Add(new VertexFormatElement(VertexElementName.Position,2,VertexElementType.Float));
-			format.elements.Add(new VertexFormatElement(VertexElementName.Color,4,VertexElementType.Float));
-			format.elements.Add(new VertexFormatElement(VertexElementName.Texture0,2,VertexElementType.Float));
-			vb.format=format;
-			vb.buffer=new byte[format.getSize()*4];
-			MemoryStream ms=new MemoryStream(vb.buffer);
-			BinaryWriter bw=new BinaryWriter(ms);
-			
+            return f;
+        }
 
-			bw.Write(0.0f);bw.Write(0.0f);
-			bw.Write(1.0f);bw.Write(1.0f);bw.Write(1.0f);bw.Write(1.0f);
-			bw.Write(0.0f);bw.Write(0.0f);
+        public static readonly VertexFormat Format = new VertexFormat(new VertexFormat.Element[]{
+																					  new VertexFormat.Element(VertexFormat.ElementName.Position,3),
+																					  new VertexFormat.Element(VertexFormat.ElementName.Texture0,2),
+																						new VertexFormat.Element(VertexFormat.ElementName.Normal,3),
+																						new VertexFormat.Element(VertexFormat.ElementName.Tangent,3),
+																						new VertexFormat.Element(VertexFormat.ElementName.Binormal,3)
+		});
 
-			bw.Write(100.0f);bw.Write(0.0f);
-			bw.Write(1.0f);bw.Write(0.0f);bw.Write(0.0f);bw.Write(1.0f);
-			bw.Write(1.0f);bw.Write(0.0f);
+    }
 
+    public struct Triangle
+    {
+        public int Index0;
+        public int Index1;
+        public int Index2;
+    }
 
+    public static class MeshUtil
+    {
+        public static void CalculateTangentSpace(NormalMappingVertex[] vertices, Triangle[] triangles)
+        {
+            for (int i = 0; i < vertices.Length; ++i)
+            {
+                vertices[i].Tangent = vertices[i].BiNormal = Vector3.Zero;
+            }
 
-			bw.Write(100.0f);bw.Write(100.0f);
-			bw.Write(1.0f);bw.Write(0.0f);bw.Write(0.0f);bw.Write(1.0f);
-			bw.Write(1.0f);bw.Write(1.0f);
+            Vector3[] tan1 = new Vector3[vertices.Length];
+            Vector3[] tan2 = new Vector3[vertices.Length];
 
-			bw.Write(0.0f);bw.Write(100.0f);
-			bw.Write(1.0f);bw.Write(1.0f);bw.Write(1.0f);bw.Write(1.0f);
-			bw.Write(0.0f);bw.Write(1.0f);
+            for (int a = 0; a < triangles.Length; a++)
+            {
+                int i1 = triangles[a].Index0;
+                int i2 = triangles[a].Index1;
+                int i3 = triangles[a].Index2;
+        
+                Vector3 v1 = vertices[i1].Position;
+                Vector3 v2 = vertices[i2].Position;
+                Vector3 v3 = vertices[i3].Position;
+        
+                Vector2 w1 = vertices[i1].Texture0;
+                Vector2 w2 = vertices[i2].Texture0;
+                Vector2 w3 = vertices[i3].Texture0;
+        
+                float x1 = v2.X - v1.X;
+                float x2 = v3.X - v1.X;
+                float y1 = v2.Y - v1.Y;
+                float y2 = v3.Y - v1.Y;
+                float z1 = v2.Z - v1.Z;
+                float z2 = v3.Z - v1.Z;
+        
+                float s1 = w2.x - w1.x;
+                float s2 = w3.x - w1.x;
+                float t1 = w2.y - w1.y;
+                float t2 = w3.y - w1.y;
+        
+                float r = 1.0F / (s1 * t2 - s2 * t1);
+                Vector3 sdir = new Vector3((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
+                    (t2 * z1 - t1 * z2) * r);
+                Vector3 tdir = new Vector3((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
+                    (s1 * z2 - s2 * z1) * r);
+        
+                tan1[i1] += sdir;
+                tan1[i2] += sdir;
+                tan1[i3] += sdir;
+        
+                tan2[i1] += tdir;
+                tan2[i2] += tdir;
+                tan2[i3] += tdir;
+            }
+            
+            for (int a = 0; a < vertices.Length; a++)
+            {
+                Vector3 n = vertices[a].Normal;
+                Vector3 t = tan1[a];
+        
+                // Gram-Schmidt orthogonalize
+                vertices[a].Tangent = (t - n * Vector3.Dot(n, t));
+                vertices[a].Tangent.Normalize();
 
-			return vb;
-		}
+                vertices[a].BiNormal = Vector3.Cross(vertices[a].Normal, vertices[a].Tangent);
+                // Calculate handedness
+                // tangent[a].w = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
+            }
 
-		Vector2 size;
-	}*/
+        }
+    }
 
 	public class SubMesh : IDisposable, ISaveable, IResource
 	{
@@ -1158,34 +1226,15 @@ namespace Cheetah.Graphics
             return float.Parse(split[vertexproperties.FindIndex(delegate(string x) { return x == property; })]);
         }
 
-        #region IResourceLoader Members
+        bool has_normals;
+        bool has_texcoord;
+        bool has_position;
 
 
-        public IResource Load(FileSystemNode n)
+        IResource OldLoadFunction()
         {
-            fmt=null;
-            r=null;
-            vertexcount = -1;
-            facecount = -1;
-            vertexproperties=null;
-
-
-
-            Stream s = n.getStream();
             string line;
             string[] split;
-
-            r = new FixedStreamReader(n.getStream());
-
-
-            ReadHeader();
-
-            bool has_normals = vertexproperties.Contains("nx");
-            bool has_texcoord = vertexproperties.Contains("s");
-            bool has_position = vertexproperties.Contains("x");
-
-            if (!has_position)
-                throw new Exception("ply: no position");
 
             List<VertexFormat.Element> elements = new List<VertexFormat.Element>();
 
@@ -1197,10 +1246,10 @@ namespace Cheetah.Graphics
 
             fmt = new VertexFormat(elements.ToArray());
 
-            int vertexfloatsize = fmt.Size/4;
+            int vertexfloatsize = fmt.Size / 4;
             float[] vertices = new float[vertexfloatsize * vertexcount];
 
-            for(int i=0;i<vertexcount;++i)
+            for (int i = 0; i < vertexcount; ++i)
             {
                 line = r.ReadLine();
                 split = line.Split(' ');
@@ -1268,10 +1317,126 @@ namespace Cheetah.Graphics
             return mesh;
         }
 
+        #region IResourceLoader Members
+
+
+        public IResource Load(FileSystemNode n)
+        {
+            fmt = null;
+            r = null;
+            vertexcount = -1;
+            facecount = -1;
+            vertexproperties = null;
+
+            Stream s = n.getStream();
+            string line;
+            string[] split;
+
+            r = new FixedStreamReader(n.getStream());
+
+            ReadHeader();
+
+            has_normals = vertexproperties.Contains("nx");
+            has_texcoord = vertexproperties.Contains("s");
+            has_position = vertexproperties.Contains("x");
+
+            if (!has_position)
+                throw new Exception("ply: no position");
+            if (!has_texcoord || !has_normals)
+            {
+                Console.WriteLine("ply: no normals/texcoords -> normal mapping wont work.");
+                return OldLoadFunction();
+            }
+
+            fmt = NormalMappingVertex.Format;
+
+            int vertexfloatsize = fmt.Size / 4;
+            //float[] vertices = new float[vertexfloatsize * vertexcount];
+            NormalMappingVertex[] vertices = new NormalMappingVertex[vertexcount];
+
+            for (int i = 0; i < vertexcount; ++i)
+            {
+                line = r.ReadLine();
+                split = line.Split(' ');
+
+                vertices[i].Position.X = GetFloatProperty(split, "x");
+                vertices[i].Position.Y = GetFloatProperty(split, "y");
+                vertices[i].Position.Z = GetFloatProperty(split, "z");
+
+                //if (has_normals)
+                {
+                    vertices[i].Normal.X = GetFloatProperty(split, "nx");
+                    vertices[i].Normal.Y = GetFloatProperty(split, "ny");
+                    vertices[i].Normal.Z = GetFloatProperty(split, "nz");
+                }
+
+                //if (has_texcoord)
+                {
+                    vertices[i].Texture0.x = GetFloatProperty(split, "s");
+                    vertices[i].Texture0.y = GetFloatProperty(split, "t");
+                    //vertices[i * vertexfloatsize + (has_normals ? 6 : 3)] = GetFloatProperty(split, "s");
+                    //vertices[i * vertexfloatsize + (has_normals ? 7 : 4)] = GetFloatProperty(split, "t");
+                }
+            }
+
+            List<int> indices = new List<int>();
+            for (int i = 0; i < facecount; ++i)
+            {
+                line = r.ReadLine();
+                split = line.Split(' ');
+
+                int c = int.Parse(split[0]);
+                if (c == 3)
+                {
+                    indices.Add(int.Parse(split[1]));
+                    indices.Add(int.Parse(split[2]));
+                    indices.Add(int.Parse(split[3]));
+                }
+                else if (c == 4)
+                {
+                    indices.Add(int.Parse(split[1]));
+                    indices.Add(int.Parse(split[2]));
+                    indices.Add(int.Parse(split[3]));
+
+                    indices.Add(int.Parse(split[1]));
+                    indices.Add(int.Parse(split[3]));
+                    indices.Add(int.Parse(split[4]));
+                }
+                else
+                {
+                    throw new Exception("ply: no triangle or quad");
+                }
+            }
+            Triangle[] triangles = new Triangle[indices.Count/3];
+            for(int i=0;i<triangles.Length;++i)
+            {
+                triangles[i].Index0=indices[i*3+0];
+                triangles[i].Index1=indices[i*3+1];
+                triangles[i].Index2=indices[i*3+2];
+            }
+
+            MeshUtil.CalculateTangentSpace(vertices, triangles);
+
+            SubMesh mesh = new SubMesh();
+
+            if (Root.Instance.UserInterface != null)
+                mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * fmt.Size);
+            else
+                mesh.Vertices = new VertexBuffer();
+
+            mesh.Vertices.Format = fmt;
+            mesh.Vertices.Buffer = NormalMappingVertex.ToFloatArray(vertices);
+            mesh.VertexCount = vertexcount;
+            mesh.Indices = new IndexBuffer();
+            mesh.Indices.buffer = indices.ToArray();
+
+            return mesh;
+        }
+
         VertexFormat fmt;
         StreamReader r;
-        int vertexcount=-1;
-        int facecount=-1;
+        int vertexcount = -1;
+        int facecount = -1;
 
         List<string> vertexproperties;
 

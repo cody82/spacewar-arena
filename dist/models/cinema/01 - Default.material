@@ -13,4 +13,5 @@ reflectionmap: black.png
 shader: bump.specular.spheremap.reflectionmap.shader
 #shader: spheremap.shader
 #shader: bump.spheremap.shader
+#shader: simple3d.textured.shader
 environmentmap: wasser2.dds
