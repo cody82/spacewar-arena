@@ -1,6 +1,6 @@
 check:
 	mdtool --help
-	zip --version
+	zip -v
 	fakeroot -v
 	dpkg-deb --version
 	hg --version
