@@ -28,6 +28,10 @@ zip: compile
 	mkdir release
 	mkdir spacewar-arena
 	cp -r dist/* spacewar-arena
+	mkdir spacewar-arena/info
+	gmcs --version>spacewar-arena/info/compiler.txt
+	echo `hg identify|awk '{print $1}'`>spacewar-arena/info/hg.txt
+	date>spacewar-arena/info/date.txt
 	cp source/Spacewar2006/bin/Release/* spacewar-arena/bin/
 	zip -r9 release/spacewar-arena-`date +%Y%m%d`-`hg identify|awk '{print $1}'`.zip spacewar-arena
 	rm -rf spacewar-arena
