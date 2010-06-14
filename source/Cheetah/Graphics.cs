@@ -6045,6 +6045,10 @@ namespace Cheetah.Graphics
         {
         }
 
+        public virtual void OnKeyPress(char c)
+        {
+        }
+
         public virtual void OnChildKeyDown(Window w, global::OpenTK.Input.Key key)
         {
         }
@@ -6384,6 +6388,7 @@ namespace Cheetah.Graphics
         {
             r.SetMode(RenderMode.Draw2D);
             w.texture = new Texture(t.Texture);
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
         }
 
         #endregion
@@ -6405,6 +6410,7 @@ namespace Cheetah.Graphics
         {
             r.SetMode(RenderMode.Draw2D);
             w.texture = new Texture(t.Texture);
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
         }
 
         #endregion
@@ -6428,6 +6434,7 @@ namespace Cheetah.Graphics
             r.SetMode(RenderMode.Draw2D);
             w.texture = new Texture(t.Texture);
             w.Draw(r, new RectangleF(0,0,1000,1000));
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
         }
 
         #endregion
@@ -6449,12 +6456,36 @@ namespace Cheetah.Graphics
         {
             r.SetMode(RenderMode.Draw2D);
             w.texture = new Texture(t.Texture);
-            w.Draw(r, new RectangleF(0, 0, 1000, 1000));
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
         }
 
         #endregion
         Window w;
     }
+
+    public class Bloom : PostProcess.IPass
+    {
+        public Bloom()
+        {
+            w = new Window(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y);
+            w.FlipTexture = true;
+            w.Color = new Color4f(1, 1, 1, 1);
+            w.Shader = Root.Instance.ResourceManager.LoadShader("postprocess.bloom.shader");
+        }
+
+        #region IPass Members
+
+        public void Render(IRenderer r, RenderTarget t)
+        {
+            r.SetMode(RenderMode.Draw2D);
+            w.texture = new Texture(t.Texture);
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
+        }
+
+        #endregion
+        Window w;
+    }
+
     public class Ripple : PostProcess.IPass
     {
         public Ripple()
@@ -6471,6 +6502,7 @@ namespace Cheetah.Graphics
         {
             r.SetMode(RenderMode.Draw2D);
             w.texture = new Texture(t.Texture);
+            w.Draw(r, new RectangleF(0, 0, Root.Instance.UserInterface.Renderer.Size.X, Root.Instance.UserInterface.Renderer.Size.Y));
         }
 
         #endregion
@@ -6497,6 +6529,9 @@ namespace Cheetah.Graphics
             //Passes.Add(new Ripple());
             //Passes.Add(new Shift());
             //Passes.Add(new Distort());
+            //Passes.Add(new Invert());
+            //Passes.Add(new Smooth());
+            Passes.Add(new Bloom());
         }
 
         public void Enable(IRenderer r)
@@ -6603,9 +6638,17 @@ namespace Cheetah.Graphics
 			}
 		}
 
+        public void OnKeyPress(char key)
+        {
+			if(Console.enabled)
+			{
+				Console.OnKeyPress(key);
+			}
+        }
+
         public void OnKeyDown(global::OpenTK.Input.Key key)
 		{
-            if (key == global::OpenTK.Input.Key.Quote)
+            if (key == global::OpenTK.Input.Key.F10)
 			{
 				Console.enabled=!Console.enabled;
 			}

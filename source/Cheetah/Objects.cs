@@ -5520,17 +5520,24 @@ using Cheetah;");
             }
         }
 
+        public override void OnKeyPress(char c)
+        {
+            base.OnKeyPress(c);
+
+            cmdline.Append(c.ToString());
+        }
+
         public override void OnKeyDown(global::OpenTK.Input.Key key)
         {
             base.OnKeyDown(key);
 
             //throw new Exception(key.Code.ToString());
             //int keycode=(int)key;
-            /*if (key.IsPrintable)
+            /*if (IsPrintable(key))
             {
                 cmdline.Append(key.GetString());
-            }else*/
-            if (key == global::OpenTK.Input.Key.Enter)
+            }
+            else */if (key == global::OpenTK.Input.Key.Enter)
             {
                 if (cmdline.GetLine(0).Length > 0)
                 {
@@ -6065,7 +6072,8 @@ using Cheetah;");
             Gui = new Gui();
 
             //PostProcessor=new PostProcess(1024,512);
-            ClientPostProcessor = new PostProcess(1024, 1024);
+            //ClientPostProcessor = new PostProcess(1024, 1024);
+            ClientPostProcessor = new PostProcess(width, height);
             //Connection=new UdpClient();
         }
         
@@ -6164,6 +6172,11 @@ using Cheetah;");
 		{
 			Gui.OnMouseMove(x,y);
 		}
+
+        public void ClientOnKeyPress(char key)
+        {
+            Gui.OnKeyPress(key);
+        }
 
         public void ClientOnKeyDown(global::OpenTK.Input.Key key)
 		{

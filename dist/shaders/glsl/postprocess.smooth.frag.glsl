@@ -10,8 +10,8 @@ void main()
 	//float strength=cos(Time*10.0)*0.5;
 	//vec2 dist=2.0*1.0/WindowSize;
 	//vec2 dist=1.0/vec2(1024.0,1024.0);
-	  float ddx=1.0/1024.0;
-	  float ddy=1.0/1024.0;
+	  float ddx=4.0/1024.0;
+	  float ddy=4.0/1024.0;
 
 
 vec4 outp = vec4(0.0, 0.0, 0.0, 0.0);

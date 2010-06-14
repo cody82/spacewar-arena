@@ -15,13 +15,13 @@ def videorec():
 		startrecord()
 
 def pp_wobble():
-	Root.Instance.ClientPostProcessor.Passes.Add(Ripple())
+	Root.Instance.ClientPostProcessor.Passes.Add(Cheetah.Graphics.Ripple())
 
 def pp_shift():
-	Root.Instance.ClientPostProcessor.Passes.Add(Shift())
+	Root.Instance.ClientPostProcessor.Passes.Add(Cheetah.Graphics.Shift())
 
 def pp_smooth():
-	Root.Instance.ClientPostProcessor.Passes.Add(Smooth())
+	Root.Instance.ClientPostProcessor.Passes.Add(Cheetah.Graphics.Smooth())
 
 
 def pp_clear():
@@ -48,5 +48,3 @@ def demostop():
 
 def fov(deg):
 	Root.Instance.Scene.camera.Fov=deg
-
-Console.WriteLine("version "+Handshake.ThisVersion.ToString())

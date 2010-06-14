@@ -149,11 +149,17 @@ namespace Cheetah.OpenTK
         KeyboardDevice dev;
         bool[] keys = new bool[256];
 
-        public Keyboard(KeyboardDevice dev)
+        public Keyboard(GameWindow w)
         {
-            this.dev = dev;
+            this.dev = w.Keyboard;
             dev.KeyDown += new EventHandler<KeyboardKeyEventArgs>(dev_KeyDown);
             dev.KeyUp += new EventHandler<KeyboardKeyEventArgs>(dev_KeyUp);
+            w.KeyPress += new EventHandler<KeyPressEventArgs>(w_KeyPress);
+        }
+
+        void w_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Root.Instance.ClientOnKeyPress(e.KeyChar);
         }
 
         void dev_KeyUp(object sender, KeyboardKeyEventArgs e)
@@ -312,7 +318,7 @@ namespace Cheetah.OpenTK
             window = new GameWindow(width, height, GraphicsMode.Default, "OpenTK Window", fullscreen ? GameWindowFlags.Fullscreen : GameWindowFlags.Default);
             gl = new OpenGL(width, height);
             m = new Mouse(window.Mouse);
-            kb = new Keyboard(window.Keyboard);
+            kb = new Keyboard(window);
             if (audio)
                 this.audio = new FmodAudio();
                 //this.audio = new OpenTkAudio();

@@ -661,6 +661,9 @@ namespace Cheetah.Graphics
 
             Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, index);
 
+            int d = CreateDepthTexture(1024, 1024);
+            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_TEXTURE_2D, d, 0);
+
             Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, ((TextureId)texture).id, 0);
 
             if (depth != null)
@@ -1877,6 +1880,18 @@ namespace Cheetah.Graphics
             Textures[t.id] = t;
 
             return t;
+        }
+
+        int CreateDepthTexture(int w, int h)
+        {
+            int[] i = new int[1];
+            Gl.glGenTextures(1, i);
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, i[0]);
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
+            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+
+            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT32, w, h, 0, Gl.GL_DEPTH_COMPONENT, Gl.GL_FLOAT, IntPtr.Zero);
+            return i[0];
         }
 
 		public Cheetah.TextureId CreateTexture(byte[] rgba, int w, int h, bool alpha)
