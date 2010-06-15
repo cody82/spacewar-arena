@@ -6282,6 +6282,7 @@ using Cheetah;");
                 EventSendQueue.Clear();
             }
 
+            ClientPostProcessor.Render();
 
             UserInterface.Renderer.SetMode(RenderMode.Draw2D);
             Gui.Draw(UserInterface.Renderer);
@@ -6289,7 +6290,6 @@ using Cheetah;");
             if (CurrentFlow != null)
                 CurrentFlow.OnDraw();
 
-            ClientPostProcessor.Render();
 
             if (true)
 			{

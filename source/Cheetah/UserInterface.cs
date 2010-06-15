@@ -117,6 +117,7 @@ namespace Cheetah
         TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec, int w, int h);
 		TextureId CreateTexture(byte[] rgba,int w,int h,bool alpha);
         TextureId CreateTexture(int w, int h, bool alpha, bool depth);
+        TextureId CreateDepthTexture(int w, int h);
 		void UpdateTexture(Cheetah.TextureId t,byte[] rgba);
 		void BindTexture(TextureId t);
 		void BindTexture(TextureId t,int unit);

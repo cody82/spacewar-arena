@@ -332,11 +332,19 @@ namespace SpaceWar2006.Effects
         {
             base.Tick(dTime);
 
+            l.diffuse = GetLightColor();
+
             if (age > 3 && quad != null)
             {
                 Draw.Remove(quad);
                 quad = null;
             }
+        }
+
+        Color4f GetLightColor()
+        {
+            float f = (3 - age) / 3;
+            return new Color4f(1.0f*f, 1.0f*f, 0.1f*f, 1);
         }
 
         Light l;
@@ -345,7 +353,7 @@ namespace SpaceWar2006.Effects
             base.OnAdd(s);
 
             l = new Light();
-            l.diffuse = new Color4f(1, 1, 0.1f, 1);
+            l.diffuse = GetLightColor();// new Color4f(1, 1, 0.1f, 1);
             l.directional = false;
             l.Position = AbsolutePosition;
             l.NoReplication = true;

@@ -6531,7 +6531,7 @@ namespace Cheetah.Graphics
             //Passes.Add(new Distort());
             //Passes.Add(new Invert());
             //Passes.Add(new Smooth());
-            Passes.Add(new Bloom());
+            //Passes.Add(new Bloom());
         }
 
         public void Enable(IRenderer r)
@@ -6540,9 +6540,7 @@ namespace Cheetah.Graphics
             {
                 if (Target == null)
                 {
-                    //Target = r.CreateRenderTarget(r.CreateTexture(new byte[Size.X * Size.Y * 3], Size.X, Size.Y, false),r.CreateTexture(Size.X,Size.Y,false,true));
-                    Target = r.CreateRenderTarget(r.CreateTexture(new byte[Size.X * Size.Y * 3], Size.X, Size.Y, false), null);
-                    //Target = r.CreateRenderTarget(r.CreateTexture(new byte[800 * 600 * 3], 800, Size.Y, false), null);
+                    Target = r.CreateRenderTarget(r.CreateTexture(new byte[Size.X * Size.Y * 3], Size.X, Size.Y, false), r.CreateDepthTexture(Size.X,Size.Y));
                 }
 
                 r.BindRenderTarget(Target);
@@ -7654,6 +7652,7 @@ namespace Cheetah.Graphics
 
 		protected void SetupLighting(IRenderer r,Node n,Light[] l)
 		{
+            int lights = lightcount;
 			if(lightcount>1)
 			{
 				LightComparer lc=new LightComparer(n);
@@ -7662,8 +7661,8 @@ namespace Cheetah.Graphics
                     {
                         return !(l1==null || (l1.Range > 0 && (n.AbsolutePosition - l1.AbsolutePosition).GetMagnitude() - n.RenderRadius > l1.Range));
                     });
-                lightcount = l.Length;
-				Array.Sort(l,0,lightcount,lc);
+                lights = l.Length;
+                Array.Sort(l, 0, lights, lc);
 			}
 			else if(lightcount==0)
 			{
@@ -7673,7 +7672,7 @@ namespace Cheetah.Graphics
 
 			int max=8;
 			int i;
-            if (lightcount < max) max = lightcount;
+            if (lights < max) max = lights;
 
             //System.Console.WriteLine(max.ToString());
 

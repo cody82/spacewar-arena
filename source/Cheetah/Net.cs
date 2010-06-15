@@ -724,7 +724,14 @@ namespace Cheetah
 
         public ConnectionStatistics Statistics
         {
-            get { return Convert(client.Statistics,client.ServerConnection.AverageRoundtripTime); }
+            get
+            { 
+                if(client!=null && client.ServerConnection!=null)
+                    return Convert(client.Statistics,client.ServerConnection.AverageRoundtripTime);
+                else
+                    return Convert(null, 0);
+
+            }
         }
 
         public NetClient client;
