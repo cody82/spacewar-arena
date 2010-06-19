@@ -202,7 +202,8 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
-            try
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            //try
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
@@ -283,22 +284,33 @@ namespace SpaceWar2006
                 {
                     Root r = new Root(args, false);
 
+                    System.Windows.Forms.Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+
                     SpaceWar2006.GameSystem.Mod.Instance.Init();
                     load = null;
                     new Spacewar2006.Forms.MainForm().ShowDialog();
 
                 }
             }
-            catch (Exception e)
+        }
+
+        static bool mailing_done = false;
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            if (!mailing_done)
             {
-                try
-                {
-                    Cheetah.Bugs.BugReport.Instance.Send(e);
-                }
-                catch (Exception e2)
-                {
-                }
-                throw e;
+                Cheetah.Bugs.BugReport.Instance.Send(e.Exception);
+                mailing_done = true;
+            }
+            throw e.Exception;
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (!mailing_done)
+            {
+                Cheetah.Bugs.BugReport.Instance.Send((Exception)e.ExceptionObject);
+                mailing_done = true;
             }
         }
     }
