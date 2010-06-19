@@ -14,6 +14,9 @@ namespace Cheetah.Graphics
 		public SimpleUserInterface()
 		{
 			GameWindow=new GameWindow(512,512);
+            GameWindow.Visible = true;
+            GameWindow.ProcessEvents();
+            GameWindow.MakeCurrent();
 			Renderer=new SimpleRenderer();
 			Renderer.Init();
 		}

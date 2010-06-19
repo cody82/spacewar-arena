@@ -202,43 +202,45 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-
-            Spacewar2006.Forms.LoadForm load=null;
-            /*if (args.Length == 0)
+            try
             {
-                load = new Spacewar2006.Forms.LoadForm();
-                load.Show();
-                System.Windows.Forms.Application.DoEvents();
-            }*/
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
-            string dir = Directory.GetCurrentDirectory();
-            Assembly a = Assembly.GetEntryAssembly();
-            System.Console.WriteLine("assembly path:"+a.Location);
-
-            int i=Array.IndexOf<string>(args,"-root");
-            if (i != -1)
-            {
-                string rootdir = args[i + 1];
-                Directory.SetCurrentDirectory(rootdir);
-                System.Console.WriteLine("root directory: " + rootdir);
-            }
-            else
-            {
-                DirectoryInfo current = new FileInfo(a.Location).Directory;
-                while (current.GetFiles("cheetah_root").Length == 0)
+                Spacewar2006.Forms.LoadForm load = null;
+                /*if (args.Length == 0)
                 {
-                    if ((current = current.Parent) == null)
-                    {
-                        throw new Exception("Can't find game root directory. Use -root $directory.");
-                    }
+                    load = new Spacewar2006.Forms.LoadForm();
+                    load.Show();
+                    System.Windows.Forms.Application.DoEvents();
+                }*/
+
+                string dir = Directory.GetCurrentDirectory();
+                Assembly a = Assembly.GetEntryAssembly();
+                System.Console.WriteLine("assembly path:" + a.Location);
+
+                int i = Array.IndexOf<string>(args, "-root");
+                if (i != -1)
+                {
+                    string rootdir = args[i + 1];
+                    Directory.SetCurrentDirectory(rootdir);
+                    System.Console.WriteLine("root directory: " + rootdir);
                 }
-                Directory.SetCurrentDirectory(current.FullName);
-                System.Console.WriteLine("root directory: " + current.FullName);
-            }
+                else
+                {
+                    DirectoryInfo current = new FileInfo(a.Location).Directory;
+                    while (current.GetFiles("cheetah_root").Length == 0)
+                    {
+                        if ((current = current.Parent) == null)
+                        {
+                            throw new Exception("Can't find game root directory. Use -root $directory.");
+                        }
+                    }
+                    Directory.SetCurrentDirectory(current.FullName);
+                    System.Console.WriteLine("root directory: " + current.FullName);
+                }
 
 
-                if (Array.IndexOf<string>(args, "server")!=-1)
+                if (Array.IndexOf<string>(args, "server") != -1)
                 {
                     ServerMain(args);
                 }
@@ -286,7 +288,18 @@ namespace SpaceWar2006
                     new Spacewar2006.Forms.MainForm().ShowDialog();
 
                 }
-
             }
+            catch (Exception e)
+            {
+                try
+                {
+                    Cheetah.Bugs.BugReport.Instance.Send(e);
+                }
+                catch (Exception e2)
+                {
+                }
+                throw e;
+            }
+        }
     }
 }

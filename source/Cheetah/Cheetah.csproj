@@ -56,6 +56,7 @@
     <Compile Include="BSPEntity.cs" />
     <Compile Include="BSPEntityCollection.cs" />
     <Compile Include="BSPFile.cs" />
+    <Compile Include="Bugs.cs" />
     <Compile Include="CeGuiRenderer.cs" />
     <Compile Include="ColladaDocument.cs" />
     <Compile Include="COLLADAUtil.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Forms\MapSettings.Designer.cs">
       <DependentUpon>MapSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gl1Renderer.cs" />
     <Compile Include="GlControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

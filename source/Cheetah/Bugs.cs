@@ -10,12 +10,12 @@ namespace Cheetah.Bugs
 
 	public class BugReport
 	{
-		public static BugReport Instance = new MailBugReport();
+        public static IBugReport Instance = new MailBugReport();
 	}
 
 	public class MailBugReport : IBugReport
 	{
-		public void Send(Exception e);
+		public void Send(Exception e)
 		{
 			Console.WriteLine ("mailing bug report...");
 			
@@ -40,7 +40,7 @@ namespace Cheetah.Bugs
 
 	public class HttpBugReport
 	{
-		public void Send(Exception e);
+		public void Send(Exception e)
 		{
 			throw new Exception("NYI");
 		}
