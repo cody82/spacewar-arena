@@ -1897,6 +1897,7 @@ namespace Cheetah.Graphics
 
 		public Cheetah.TextureId CreateTexture(byte[] rgba, int w, int h, bool alpha)
 		{
+            bool mipmap = IsPowerOf2(w) && IsPowerOf2(h);
 			//if (!(IsPowerOf2(w) && IsPowerOf2(h)))
 			//	throw new Exception("Texture sizes must be n^2.");
 			int[] i = new int[1];
@@ -1917,7 +1918,11 @@ namespace Cheetah.Graphics
             //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
 
 			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+            if(mipmap)
+                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+            else
+                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+
             //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_NEAREST);
             //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
 
@@ -1932,11 +1937,20 @@ namespace Cheetah.Graphics
 								Glu.gluScaleImage(Gl.GL_RGB,w,h,Gl.GL_UNSIGNED_BYTE,rgba,s,s,Gl.GL_UNSIGNED_BYTE,data);
 						}
 			*/
-			if (alpha)
-				Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
-			else
-				Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 3, w, h, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
-
+            if (mipmap)
+            {
+                if (alpha)
+                    Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+                else
+                    Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 3, w, h, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
+            }
+            else
+            {
+                if (alpha)
+                    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 4, w, h, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+                 else
+                    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
+            }
 			//t.width=w;
 			//t.height=h;
 			Textures[t.id] = t;
@@ -1946,6 +1960,7 @@ namespace Cheetah.Graphics
 
         public Cheetah.TextureId CreateTexture(int w, int h, bool alpha, bool depth)
         {
+            bool mipmap = IsPowerOf2(w) && IsPowerOf2(h);
             //if (!(IsPowerOf2(w) && IsPowerOf2(h)))
             //	throw new Exception("Texture sizes must be n^2.");
             int[] i = new int[1];
@@ -1966,7 +1981,10 @@ namespace Cheetah.Graphics
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
 
             Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+            if (mipmap)
+                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+            else
+                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
 
             if (depth)
                 Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT, w, h, 0, Gl.GL_DEPTH_COMPONENT, Gl.GL_UNSIGNED_SHORT, IntPtr.Zero);
