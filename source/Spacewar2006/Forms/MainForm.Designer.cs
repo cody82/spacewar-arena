@@ -123,6 +123,7 @@ namespace Spacewar2006.Forms
             this.HelpRtf = new System.Windows.Forms.RichTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.Bloom = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.ClientTab.SuspendLayout();
             this.ServerTab.SuspendLayout();
@@ -799,11 +800,12 @@ namespace Spacewar2006.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Bloom);
             this.groupBox1.Controls.Add(this.WindowMode);
             this.groupBox1.Controls.Add(this.Resolution);
             this.groupBox1.Location = new System.Drawing.Point(30, 26);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(221, 106);
+            this.groupBox1.Size = new System.Drawing.Size(221, 236);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Graphics";
@@ -1129,6 +1131,17 @@ namespace Spacewar2006.Forms
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // Bloom
+            // 
+            this.Bloom.AutoSize = true;
+            this.Bloom.Location = new System.Drawing.Point(24, 104);
+            this.Bloom.Name = "Bloom";
+            this.Bloom.Size = new System.Drawing.Size(55, 17);
+            this.Bloom.TabIndex = 2;
+            this.Bloom.Text = "Bloom";
+            this.Bloom.UseVisualStyleBackColor = true;
+            this.Bloom.CheckedChanged += new System.EventHandler(this.Bloom_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1275,5 +1288,6 @@ namespace Spacewar2006.Forms
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox IpAddress;
         private System.Windows.Forms.Button EditorButton;
+        private System.Windows.Forms.CheckBox Bloom;
     }
 }

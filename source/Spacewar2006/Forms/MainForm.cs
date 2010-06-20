@@ -125,6 +125,13 @@ namespace Spacewar2006.Forms
             //Sound.SelectedText = c.GetBool("audio.enable") ? "Fmod SoundSystem" : "Off";
             Sound.Checked = c.GetBool("audio.enable");
 
+            bool bloom = true;
+            if (c.Table.ContainsKey("postprocess.bloom"))
+            {
+                bloom = c.GetBool("postprocess.bloom");
+            }
+            Bloom.Checked = bloom;
+
             loading = false;
         }
 
@@ -200,6 +207,7 @@ namespace Spacewar2006.Forms
             c.Set("irc.host", HostIrcServer.Text);
 
             c.Set("audio.enable", Sound.Checked);
+            c.Set("postprocess.bloom", Bloom.Checked);
         }
 
         void LoadDemos()
@@ -326,7 +334,6 @@ namespace Spacewar2006.Forms
             IUserInterface ui = r.UserInterface;
 
             //Cheetah.Root.Instance.LocalObjects.Add(new Helper());
-
 
             Cheetah.Console.ConsoleEvent += ConsoleOutput;
 
@@ -460,6 +467,7 @@ namespace Spacewar2006.Forms
             r.ResourceManager.UnloadAll();
             r.UserInterface.Dispose();
             r.UserInterface = null;
+            r.ClientPostProcessor = null;
 
             GameRunning = false;
         }
@@ -542,7 +550,9 @@ namespace Spacewar2006.Forms
 
             if(HostDedicated.Checked)
             {
-                Cheetah.Root.Instance.LocalObjects.Add(h=new Helper());
+                SimpleUserInterface sui = new SimpleUserInterface();
+
+                Cheetah.Root.Instance.LocalObjects.Add(h = new Helper());
             }
 
             Root r = Root.Instance;
@@ -892,6 +902,11 @@ namespace Spacewar2006.Forms
             vf.Close();
 
             GameRunning = false;
+        }
+
+        private void Bloom_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveConfig();
         }
 
     }
