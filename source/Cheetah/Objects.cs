@@ -6073,7 +6073,7 @@ using Cheetah;");
 
             //PostProcessor=new PostProcess(1024,512);
             //ClientPostProcessor = new PostProcess(1024, 1024);
-            ClientPostProcessor = new PostProcess(width, height);
+            ClientPostProcessor = new PostProcess(width, height, UserInterface.Renderer);
             //Connection=new UdpClient();
         }
         

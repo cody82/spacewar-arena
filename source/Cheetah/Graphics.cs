@@ -6521,17 +6521,33 @@ namespace Cheetah.Graphics
         public List<IPass> Passes = new List<IPass>();
         IRenderer Renderer;
 
-        public PostProcess(int width,int height)
+        public PostProcess(int width,int height,IRenderer renderer)
         {
             Size.X=width;
             Size.Y=height;
-
+            Renderer=renderer;
             //Passes.Add(new Ripple());
             //Passes.Add(new Shift());
             //Passes.Add(new Distort());
             //Passes.Add(new Invert());
             //Passes.Add(new Smooth());
-            //Passes.Add(new Bloom());
+            try
+            {
+                Renderer.CreateRenderTarget(null, null);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+          
+            Config c = Root.Instance.ResourceManager.LoadConfig("config/global.config");
+            bool bloom = true;
+            if (c.Table.ContainsKey("postprocess.bloom"))
+            {
+                bloom = c.GetBool("postprocess.bloom");
+            }
+            if(bloom)
+                Passes.Add(new Bloom());
         }
 
         public void Enable(IRenderer r)
