@@ -38,4 +38,4 @@ zip: compile
 
 upload:
 	#scp spacewar-arena-20100613-c452d2f7d430+.zip cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
-	rsync -e ssh -rv --delete release/* cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
+	rsync -e ssh -rv --delete --progress release/* cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
