@@ -1469,7 +1469,7 @@ namespace Cheetah.Graphics
             LoadExtension("GL_ARB_fragment_shader");
             LoadExtension("GL_VERSION_2_0");
             LoadExtension("GL_ARB_vertex_buffer_object");
-            fbo_disabled &= LoadExtension("GL_EXT_framebuffer_object");
+            fbo_disabled |= !LoadExtension("GL_EXT_framebuffer_object");
             LoadExtension("GL_ARB_texture_cube_map");
             LoadExtension("GL_EXT_texture_compression_s3tc");
             LoadExtension("GL_ARB_texture_compression");
@@ -1481,7 +1481,7 @@ namespace Cheetah.Graphics
             }
             LoadExtension("GL_EXT_gpu_shader4");
             LoadExtension("GL_EXT_bindable_uniform");
-            fbo_disabled &= LoadExtension("GL_ARB_texture_non_power_of_two");
+            fbo_disabled |= !LoadExtension("GL_ARB_texture_non_power_of_two");
 
 			width = currentwidth=_width;
 			height = currentheight=_height;

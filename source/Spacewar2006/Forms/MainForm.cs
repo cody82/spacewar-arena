@@ -550,7 +550,7 @@ namespace Spacewar2006.Forms
 
             if(HostDedicated.Checked)
             {
-                SimpleUserInterface sui = new SimpleUserInterface();
+                //SimpleUserInterface sui = new SimpleUserInterface();
 
                 Cheetah.Root.Instance.LocalObjects.Add(h = new Helper());
             }
