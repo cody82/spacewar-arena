@@ -49,7 +49,8 @@ namespace Cheetah.Bugs
 
             for (Exception e2 = e; e2 != null;e2 = e2.InnerException)
             {
-                message += "\n" + e2.Message + "\n\n" + e2.StackTrace;
+				message += "\n" + e2.GetType().ToString() + "\n";
+                message += e2.Message + "\n\n" + e2.StackTrace;
                 if (e2.InnerException != null)
                 {
                     message += "\nInner Exception:\n";
