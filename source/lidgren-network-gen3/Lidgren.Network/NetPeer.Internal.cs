@@ -75,7 +75,15 @@ namespace Lidgren.Network
 
 			InitializeRecycling();
 
-			System.Net.NetworkInformation.PhysicalAddress pa = NetUtility.GetMacAddress();
+			System.Net.NetworkInformation.PhysicalAddress pa=null;
+			try
+			{
+				pa = NetUtility.GetMacAddress();
+			}
+			catch(NotSupportedException e)
+			{
+			}
+			
 			if (pa != null)
 			{
 				m_macAddressBytes = pa.GetAddressBytes();
