@@ -326,6 +326,28 @@ namespace Cheetah.OpenTK
                 this.audio = new DummyAudio();
 
             window.Visible = true;
+			
+			Config c = (Config)Root.Instance.ResourceManager.Load("config/global.config", typeof(Config));
+            if(c.Table.ContainsKey("video.vsync"))
+			{
+				string vsync = c.GetString("video.vsync");
+				if(vsync=="on"||vsync=="true")
+				{
+					window.VSync=VSyncMode.On;
+				}
+				else if(vsync=="off"||vsync=="false")
+				{
+					window.VSync=VSyncMode.Off;
+				}
+				else
+				{
+					window.VSync=VSyncMode.Adaptive;
+				}
+			}
+			else
+			{
+				window.VSync=VSyncMode.Adaptive;
+			}
         }
 
         public void ProcessEvents()
