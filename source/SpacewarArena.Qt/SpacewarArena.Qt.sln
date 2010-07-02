@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacewarArena.Qt", "SpacewarArena.Qt.csproj", "{4C658910-EFCF-4BD5-AB8F-B9F8A2FB6470}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C658910-EFCF-4BD5-AB8F-B9F8A2FB6470}.Debug|x86.ActiveCfg = Debug|x86
+		{4C658910-EFCF-4BD5-AB8F-B9F8A2FB6470}.Debug|x86.Build.0 = Debug|x86
+		{4C658910-EFCF-4BD5-AB8F-B9F8A2FB6470}.Release|x86.ActiveCfg = Release|x86
+		{4C658910-EFCF-4BD5-AB8F-B9F8A2FB6470}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SpacewarArena.Qt.csproj
+	EndGlobalSection
+EndGlobal
