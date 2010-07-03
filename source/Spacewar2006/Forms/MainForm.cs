@@ -282,7 +282,7 @@ namespace Spacewar2006.Forms
             ListViewItem lvi=FindServer(msg.SenderEndpoint);
             bool add = false;
 
-            string[] subitems = new string[6];
+            string[] subitems = new string[5];
             if (lvi == null)
             {
                 lvi = new ListViewItem();
@@ -290,35 +290,31 @@ namespace Spacewar2006.Forms
                 add = true;
             }
 
-
-            subitems[1] = msg.SenderEndpoint.ToString();
+ 
+            //subitems[1] = msg.SenderEndpoint.ToString();
 
             if (info != null)
             {
-                subitems[0] = info.ServerName;
-                subitems[2] = info.Map;
-                subitems[3] = info.GameType;
-                subitems[4] = info.NumPlayers.ToString() + "/" + info.MaxPlayers.ToString();
-                subitems[5] = info.Password.ToString();
-            }
-            else
-            {
-                subitems[0] = "???";
-            }
-
-            string tmp="";
-            if (Root.Instance.IsWindows)
-            {
-                tmp = subitems[0];
-                for (int i = 0; i < subitems.Length - 1; ++i)
-                    subitems[i] = subitems[i + 1];
+                subitems[0] = msg.SenderEndpoint.ToString();
+                subitems[1] = info.Map;
+                subitems[2] = info.GameType;
+                subitems[3] = info.NumPlayers.ToString() + "/" + info.MaxPlayers.ToString();
+                subitems[4] = info.Password.ToString();
+				lvi.Text = info.ServerName;
             }
 
             lvi.SubItems.Clear();
             lvi.SubItems.AddRange(subitems);
-            if (Root.Instance.IsWindows)
-                lvi.Text = tmp;
-
+			
+            if (info != null)
+            {
+            	lvi.Text = info.ServerName;
+			}
+			else
+			{
+            	lvi.Text = "???";
+			}
+			
             if(add)
                 ServerList.Items.Add(lvi);
         }
