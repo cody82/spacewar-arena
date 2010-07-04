@@ -1060,6 +1060,10 @@ namespace SpaceWar2006.Flows
             {
                 ToggleGameMenu();
             }
+			else if (k == global::OpenTK.Input.Key.F3)
+			{
+				ToggleCamera();
+			}
             else if (Spectate && (k == global::OpenTK.Input.Key.Space))
             {
                 IList<SpaceShip> l = Root.Instance.Scene.FindEntitiesByType<SpaceShip>();
@@ -1089,6 +1093,34 @@ namespace SpaceWar2006.Flows
             }
         }
 
+		void ToggleCamera()
+		{
+				Scene s=Root.Instance.Scene;
+				GameCamera oldcam=MainCamera;
+				GameCamera newcam;
+				Root.Instance.LocalObjects.Remove(oldcam);
+				if(oldcam.GetType()==typeof(OverviewCamera))
+				{
+					newcam=new TopCamera();
+				}
+				else if(oldcam.GetType()==typeof(TopCamera))
+				{
+					newcam=new IsoCamera();
+				}
+				else if(oldcam.GetType()==typeof(IsoCamera))
+				{
+					newcam=new OverviewCamera();
+				}
+				else
+					throw new Exception("bug");
+				
+				newcam.Target=oldcam.Target;
+				Root.Instance.LocalObjects.Add(newcam);
+				MainCamera=newcam;
+		        MainCamera.Aspect = (float)Root.Instance.UserInterface.Renderer.Size.X / (float)Root.Instance.UserInterface.Renderer.Size.Y;
+				s.camera=newcam;
+		}
+		
         Sound Music;// = Root.Instance.ResourceManager.LoadSound("battle12.mp3");
         Channel MusicChannel;
 
@@ -1119,11 +1151,7 @@ namespace SpaceWar2006.Flows
                 Server.Start();
             }
             MainCamera = new OverviewCamera();
-            //MainCamera = new IsoCamera();
-            //MainCamera = new TopCamera();
             MainCamera.Aspect = (float)Root.Instance.UserInterface.Renderer.Size.X / (float)Root.Instance.UserInterface.Renderer.Size.Y;
-            //MainCamera.View = new Viewport(0, 0, 720, 720);
-            //MainCamera = new FollowCamera();
             Root.Instance.LocalObjects.Add(MainCamera);
 
             if(Music!=null)
@@ -1488,7 +1516,7 @@ namespace SpaceWar2006.Flows
         //Vector3 campos;
         Node TargetMarker;
         Camera TargetCamera;
-        OverviewCamera MainCamera;
+        GameCamera MainCamera;
         //FollowCamera MainCamera;
         //AdvancedCamera FlyByCamera;
         float TimeToSpawn;

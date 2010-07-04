@@ -333,6 +333,95 @@ namespace SpaceWar2006.Ships
         public static string Thumbnail = "cnv301-image.dds";
     }
 
+	
+    [Editable]
+    public class GravityForceShip : SpaceShip
+    {
+        public GravityForceShip()
+        {
+
+            Draw = new ArrayList();
+            Draw.Add(Root.Instance.ResourceManager.LoadMesh("spaceship-symbol/spaceship-symbol.mesh"));
+            //Draw.Add(Root.Instance.ResourceManager.LoadMesh("mk9hawk/mk9hawk.mesh"));
+            //Draw.Add(new Marker());
+            //Transparent = true;
+
+            ShieldModel = Root.Instance.ResourceManager.LoadMesh("cnv-shield/cnv-shield.mesh");
+            //ShieldModel = Root.Instance.ResourceManager.LoadMesh("mk9hawk-shield/mk9hawk-shield.mesh");
+
+
+            Battery = new Battery(100);
+            Generator = new Generator(10, Battery);
+            Inventory = new Inventory(100);
+            //Inventory.Load(typeof(HomingMissile), 10);
+            Inventory.Load(typeof(LaserCannon), 2);
+            Inventory.Load(typeof(RailGun), 1);
+            Inventory.Load(typeof(IonPulseCannon), 2);
+            Inventory.Load(typeof(DisruptorCannon), 2);
+            Inventory.Load(typeof(PulseLaserCannon), 2);
+            Inventory.Load(typeof(Mine), 10);
+            Inventory.Load(typeof(MineLayer), 1);
+            Inventory.Load(typeof(HomingMissile), 10);
+            Inventory.Load(typeof(HomingMissileLauncher), 1);
+            //Inventory.Load(typeof(MissileLauncher), 1);
+            Slots = new Slot[3]{
+								 new Slot(null,new Vector3(46,0,0),Quaternion.Identity,0),
+								 new Slot(null,new Vector3(-46,0,0),Quaternion.Identity,0),
+								 new Slot(null,new Vector3(64,0,0),Quaternion.Identity,0)
+							 };
+            Shield = new Shield(Battery, 100, 5);
+            Hull = new Hull(100);
+            Computer = new Computer(this);
+            Radius = 60;
+            RenderRadius = 90;
+            SyncRefs = false;
+            ShieldSound = Root.Instance.ResourceManager.LoadSound("cnv-shield.wav");
+
+            WeaponNumbers = new int[] { -1, -1, -1 };
+            ArmWeapon(GetWeaponNumber(typeof(LaserCannon)), 0);
+            ArmWeapon(GetWeaponNumber(typeof(LaserCannon)), 1);
+
+            MainThrust = 600;
+            StrafeThrust = 0;
+            Resistance = 0.0f;
+            RollSpeed = 0;
+            MaxRoll = 0;
+            MaxRotationSpeed = 3;
+			MaxSpeed = 500;
+        }
+
+		public float MaxSpeed=0;
+
+
+        public override string Name
+        {
+            get { return "GravityForce Ship"; }
+        }
+
+        public override void OnRemove(Scene s)
+        {
+            base.OnRemove(s);
+        }
+
+        public GravityForceShip(DeSerializationContext context)
+            : this()
+        {
+            DeSerialize(context);
+        }
+
+		public override void Tick (float dTime)
+		{
+			base.Tick (dTime);
+			
+			float speed=Speed.GetMagnitude();
+			if(MaxSpeed>0 && speed>MaxSpeed && speed!=0)
+			{
+				Speed*=MaxSpeed/speed;
+			}
+		}
+        public static string Thumbnail = "test.jpg";
+    }
+
     [Editable]
     public class BorgCube : SpaceShip
     {

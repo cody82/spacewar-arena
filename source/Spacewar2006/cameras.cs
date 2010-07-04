@@ -18,7 +18,12 @@ using OpenTK.Input;
 
 namespace SpaceWar2006.Cameras
 {
-    public class FollowCamera : Camera
+	public class GameCamera : Camera
+	{
+        public Node Target;
+	}
+	
+    public class FollowCamera : GameCamera
     {
         public FollowCamera()
         {
@@ -58,11 +63,9 @@ namespace SpaceWar2006.Cameras
             */
 
         }
-
-        public Node Target;
     }
 
-    public class TopCamera : Camera
+    public class TopCamera : GameCamera
     {
         public TopCamera()
         {
@@ -81,10 +84,9 @@ namespace SpaceWar2006.Cameras
         }
 
         Vector3 RelativePosition = new Vector3(0,2500,1);
-        public Node Target;
     }
 
-    public class IsoCamera : Camera
+    public class IsoCamera : GameCamera
     {
         public IsoCamera()
         {
@@ -103,10 +105,9 @@ namespace SpaceWar2006.Cameras
         }
 
         Vector3 RelativePosition = new Vector3(1000,1500,1000);
-        public Node Target;
     }
 
-    public class OverviewCamera : Camera
+    public class OverviewCamera : GameCamera
     {
         public OverviewCamera()
         {
@@ -160,7 +161,6 @@ namespace SpaceWar2006.Cameras
         }
 
         Vector3 smoothtargetspeed;
-        public Node Target;
     }
 
 }
