@@ -99,7 +99,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetConnection SenderConnection { get { return m_senderConnection; } }
 
-		internal NetIncomingMessage()
+		public NetIncomingMessage()
 		{
 		}
 
@@ -128,6 +128,28 @@ namespace Lidgren.Network
 			for (int i = 0; i < blocks; i++)
 				tea.DecryptBlock(m_data, (i * 8), result, (i * 8));
 			m_data = result;
+		}
+
+		public NetIncomingMessage Clone()
+		{
+			NetIncomingMessage retval = new NetIncomingMessage();
+
+			// copy content
+			retval.m_data = new byte[LengthBytes];
+			Buffer.BlockCopy(m_data, 0, retval.m_data, 0, LengthBytes);
+
+			retval.m_bitLength = m_bitLength;
+			retval.m_messageType = m_messageType;
+			retval.m_sequenceNumber = m_sequenceNumber;
+			retval.m_status = m_status;
+			retval.m_incomingType = m_incomingType;
+			retval.m_senderEndpoint = m_senderEndpoint;
+			retval.m_senderConnection = m_senderConnection;
+			retval.m_fragmentationInfo = m_fragmentationInfo;
+			retval.m_bitLength = m_bitLength;
+			retval.m_bitLength = m_bitLength;
+
+			return retval;
 		}
 
 		public override string ToString()

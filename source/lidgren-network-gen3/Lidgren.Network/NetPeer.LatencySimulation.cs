@@ -37,15 +37,17 @@ namespace Lidgren.Network
 			public IPEndPoint Target;
 		}
 
-		internal void SendPacket(int numBytes, IPEndPoint target, int numMessages)
+		internal void SendPacket(int numBytes, IPEndPoint target, int numMessages, out bool connectionReset)
 		{
+			connectionReset = false;
+
 			// simulate loss
 			float loss = m_configuration.m_loss;
 			if (loss > 0.0f)
 			{
 				if (NetRandom.Instance.Chance(m_configuration.m_loss))
 				{
-					LogVerbose("Sending packet " + numBytes + " bytes - SIMULATED LOST!");
+					//LogVerbose("Sending packet " + numBytes + " bytes - SIMULATED LOST!");
 					return; // packet "lost"
 				}
 			}
@@ -58,8 +60,8 @@ namespace Lidgren.Network
 			if (m == 0.0f && r == 0.0f)
 			{
 				// no latency simulation
-				LogVerbose("Sending packet " + numBytes + " bytes");
-				ActuallySendPacket(m_sendBuffer, numBytes, target);
+				//LogVerbose("Sending packet " + numBytes + " bytes");
+				ActuallySendPacket(m_sendBuffer, numBytes, target, out connectionReset);
 				return;
 			}
 
@@ -82,7 +84,7 @@ namespace Lidgren.Network
 				m_delayedPackets.Add(p);
 			}
 
-			LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay));
+			// LogVerbose("Sending packet " + numBytes + " bytes - delayed " + NetTime.ToReadable(delay));
 		}
 
 		private void SendDelayedPackets()
@@ -92,25 +94,38 @@ namespace Lidgren.Network
 
 			double now = NetTime.Now;
 
+			bool connectionReset;
+
 		RestartDelaySending:
 			foreach (DelayedPacket p in m_delayedPackets)
 			{
 				if (now > p.DelayedUntil)
 				{
-					ActuallySendPacket(p.Data, p.Data.Length, p.Target);
+					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
 					m_delayedPackets.Remove(p);
 					goto RestartDelaySending;
 				}
 			}
 		}
 
-		internal void ActuallySendPacket(byte[] data, int numBytes, IPEndPoint target)
+		internal void ActuallySendPacket(byte[] data, int numBytes, IPEndPoint target, out bool connectionReset)
 		{
+			connectionReset = false;
 			try
 			{
 				int bytesSent = m_socket.SendTo(data, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
+			}
+			catch (SocketException sx)
+			{
+				if (sx.SocketErrorCode == SocketError.ConnectionReset)
+				{
+					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable" 
+					connectionReset = true;
+					return;
+				}
+				LogError("Failed to send packet: " + sx);
 			}
 			catch (Exception ex)
 			{
@@ -119,17 +134,28 @@ namespace Lidgren.Network
 		}
 
 #else
-		//
+        //
 		// Release - just send the packet straight away
 		//
-		internal void SendPacket(int numBytes, IPEndPoint target, int numMessages)
+		internal void SendPacket(int numBytes, IPEndPoint target, int numMessages, out bool connectionReset)
 		{
+			connectionReset = false;
 			try
 			{
 				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
-			    m_statistics.PacketSent(numBytes, numMessages);
+                m_statistics.PacketSent(numBytes, numMessages);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
+			}
+			catch (SocketException sx)
+			{
+				if (sx.SocketErrorCode == SocketError.ConnectionReset)
+				{
+					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable" 
+					connectionReset = true;
+					return;
+				}
+				LogError("Failed to send packet: " + sx);
 			}
 			catch (Exception ex)
 			{

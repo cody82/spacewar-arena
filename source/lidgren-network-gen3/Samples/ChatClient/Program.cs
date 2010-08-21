@@ -44,6 +44,9 @@ namespace ChatClient
 
 		public static void Input(string input)
 		{
+			if (string.IsNullOrEmpty(input))
+				return;
+
 			if (input.ToLowerInvariant().StartsWith("connect "))
 			{
 				string host = input.Substring(8).Trim();
@@ -61,7 +64,7 @@ namespace ChatClient
 
 			NetOutgoingMessage om = Client.CreateMessage();
 			om.WriteAllFields(cm);
-			Client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+			Client.SendMessage(om, NetDeliveryMethod.ReliableOrdered, 8);
 		}
 
 		static void AppLoop(object sender, EventArgs e)

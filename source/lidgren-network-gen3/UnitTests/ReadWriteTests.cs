@@ -76,24 +76,47 @@ namespace UnitTests
 			test.Name = "Hallon";
 			test.Age = 8.2f;
 
-			tmp.WriteAllFields(test);
+			tmp.WriteAllFields(test, BindingFlags.Public | BindingFlags.Instance);
 
 			data = tmp.PeekDataBuffer();
 
 			inc = Program.CreateIncomingMessage(data, tmp.LengthBits);
 
 			Test readTest = new Test();
-			inc.ReadAllFields(readTest);
+			inc.ReadAllFields(readTest, BindingFlags.Public | BindingFlags.Instance);
 
 			NetException.Assert(readTest.Number == 42);
 			NetException.Assert(readTest.Name == "Hallon");
 			NetException.Assert(readTest.Age == 8.2f);
+
+			msg = peer.CreateMessage();
+
+			System.IO.BinaryWriter br = new System.IO.BinaryWriter(msg);
+
+			br.Write(true);
+			br.Write("hallon");
+			br.Write((byte)42);
+
+			int byteLen = msg.LengthBytes;
+			byte[] rbts = msg.PeekDataBuffer();
+
+			inc = Program.CreateIncomingMessage(rbts, msg.LengthBits);
+
+			System.IO.BinaryReader rdr = new System.IO.BinaryReader(inc);
+
+			bool one = rdr.ReadBoolean();
+			string hallon = rdr.ReadString();
+			byte fourtyTwo = rdr.ReadByte();
 		}
 	}
 
-	public class Test
+	public class TestBase
 	{
 		public int Number;
+	}
+
+	public class Test : TestBase
+	{
 		public float Age;
 		public string Name;
 	}

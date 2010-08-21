@@ -92,6 +92,7 @@ namespace DurableServer
 								case NetDeliveryMethod.ReliableOrdered:
 									if (nr != m_expectedReliableOrdered[chan])
 									{
+										//Display("Expected " + m_expectedReliableOrdered[chan] + ", got " + nr);
 										m_reliableOrderedErrors[chan]++;
 										m_expectedReliableOrdered[chan] = nr + 1;
 									}
@@ -108,6 +109,8 @@ namespace DurableServer
 										m_sequencedCorrect[chan]++;
 									m_expectedSequenced[chan] = nr + 1;
 									break;
+								default:
+									throw new Exception("Bad NetDeliveryMethod: " + msg.DeliveryMethod);
 							}
 							break;
 					}

@@ -20,11 +20,11 @@ using System;
 
 namespace Lidgren.Network
 {
-	internal static class NetConstants
+	public static class NetConstants
 	{
-		internal const int NetChannelsPerDeliveryMethod = 32;
+		public const int NetChannelsPerDeliveryMethod = 32;
 
-		internal const int NumSequenceNumbers = ushort.MaxValue + 1; // 0 is a valid sequence number
+		public const int NumSequenceNumbers = ushort.MaxValue + 1; // 0 is a valid sequence number
 
 		/// <summary>
 		/// Number of channels which needs a sequence number to work
@@ -40,5 +40,7 @@ namespace Lidgren.Network
 		/// Number of bytes added when message is really a fragment
 		/// </summary>
 		internal const int FragmentHeaderSize = 6;
+
+		internal const string ConnResetMessage = "Connection was reset by remote host";
 	}
 }

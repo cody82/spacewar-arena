@@ -105,6 +105,17 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
+		/// Returns the connection to a remote endpoint; if it exists
+		/// </summary>
+		public NetConnection GetConnection(IPEndPoint remoteEndPoint)
+		{
+			NetConnection retval;
+			if (m_connectionLookup.TryGetValue(remoteEndPoint, out retval))
+				return retval;
+			return null;
+		}
+
+		/// <summary>
 		/// Binds to socket
 		/// </summary>
 		public void Start()
@@ -185,30 +196,49 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
-		/// Create a connection to a remote endpoint
+		/// Tries to create a connection to a remote endpoint; returns true on success
+		/// Note that the connection attempt may still fail; the returning value only indicates that the connection procedure initiated successfully
 		/// </summary>
-		public virtual NetConnection Connect(IPEndPoint remoteEndpoint, NetOutgoingMessage approvalMessage)
+		public bool TryConnect(IPEndPoint remoteEndpoint, NetOutgoingMessage approvalMessage, out NetConnection connection)
 		{
-			if (m_status == NetPeerStatus.NotRunning)
-				throw new NetException("Must call Start() first");
-
-			if (m_connectionLookup.ContainsKey(remoteEndpoint))
-				throw new NetException("Already connected to that endpoint!");
-
-			NetConnection conn = new NetConnection(this, remoteEndpoint);
-			conn.m_approvalMessage = approvalMessage;
-
-			// handle on network thread
-			conn.m_connectRequested = true;
-			conn.m_connectionInitiator = true;
-
 			lock (m_connections)
 			{
+				if (m_status == NetPeerStatus.NotRunning || m_connectionLookup.ContainsKey(remoteEndpoint))
+				{
+					connection = null;
+					return false;
+				}
+
+				connection = Connect(remoteEndpoint, approvalMessage);
+				return true;
+			}
+		}
+
+		/// <summary>
+		/// Create a connection to a remote endpoint
+		/// </summary>
+		public NetConnection Connect(IPEndPoint remoteEndpoint, NetOutgoingMessage approvalMessage)
+		{
+			lock (m_connections)
+			{
+				if (m_status == NetPeerStatus.NotRunning)
+					throw new NetException("Must call Start() first");
+
+				if (m_connectionLookup.ContainsKey(remoteEndpoint))
+					throw new NetException("Already connected to that endpoint!");
+
+				NetConnection conn = new NetConnection(this, remoteEndpoint);
+				conn.m_approvalMessage = approvalMessage;
+
+				// handle on network thread
+				conn.m_connectRequested = true;
+				conn.m_connectionInitiator = true;
+
 				m_connections.Add(conn);
 				m_connectionLookup[remoteEndpoint] = conn;
-			}
 
-			return conn;
+				return conn;
+			}
 		}
 
 		/// <summary>
@@ -239,35 +269,37 @@ namespace Lidgren.Network
 			if (m_status != NetPeerStatus.Running)
 				return false;
 
-			msg.m_type = (NetMessageType)((int)deliveryMethod + channel);
-
-			recipient.EnqueueOutgoingMessage(msg);
-
-			return true;
+			return recipient.SendMessage(msg, deliveryMethod, channel);
 		}
 
 		/// <summary>
-		/// Send a message to a number of existing connections
+		/// Send a message to a number of existing connections; returns true if all recipients were sent the message
 		/// </summary>
 		/// <param name="channel">Delivery channel (0-31)</param>
-		public bool SendMessage(NetOutgoingMessage msg, IEnumerable<NetConnection> recipients, NetDeliveryMethod deliveryMethod, int channel)
+		public bool SendMessage(NetOutgoingMessage msg, IEnumerable<NetConnection> recipients, NetDeliveryMethod deliveryMethod, int sequenceChannel)
 		{
 			if (msg.IsSent)
 				throw new NetException("Message has already been sent!");
-			if (channel < 0 || channel > NetConstants.NetChannelsPerDeliveryMethod)
+			if (sequenceChannel < 0 || sequenceChannel > NetConstants.NetChannelsPerDeliveryMethod)
 				throw new NetException("Channel must be between 0 and " + (NetConstants.NetChannelsPerDeliveryMethod - 1));
-			if (channel != 0 && (deliveryMethod == NetDeliveryMethod.Unreliable || deliveryMethod == NetDeliveryMethod.ReliableUnordered))
+			if (sequenceChannel != 0 && (deliveryMethod == NetDeliveryMethod.Unreliable || deliveryMethod == NetDeliveryMethod.ReliableUnordered))
 				throw new NetException("Channel must be 0 for Unreliable and ReliableUnordered");
 
 			if (m_status != NetPeerStatus.Running)
 				return false;
 
-			msg.m_type = (NetMessageType)((int)deliveryMethod + channel);
+			msg.m_wasSent = true;
 
+			NetMessageType tp = (NetMessageType)((int)deliveryMethod + sequenceChannel);
+
+			bool all = true;
 			foreach (NetConnection conn in recipients)
-				conn.EnqueueOutgoingMessage(msg);
+			{
+				if (!conn.EnqueueSendMessage(msg, tp))
+					all = false;
+			}
 
-			return true;
+			return all;
 		}
 
 		/// <summary>
@@ -275,15 +307,11 @@ namespace Lidgren.Network
 		/// </summary>
 		public void SendUnconnectedMessage(NetOutgoingMessage msg, string host, int port)
 		{
-			if (msg.IsSent)
-				throw new NetException("Message has already been sent!");
-
 			IPAddress adr = NetUtility.Resolve(host);
 			if (adr == null)
 				throw new NetException("Failed to resolve " + host);
 
-			msg.m_type = NetMessageType.UserUnreliable; // sortof not applicable
-			EnqueueUnconnectedMessage(msg, new IPEndPoint(adr, port));
+			SendUnconnectedMessage(msg, new IPEndPoint(adr, port));
 		}
 
 		/// <summary>
@@ -293,16 +321,8 @@ namespace Lidgren.Network
 		{
 			if (msg.IsSent)
 				throw new NetException("Message has already been sent!");
-			msg.m_type = NetMessageType.UserUnreliable; // sortof not applicable
-			EnqueueUnconnectedMessage(msg, recipient);
-		}
+			msg.m_wasSent = true;
 
-		internal void SendUnconnectedLibraryMessage(NetOutgoingMessage msg, NetMessageLibraryType libType, IPEndPoint recipient)
-		{
-			if (msg.IsSent)
-				throw new NetException("Message has already been sent!");
-			msg.m_type = NetMessageType.Library;
-			msg.m_libType = libType;
 			EnqueueUnconnectedMessage(msg, recipient);
 		}
 
@@ -313,9 +333,10 @@ namespace Lidgren.Network
 		{
 			if (msg.IsSent)
 				throw new NetException("Message has already been sent!");
-			msg.m_type = NetMessageType.UserUnreliable; // sortof not applicable
-			foreach (IPEndPoint ipe in recipients)
-				EnqueueUnconnectedMessage(msg, ipe);
+			msg.m_wasSent = true;
+
+			foreach (IPEndPoint rec in recipients)
+				EnqueueUnconnectedMessage(msg, rec);
 		}
 
 		/// <summary>
@@ -327,9 +348,9 @@ namespace Lidgren.Network
 				msg = CreateMessage(0);
 			if (msg.IsSent)
 				throw new NetException("Message has already been sent!");
-			msg.m_type = NetMessageType.Library;
+
 			msg.m_libType = NetMessageLibraryType.DiscoveryResponse;
-			EnqueueUnconnectedMessage(msg, recipient);
+			SendUnconnectedLibrary(msg, recipient);
 		}
 
 		/// <summary>
