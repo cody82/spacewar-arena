@@ -21,9 +21,11 @@ using System.Web;
 using System.CodeDom;
 using Microsoft.CSharp;
 using System.Xml;
-
+using System.Runtime.InteropServices;
 using OpenTK.Input;
 using Cheetah.Graphics;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Cheetah
 {
@@ -6044,11 +6046,57 @@ using Cheetah;");
     {
         public List<Assembly> Assemblies = new List<Assembly>();
 
-        /// <summary>
-        /// CLIENT
-        /// </summary>
-        /// 
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWow64Process(
+            [In] IntPtr hProcess,
+            [Out] out bool wow64Process
+        );
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool InternalCheckIsWow64()
+        {
+            if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
+                Environment.OSVersion.Version.Major >= 6)
+            {
+                using (Process p = Process.GetCurrentProcess())
+                {
+                    bool retVal;
+                    if (!IsWow64Process(p.Handle, out retVal))
+                    {
+                        return false;
+                    }
+                    return retVal;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool Is64BitProcess
+        {
+            get
+            {
+                return IntPtr.Size == 8;
+            }
+        }
+
+        public static bool Is64BitOS
+        {
+            get
+            {
+                try
+                {
+                    return Is64BitProcess || InternalCheckIsWow64();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
 
         public void ClientClient(string[] args, IUserInterface userinterface)
         {
@@ -6646,10 +6694,13 @@ using Cheetah;");
 
         public Root(string[] args,bool authoritive)
         {
-
             Authoritive = authoritive;
             Args = args;
             singleton = this;
+
+            Console.WriteLine("Process: " + (Is64BitProcess ? "64" : "32") + " Bit");
+            Console.WriteLine("OS: " + (Is64BitOS ? "64" : "32") + " Bit");
+
 
 			string home;
 			int i=Array.IndexOf<string>(args, "-home");
