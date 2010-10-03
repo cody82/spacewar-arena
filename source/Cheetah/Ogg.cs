@@ -10,6 +10,7 @@ using size_t=System.UInt32;
 using ogg_int64_t=System.Int64;
 using ogg_uint32_t=System.UInt32;
 using System.Threading;
+using System.Security;
 
 namespace Cheetah.Graphics
 {
@@ -109,44 +110,56 @@ namespace Cheetah.Graphics
 
 		
 		[DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity] 
 		extern static public IntPtr th_version_string ();
 			
-        [DllImport(LIB)]
-        extern static public void th_info_init (ref th_info _info);
+        [DllImport(LIB,CallingConvention=CallingConvention.Winapi)]
+        [SuppressUnmanagedCodeSecurity]
+        extern static public void th_info_init(th_info* _info);
 		
 		[DllImport(LIB)]
-		extern static public void th_info_clear (th_info *_info);
+        [SuppressUnmanagedCodeSecurity]
+        extern static public void th_info_clear(th_info* _info);
 			
 		[DllImport(LIB)]
-		extern static public void th_comment_clear (th_comment *_tc);
+        [SuppressUnmanagedCodeSecurity]
+        extern static public void th_comment_clear(th_comment* _tc);
 		
 		[DllImport(LIB)]
-		extern static public void th_comment_init (ref th_comment _tc);
+        [SuppressUnmanagedCodeSecurity]
+        extern static public void th_comment_init(ref th_comment _tc);
 			
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         extern static public int th_decode_headerin(ref th_info _info, ref th_comment _tc, ref IntPtr _setup, ref ogg_packet _op);
         //extern static public int th_decode_headerin(ref th_info _info, ref th_comment _tc, th_setup_info** _setup, ogg_packet* _op);
 
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         //extern static public th_dec_ctx* th_decode_alloc(th_info* _info, th_setup_info* _setup);
         extern static public IntPtr th_decode_alloc(ref th_info _info, IntPtr _setup);
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         extern static public void th_setup_free(th_setup_info* _setup);
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         extern static public int th_decode_ctl(th_dec_ctx* _dec, int _req, void* _buf, size_t _buf_sz);
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         //extern static public int th_decode_packetin(th_dec_ctx* _dec, ogg_packet* _op, ogg_int64_t* _granpos);
         extern static public int th_decode_packetin(IntPtr _dec, ref ogg_packet _op, ref ogg_int64_t _granpos);
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         //extern static public int th_decode_ycbcr_out(th_dec_ctx* _dec, th_ycbcr_buffer _ycbcr);
 		extern static public int th_decode_ycbcr_out(IntPtr _dec, ref th_ycbcr_buffer _ycbcr);
 
         [DllImport(LIB)]
+        [SuppressUnmanagedCodeSecurity]
         extern static public void th_decode_free(th_dec_ctx* _dec);
 		
 		
@@ -205,11 +218,14 @@ namespace Cheetah.Graphics
 			get{return data;}
 		}*/
 		
-		public TheoraDecoder()
+		public unsafe TheoraDecoder()
 		{
 			Console.WriteLine(Theora.Version());
-			
-			Theora.th_info_init(ref info);
+
+            fixed (Theora.th_info* p = &info)
+            {
+                Theora.th_info_init(p);
+            }
 			Theora.th_comment_init(ref comment);
 		
 			
