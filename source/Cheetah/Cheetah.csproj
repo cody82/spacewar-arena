@@ -63,6 +63,7 @@
     <Compile Include="DDS.cs" />
     <Compile Include="Doom3Map.cs" />
     <Compile Include="Doom3Md5.cs" />
+    <Compile Include="FFmpeg.cs" />
     <Compile Include="Fmod.cs" />
     <Compile Include="fmod_dsp.cs" />
     <Compile Include="fmod_errors.cs" />
@@ -181,6 +182,10 @@
       <Project>{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tao.FFmpeg\Tao.FFmpeg.csproj">
+      <Project>{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}</Project>
+      <Name>Tao.FFmpeg</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Cheetah.dll.config">
@@ -194,6 +199,33 @@
     </Content>
     <Content Include="..\libs\native\devil.dll">
       <Link>devil.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avcodec-52.dll">
+      <Link>avcodec-52.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avcore-0.dll">
+      <Link>avcore-0.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avdevice-52.dll">
+      <Link>avdevice-52.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avfilter-1.dll">
+      <Link>avfilter-1.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avformat-52.dll">
+      <Link>avformat-52.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\avutil-50.dll">
+      <Link>avutil-50.dll</Link>
+    </Content>
+    <Content Include="..\libs\native\FFmpeg\swscale-0.dll">
+      <Link>swscale-0.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\libs\native\fmodex.dll">

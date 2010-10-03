@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csogg", "..\csvorbis\csogg\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj", "{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tao.FFmpeg", "..\Tao.FFmpeg\Tao.FFmpeg.csproj", "{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,15 @@ Global
 		{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}.ReleaseWithStatistics|Any CPU.ActiveCfg = Release|Any CPU
 		{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}.ReleaseWithStatistics|Any CPU.Build.0 = Release|Any CPU
 		{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}.ReleaseWithStatistics|x86.ActiveCfg = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.ReleaseWithStatistics|Any CPU.ActiveCfg = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.ReleaseWithStatistics|Any CPU.Build.0 = Release|Any CPU
+		{ABF4DD1F-C5CE-40E1-86B2-AA82127B1927}.ReleaseWithStatistics|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
