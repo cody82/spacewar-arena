@@ -202,6 +202,9 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
+            FFmpegFile f = new FFmpegFile(@"D:\Code\spacewar2006\dist\textures\0190.ogv");
+            return;
+
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             //try
             {
@@ -239,6 +242,7 @@ namespace SpaceWar2006
                     Directory.SetCurrentDirectory(current.FullName);
                     System.Console.WriteLine("root directory: " + current.FullName);
                 }
+
 
 
                 if (Array.IndexOf<string>(args, "server") != -1)
