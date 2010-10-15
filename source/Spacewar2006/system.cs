@@ -169,21 +169,21 @@ namespace SpaceWar2006.GameSystem
                 return "none";
         }
 
-        public string ServerName;
-        public int GamePort;
-        public int QueryPort;
+        public string ServerName{get;set;}
+        public int GamePort { get; set; }
+        public int QueryPort { get; set; }
         public int WebPort;
-        public bool Password;
-        public int MaxPlayers;
-        public int NumPlayers;
-        public string AdminName;
+        public bool Password { get; set; }
+        public int MaxPlayers { get; set; }
+        public int NumPlayers { get; set; }
+        public string AdminName { get; set; }
         public string AdminMail;
-        public string Map;
-        public string Game;
-        public string GameType;
-        public int Version;
-        public int TickRate;
-        public int UpdateRate;
+        public string Map { get; set; }
+        public string Game { get; set; }
+        public string GameType { get; set; }
+        public int Version { get; set; }
+        public int TickRate { get; set; }
+        public int UpdateRate { get; set; }
 
         public IEnumerable<Player> Players;
 
