@@ -174,7 +174,7 @@ namespace Cheetah
 
     public class ServerFinder : ITickable
     {
-        struct Server
+        public struct Server
         {
             public Server(string host, int port)
             {
@@ -208,7 +208,27 @@ namespace Cheetah
             }
             return servers;
         }
+		
+        public ServerFinder(AnswerDelegate answer, bool local, List<Server> _servers)
+        {
+            Answer = answer;
 
+            servers = _servers;
+
+            if (local)
+            {
+                LowPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanstart");
+                HighPort = ((Config)Root.Instance.ResourceManager.Load("config/global.config")).GetInteger("lanscanner.scanend");
+            }
+
+            DiscoverInternetServers = true;
+            DiscoverLocalServers = local;
+
+            client = new UdpClient();
+
+            SendQuery();
+        }
+		
         public ServerFinder(AnswerDelegate answer, bool local, bool internet)
         {
             Answer = answer;
