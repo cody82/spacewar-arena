@@ -32,7 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
@@ -46,8 +45,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
@@ -143,6 +140,10 @@
     <ProjectReference Include="..\Spacewar2006\Spacewar2006.csproj">
       <Project>{A1E976C6-632B-4E48-93B0-E051D6785C93}</Project>
       <Name>Spacewar2006</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Npgsql\src\Npgsql.csproj">
+      <Project>{F37A690A-A55C-4684-BDE1-E8A45D90BD61}</Project>
+      <Name>Npgsql</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
