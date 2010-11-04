@@ -56,48 +56,67 @@ namespace PgQueryTool
 			
 			string cstring = builder.ToString ();
 			System.Console.WriteLine (cstring);
-			NpgsqlConnection c = new NpgsqlConnection (cstring);
-			c.Open ();
-			
-			NpgsqlCommand cmd = c.CreateCommand ();
-			cmd.CommandText = "SELECT * FROM gameserver";
-			NpgsqlDataReader r = cmd.ExecuteReader ();
-			List<ServerFinder.Server> list = new List<ServerFinder.Server> ();
-			while (r.Read ())
-			{
-				string host = (string)r["host"];
-				int port = (int)r["port"];
-				ServerFinder.Server s = new ServerFinder.Server (host, port);
-				list.Add (s);
-			}
-			
-			ServerFinder finder = new ServerFinder (new ServerFinder.AnswerDelegate (Answer), false, list);
-			
-			while (true)
-			{
-				for (i = 0; i < 10; ++i)
-				{
-					finder.Tick (0.1f);
-					Thread.Sleep (100);
-				}
-				
-				foreach (KeyValuePair<string, SpaceWar2006.GameSystem.GameServerInfo> info in infos)
-				{
-					string host = info.Key.Split (':')[0];
-					int port = int.Parse (info.Key.Split (':')[1]);
-					
-					string map = info.Value.Map;
-					int numplayers = info.Value.NumPlayers;
-					int maxplayers = info.Value.MaxPlayers;
-					
-					string sql = string.Format (@"INSERT INTO gameinfo(time,map,numplayers,maxplayers,gameserver_id) VALUES (NOW(),'{2}',{3},{4},(SELECT id FROM gameserver WHERE host='{0}' AND port={1}));", host, port, map, numplayers, maxplayers);
-					System.Console.WriteLine (sql);
-					cmd = c.CreateCommand ();
-					cmd.CommandText = sql;
-					cmd.ExecuteNonQuery ();
-				}
-				infos.Clear();
-			}
+
+
+            while (true)
+            {
+                try
+                {
+                    infos.Clear();
+
+                    using (NpgsqlConnection c = new NpgsqlConnection(cstring))
+                    {
+                        c.Open();
+
+                        NpgsqlCommand cmd = c.CreateCommand();
+                        cmd.CommandText = "SELECT * FROM gameserver";
+                        NpgsqlDataReader r = cmd.ExecuteReader();
+                        List<ServerFinder.Server> list = new List<ServerFinder.Server>();
+                        while (r.Read())
+                        {
+                            string host = (string)r["host"];
+                            int port = (int)r["port"];
+                            ServerFinder.Server s = new ServerFinder.Server(host, port);
+                            list.Add(s);
+                        }
+
+                        ServerFinder finder = new ServerFinder(new ServerFinder.AnswerDelegate(Answer), false, list);
+
+                        while (true)
+                        {
+                            for (i = 0; i < 10; ++i)
+                            {
+                                finder.Tick(0.1f);
+                                Thread.Sleep(100);
+                            }
+
+                            foreach (KeyValuePair<string, SpaceWar2006.GameSystem.GameServerInfo> info in infos)
+                            {
+                                string host = info.Key.Split(':')[0];
+                                int port = int.Parse(info.Key.Split(':')[1]);
+
+                                string map = info.Value.Map;
+                                int numplayers = info.Value.NumPlayers;
+                                int maxplayers = info.Value.MaxPlayers;
+
+                                string sql = string.Format(@"INSERT INTO gameinfo(time,map,numplayers,maxplayers,gameserver_id) VALUES (NOW(),'{2}',{3},{4},(SELECT id FROM gameserver WHERE host='{0}' AND port={1}));", host, port, map, numplayers, maxplayers);
+                                System.Console.WriteLine(sql);
+                                cmd = c.CreateCommand();
+                                cmd.CommandText = sql;
+                                cmd.ExecuteNonQuery();
+                            }
+                            infos.Clear();
+                        }
+                    }
+                }
+                catch (NpgsqlException e)
+                {
+                    System.Console.WriteLine(e.GetType().ToString());
+                    System.Console.WriteLine(e.StackTrace);
+                    System.Console.WriteLine(e.Message);
+                }
+                Thread.Sleep(1000);
+            }
 		}
 	}
 }
