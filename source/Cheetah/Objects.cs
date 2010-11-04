@@ -2884,10 +2884,10 @@ using Cheetah;");
             AddSearchPath(".");
         }
 
-        ~ResourceManager()
+        /*~ResourceManager()
         {
             Dispose();
-        }
+        }*/
 
         public void Dispose()
         {

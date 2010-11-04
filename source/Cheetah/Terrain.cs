@@ -538,10 +538,10 @@ namespace Cheetah.Graphics
 		}
 
 
-		~Terrain()
+		/*~Terrain()
 		{
 			Dispose();
-		}
+		}*/
 
 		static protected int GetHighestBitValue(int i)
 		{

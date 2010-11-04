@@ -5859,12 +5859,12 @@ namespace Cheetah.Graphics
 			vertices=CreateVB();
 			FillVB();
 		}
-        ~Window()
+        /*~Window()
         {
             //Console.WriteLine("~Window: vertexbuffer freed.");
             if(Root.Instance.UserInterface!=null)
             Root.Instance.UserInterface.Renderer.FreeVertexBuffer(vertices);
-        }
+        }*/
 
 		public Window()
 		{

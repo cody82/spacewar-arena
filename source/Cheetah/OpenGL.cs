@@ -1005,10 +1005,10 @@ namespace Cheetah.Graphics
         protected class VertexBuffer : Cheetah.Graphics.VertexBuffer
 		{
 			public int id;
-			~VertexBuffer()
+			/*~VertexBuffer()
 			{
 				Dispose();
-			}
+			}*/
 
 			void Dispose()
 			{
