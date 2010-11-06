@@ -7,7 +7,7 @@ check:
 	#awk --version
 
 compile: check
-	mdtool build -c:Release source/Spacewar2006/Spacewar2006.sln
+	mdtool -v build -c:Release source/Spacewar2006/Spacewar2006.sln
 
 deb: compile
 	rm -f spacewar2006-1.1-2.deb
@@ -17,6 +17,7 @@ deb: compile
 	mkdir debian/opt/spacewar2006
 	cp -r dist/* debian/opt/spacewar2006
 	cp source/Spacewar2006/bin/Release/* debian/opt/spacewar2006/bin/
+	cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll debian/opt/spacewar2006/maps/
 
 	fakeroot dpkg-deb --build debian spacewar2006-1.1-2.deb
 
@@ -33,9 +34,17 @@ zip: compile
 	echo `hg identify|awk '{print $1}'`>spacewar-arena/info/hg.txt
 	date>spacewar-arena/info/date.txt
 	cp source/Spacewar2006/bin/Release/* spacewar-arena/bin/
+	cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll spacewar-arena/maps/
+
 	zip -r9 release/spacewar-arena-`date +%Y%m%d`-`hg identify|awk '{print $1}'`.zip spacewar-arena
 	rm -rf spacewar-arena
 
 upload:
 	#scp spacewar-arena-20100613-c452d2f7d430+.zip cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
 	rsync -e ssh -rv --delete --progress release/* cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
+
+clean:
+	rm -rf release
+	rm -rf spacewar-arena
+	rm -rf debian/opt
+	mdtool -v build -c:Release -t:Clean source/Spacewar2006/Spacewar2006.sln
