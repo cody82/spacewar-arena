@@ -17,7 +17,7 @@ deb: compile
 	mkdir debian/opt/spacewar2006
 	cp -r dist/* debian/opt/spacewar2006
 	cp source/Spacewar2006/bin/Release/* debian/opt/spacewar2006/bin/
-	cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll debian/opt/spacewar2006/maps/
+	#cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll debian/opt/spacewar2006/maps/
 
 	fakeroot dpkg-deb --build debian spacewar2006-1.1-2.deb
 
@@ -34,7 +34,7 @@ zip: compile
 	echo `hg identify|awk '{print $1}'`>spacewar-arena/info/hg.txt
 	date>spacewar-arena/info/date.txt
 	cp source/Spacewar2006/bin/Release/* spacewar-arena/bin/
-	cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll spacewar-arena/maps/
+	#cp source/Spacewar2006.Maps/bin/Release/Spacewar2006.Maps.dll spacewar-arena/maps/
 
 	zip -r9 release/spacewar-arena-`date +%Y%m%d`-`hg identify|awk '{print $1}'`.zip spacewar-arena
 	rm -rf spacewar-arena
