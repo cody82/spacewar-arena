@@ -2627,9 +2627,6 @@ namespace Cheetah.Graphics
     {
         public IResource Load(FileSystemNode n)
         {
-            if (Root.Instance.UserInterface==null)
-                return null;
-
             Stream s = n.getStream();
             StreamReader r = new StreamReader(s);
 
@@ -4472,6 +4469,9 @@ namespace Cheetah.Graphics
     {
         public SelectionDrawer()
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             float d=100000;
             vertices[0].Position = new Vector3(-d, 0, 0);
             vertices[1].Position = new Vector3(d, 0, 0);
@@ -4519,6 +4519,9 @@ namespace Cheetah.Graphics
 
 		public Marker()
 		{
+            if (Root.Instance.UserInterface == null)
+                return;
+
 			vb=CreateVB(1000);
             shader = Root.Instance.ResourceManager.LoadShader("geometrytest.shader");
 		}
@@ -5983,6 +5986,9 @@ namespace Cheetah.Graphics
 	
 		protected DynamicVertexBuffer CreateVB()
 		{
+            if (Root.Instance.UserInterface == null)
+                return null;
+
             vertices = Root.Instance.UserInterface.Renderer.CreateDynamicVertexBuffer(VertexFormat.VF_P2C4T2.Size * 4);
             vertices.Format = VertexFormat.VF_P2C4T2;
 			data=new VertexP2C4T2[4];
@@ -5992,7 +5998,10 @@ namespace Cheetah.Graphics
 		
 		protected void FillVB()
 		{
-			float u1=0.0f;
+            if (Root.Instance.UserInterface == null)
+                return;
+
+            float u1 = 0.0f;
             float v1 = FlipTexture ? 1.0f : 0.0f;
 			float u2=1.0f;
             float v2 = 1.0f - v1;
@@ -6063,6 +6072,9 @@ namespace Cheetah.Graphics
 
 		public void Center()
 		{
+            if (Root.Instance.UserInterface == null)
+                return;
+
 			Point p=Root.Instance.UserInterface.Renderer.Size;
 			Position=new Vector2(p.X/2-Size.x/2,p.Y/2-Size.y/2);
 		}

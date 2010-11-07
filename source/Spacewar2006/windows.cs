@@ -1305,15 +1305,22 @@ namespace SpaceWar2006.Windows
             : base()
         {
             Shader = Root.Instance.ResourceManager.LoadShader("radar.shader");
-            PointBuffer = Root.Instance.UserInterface.Renderer.CreateDynamicVertexBuffer(256 * 36);
-            PointBuffer.Format = VertexFormat.VF_P3C4T2;
+
+            if (Root.Instance.UserInterface != null)
+            {
+                PointBuffer = Root.Instance.UserInterface.Renderer.CreateDynamicVertexBuffer(256 * 36);
+                PointBuffer.Format = VertexFormat.VF_P3C4T2;
+            }
 
             Size = new Vector2(200,200);
-            Position=new Vector2(Root.Instance.UserInterface.Renderer.Size.X-Size.y-8,8);
+            Position = new Vector2(Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.X - Size.y - 8):1000, 8);
         }
 
         void UpdateBuffer()
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             IList<Node> list = Root.Instance.Scene.FindEntitiesByType<Node>();
 
             Vector3 offset = new Vector3(5000, 0, 5000);
@@ -1477,7 +1484,7 @@ namespace SpaceWar2006.Windows
             Size = new Vector2(pixelsize, icons.Length * pixelsize);
             Position = new Vector2(
                 8,
-                Root.Instance.UserInterface.Renderer.Size.Y / 2 - Size.y / 2
+                Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.Y / 2 - Size.y / 2):1000
                 );
             Transparent = true;
 
@@ -1686,7 +1693,7 @@ namespace SpaceWar2006.Windows
     public class WeaponDisplay : Window
     {
         public WeaponDisplay(Slot[] slots)
-            : base(Root.Instance.UserInterface.Renderer.Size.X - 150, 0, 96, slots.Length * 16, new Layout(1, slots.Length))
+            : base(Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.X - 150):1000, 0, 96, slots.Length * 16, new Layout(1, slots.Length))
         {
             Transparent = true;
 

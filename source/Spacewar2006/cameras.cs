@@ -132,12 +132,16 @@ namespace SpaceWar2006.Cameras
             {
                 float camheight = 1500 + 2 * Target.SmoothSpeed.GetMagnitude();
                 campos = new Vector3(0, 0, 800);
-                if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Space))
-                    camheight *= 4;
-                if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Z))
+
+                if (Root.Instance.UserInterface != null)
                 {
-                    camheight /= 5;
-                    campos /= 3;
+                    if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Space))
+                        camheight *= 4;
+                    if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)Key.Z))
+                    {
+                        camheight /= 5;
+                        campos /= 3;
+                    }
                 }
                 campos.Y = camheight;
             }

@@ -297,21 +297,25 @@ namespace SpaceWar2006
         static bool mailing_done = false;
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
+#if !DEBUG
             if (!mailing_done)
             {
                 Cheetah.Bugs.BugReport.Instance.Send(e.Exception);
                 mailing_done = true;
             }
+#endif
             throw e.Exception;
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+#if !DEBUG
             if (!mailing_done)
             {
                 Cheetah.Bugs.BugReport.Instance.Send((Exception)e.ExceptionObject);
                 mailing_done = true;
             }
+#endif
         }
     }
 }

@@ -863,6 +863,9 @@ namespace SpaceWar2006.Flows
         float FontSize;
         public GameLog()
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             float sx = (float)Root.Instance.UserInterface.Renderer.Size.X;
             float sy = (float)Root.Instance.UserInterface.Renderer.Size.Y;
 
@@ -886,6 +889,9 @@ namespace SpaceWar2006.Flows
 
         public void WriteLine(string text)
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             float sx = (float)Root.Instance.UserInterface.Renderer.Size.X;
             float sy = (float)Root.Instance.UserInterface.Renderer.Size.Y;
 
@@ -901,6 +907,9 @@ namespace SpaceWar2006.Flows
 
         public void Tick(float dtime)
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             float sx = (float)Root.Instance.UserInterface.Renderer.Size.X;
             float sy = (float)Root.Instance.UserInterface.Renderer.Size.Y;
 
@@ -1151,7 +1160,8 @@ namespace SpaceWar2006.Flows
                 Server.Start();
             }
             MainCamera = new OverviewCamera();
-            MainCamera.Aspect = (float)Root.Instance.UserInterface.Renderer.Size.X / (float)Root.Instance.UserInterface.Renderer.Size.Y;
+            if (Root.Instance.UserInterface != null)
+                MainCamera.Aspect = (float)Root.Instance.UserInterface.Renderer.Size.X / (float)Root.Instance.UserInterface.Renderer.Size.Y;
             Root.Instance.LocalObjects.Add(MainCamera);
 
             if(Music!=null)
@@ -1285,19 +1295,22 @@ namespace SpaceWar2006.Flows
             {
                 Display.Close();
             }
-            Root.Instance.Gui.windows.Add(Display = new WeaponDisplay(playership.Slots));
-            if (Bar != null)
-            {
-                Bar.Close();
-            }
-            Root.Instance.Gui.windows.Add(Bar = new WeaponBar(playership,Display));
 
-            if (Radar != null)
+            if (Root.Instance.Gui != null)
             {
-                Radar.Close();
-            }
-            Root.Instance.Gui.windows.Add(Radar = new RadarDisplay());
+                Root.Instance.Gui.windows.Add(Display = new WeaponDisplay(playership.Slots));
+                if (Bar != null)
+                {
+                    Bar.Close();
+                }
+                Root.Instance.Gui.windows.Add(Bar = new WeaponBar(playership, Display));
 
+                if (Radar != null)
+                {
+                    Radar.Close();
+                }
+                Root.Instance.Gui.windows.Add(Radar = new RadarDisplay());
+            }
             //ControlMenu.Ship = playership;
             //ControlMenu.Visible=false;
         }
@@ -1450,7 +1463,9 @@ namespace SpaceWar2006.Flows
             }
             MainCamera.Tick(dtime);
 
-            UpdateCursorPosition(GetMouseVector());
+            if(Root.Instance.UserInterface!=null)
+                UpdateCursorPosition(GetMouseVector());
+
             if (playership != null && Rule is Race)
             {
                 CheckPoint cp = ((Race)Rule).GetNextCheckPoint((RacePlayer)Player);
@@ -1493,6 +1508,9 @@ namespace SpaceWar2006.Flows
         GameLog Log = new GameLog();
         public override void OnDraw()
         {
+            if (Root.Instance.UserInterface == null)
+                return;
+
             base.OnDraw();
 
             Log.Draw(Root.Instance.UserInterface.Renderer);
@@ -1626,9 +1644,8 @@ namespace SpaceWar2006.Flows
             }
             Root.Instance.Scene.camera = new Camera();
 
-            Root.Instance.Gui.windows.Add(new MainMenu());
-
-            //Root.Instance.ResourceManager.LoadSound("z57_v0d.xm").Play(true);
+            if(Root.Instance.Gui!=null)
+                Root.Instance.Gui.windows.Add(new MainMenu());
         }
 
         public override void Stop()

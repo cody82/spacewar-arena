@@ -5453,7 +5453,12 @@ using Cheetah;");
     {
         public InGameConsole(Gui gui)
         {
-            System.Drawing.Point s = Root.Instance.UserInterface.Renderer.Size;
+            System.Drawing.Point s;
+            if (Root.Instance.UserInterface != null)
+                s = Root.Instance.UserInterface.Renderer.Size;
+            else
+                s = new System.Drawing.Point(1000, 1000);
+
             Size = new Vector2(s.X, s.Y / 2);
             float f = s.Y / 2 - gui.DefaultFont.size;
             log = new TextBox(0, 0, s.X, f);
@@ -6103,34 +6108,46 @@ using Cheetah;");
             Authoritive = false;
 
             Config c = (Config)ResourceManager.Load("config/global.config", typeof(Config));
-            int width = c.GetInteger("video.width");
-            int height = c.GetInteger("video.height");
-            bool fullscreen = c.GetBool("video.fullscreen");
-            bool audio = c.GetBool("audio.enable");
 
-            float updaterate = c.GetFloat("client.updaterate");
-            ClientSendEvent = new TimedEvent(updaterate);
+            if (userinterface != null)
+            {
+                int width = c.GetInteger("video.width");
+                int height = c.GetInteger("video.height");
+                bool fullscreen = c.GetBool("video.fullscreen");
+                bool audio = c.GetBool("audio.enable");
 
-            UserInterface = userinterface;
-            //UserInterface = new Cheetah.Xna.XnaUserInterface();
-            UserInterface.Create(fullscreen, width, height, audio);
 
-            ShaderManager = new ShaderManager(UserInterface.Renderer);
+                UserInterface = userinterface;
+                UserInterface.Create(fullscreen, width, height, audio);
+                ShaderManager = new ShaderManager(UserInterface.Renderer);
+                ClientPostProcessor = new PostProcess(width, height, UserInterface.Renderer);
+            }
 
             Gui = new Gui();
 
-            //PostProcessor=new PostProcess(1024,512);
-            //ClientPostProcessor = new PostProcess(1024, 1024);
-            ClientPostProcessor = new PostProcess(width, height, UserInterface.Renderer);
-            //Connection=new UdpClient();
+            float updaterate = c.GetFloat("client.updaterate");
+            ClientSendEvent = new TimedEvent(updaterate);
         }
         
         public void ClientClient(string[] args)
 		{
-            //ClientClient(args, new SDL_OpenGL_OpenAL_UserInterface());
-            ClientClient(args, new Cheetah.OpenTK.UserInterface());
-            //UserInterface.Create(fullscreen, width, height, audio);
-
+            int i = Array.IndexOf<string>(args, "--ui");
+            if (i != -1)
+            {
+                string ui = args[i + 1];
+                switch (ui)
+                {
+                    case "none":
+                        ClientClient(args, null);
+                        break;
+                    default:
+                        throw new Exception("unknown UI: " + ui);
+                }
+            }
+            else
+            {
+                ClientClient(args, new Cheetah.OpenTK.UserInterface());
+            }
 		}
         public void ClientConnect(string host)
 		{
@@ -6179,7 +6196,7 @@ using Cheetah;");
 
 		public void ClientLoop()
 		{
-			while(!UserInterface.wantsQuit()&&!Quit&&(CurrentFlow==null||!CurrentFlow.Finished))
+			while((UserInterface==null || !UserInterface.wantsQuit()) && !Quit&&(CurrentFlow==null||!CurrentFlow.Finished))
 			{
 				Update(false);
 			}
@@ -6311,14 +6328,19 @@ using Cheetah;");
 
 		public void ClientTick(float dtime)
 		{
-			UserInterface.ProcessEvents();
+            if(UserInterface!=null)
+			    UserInterface.ProcessEvents();
 
-            ClientPostProcessor.Enable(UserInterface.Renderer);
+            if(ClientPostProcessor!=null)
+                ClientPostProcessor.Enable(UserInterface.Renderer);
 
-            UserInterface.Renderer.SetMode(RenderMode.Draw3D);
-            Scene.Draw(UserInterface.Renderer);
+            if (UserInterface != null)
+            {
+                UserInterface.Renderer.SetMode(RenderMode.Draw3D);
+                Scene.Draw(UserInterface.Renderer);
 
-            UserInterface.Tick(dtime);
+                UserInterface.Tick(dtime);
+            }
 
             //for (int i = 0; i < TickMultiplier; ++i)
             {
@@ -6330,16 +6352,20 @@ using Cheetah;");
                 EventSendQueue.Clear();
             }
 
-            ClientPostProcessor.Render();
+            if (ClientPostProcessor != null)
+                ClientPostProcessor.Render();
 
-            UserInterface.Renderer.SetMode(RenderMode.Draw2D);
-            Gui.Draw(UserInterface.Renderer);
+            if (UserInterface != null)
+            {
+                UserInterface.Renderer.SetMode(RenderMode.Draw2D);
+                Gui.Draw(UserInterface.Renderer);
+            }
 
             if (CurrentFlow != null)
                 CurrentFlow.OnDraw();
 
 
-            if (true)
+            if (UserInterface != null)
 			{
                 string gc="";
 
@@ -6356,6 +6382,7 @@ using Cheetah;");
                         gc += GC.CollectionCount(i) + ((i == GC.MaxGeneration) ? "" : "/");
                     }
                 }
+
                 Gui.DefaultFont.Draw(UserInterface.Renderer, "fps: " + ClientFps.ToString() + " mem: " + (ClientMem / 1024).ToString() + "k" +
                     " gc: "+gc+
 					" video: "+(((OpenGL)UserInterface.Renderer).BufferMemory/1024).ToString()+"k vis: "+Scene.VisibleNodes.ToString()+
@@ -6371,7 +6398,8 @@ using Cheetah;");
             }
 
 
-            UserInterface.Flip();
+            if (UserInterface != null)
+                UserInterface.Flip();
 
             if (ClientRecordVideo > 0)
             {
@@ -7071,9 +7099,9 @@ using Cheetah;");
                 dt = 1000;
             }
 
-            if (dt == 0)
+            if (dt <= 5)
             {
-                Thread.Sleep(0);
+                Thread.Sleep(1);
                 return;
             }
 
