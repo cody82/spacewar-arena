@@ -19,7 +19,35 @@ using Cheetah.Graphics;
 
 namespace SpaceWar2006.GameSystem
 {
+    public class Reporter : ITickable
+    {
+        public void Tick(float dtime)
+        {
+            Time += dtime;
+            while (Time >= 5)
+            {
+                Time -= 5;
 
+                Report();
+            }
+
+
+        }
+
+        protected void Report()
+        {
+            if (Root.Instance.UserInterface == null)
+            {
+                IList<Player> players = Root.Instance.Scene.FindEntitiesByType<Player>();
+                foreach (Player p in players)
+                {
+                    System.Console.WriteLine(p.Name);
+                }
+            }
+        }
+
+        float Time = 0;
+    }
 
 
     public class IrcReporter : IrcBot

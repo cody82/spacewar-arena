@@ -1167,10 +1167,11 @@ namespace SpaceWar2006.Flows
             if(Music!=null)
                 MusicChannel = MainCamera.PlaySound(Music, true);
 
-            //FlyByCamera = new AdvancedCamera(CameraMode.FlyBy, null, 1000);
-            //FlyByCamera.View = new Viewport(720, 0, 720, 720);
-            //Root.Instance.LocalObjects.Add(FlyByCamera);
-
+            /*if (Spectate)
+            {
+                Root.Instance.LocalObjects.Add(new Reporter());
+            }*/
+            
             Root.Instance.Scene.camera = MainCamera;
             //Root.Instance.Scene.camera2 = FlyByCamera;
 
@@ -1488,6 +1489,7 @@ namespace SpaceWar2006.Flows
 
             if (Spectate)
             {
+
             }
             else
             {
