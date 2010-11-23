@@ -34,8 +34,42 @@ namespace SpacewarArena.WPF
             get { return scene; }
             set
             {
+                if (scene != null)
+                {
+                    scene.SpawnEvent -= scene_SpawnEvent;
+                    scene.RemoveEvent -= scene_RemoveEvent;
+                }
+
                 scene = value;
+                scene.SpawnEvent += scene_SpawnEvent;
+                scene.RemoveEvent += scene_RemoveEvent;
+                foreach (Entity e in scene.FindEntitiesByType<Node>())
+                {
+                    AddEntity(e);
+                }
             }
+        }
+
+        private void AddEntity(Entity e)
+        {
+            Ellipse visual = new Ellipse();
+
+            Node n=e as Node;
+            if(n==null)
+                return;
+
+            visual.Width = visual.Height = n.RenderRadius*2;
+            visual.
+        }
+
+        void scene_RemoveEvent(Entity e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void scene_SpawnEvent(Entity e)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void OnRender(DrawingContext drawingContext)
