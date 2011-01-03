@@ -1455,8 +1455,6 @@ namespace Cheetah.Graphics
 
 			GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix((float[])c.GetProjectionMatrix());
-			//GL.LoadIdentity();
-			//Glu.gluPerspective(c.Fov, (float)width / (float)height, c.nearplane, c.farplane);
             GL.MatrixMode(MatrixMode.Modelview);
 
 			Matrix3 m = c.Matrix;//Matrix3.FromQuaternion(c.Orientation);
@@ -1474,9 +1472,8 @@ namespace Cheetah.Graphics
                 pos += c.Shake * VecRandom.Instance.NextUnitVector3();
             }
 
-			GL.LoadIdentity();
-			Glu.gluLookAt(pos.X, pos.Y, pos.Z, t.X, t.Y, t.Z, y.X, y.Y, y.Z);
-            //GL.MultMatrixf((float[])c.GetViewMatrix());
+            global::OpenTK.Matrix4 m2=global::OpenTK.Matrix4.LookAt(pos.X, pos.Y, pos.Z, t.X, t.Y, t.Z, y.X, y.Y, y.Z);
+            GL.LoadMatrix(ref m2);
 
             Viewport vp;
             if(c.View!=null)
@@ -1520,9 +1517,7 @@ namespace Cheetah.Graphics
 			GL.BindTexture(TextureTarget.Texture2D, t1.id);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-			//GL.TexImage2D(TextureTarget.Texture2D, 0, 3, t1.w, t1.h,0, GL._RGB,GL._UNSIGNED_BYTE,rgba);
             GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.w, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
-			//Glu.gluBuild2DMipmaps(TextureTarget.Texture2D,3,t1.w,t1.h,GL._RGB,GL._UNSIGNED_BYTE,rgba);
 		}
 
 		protected bool IsPowerOf2(int x)
@@ -1603,9 +1598,6 @@ namespace Cheetah.Graphics
             CheckError();
             GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapNegativeZ, 0, format, w, h, 0, zneg.Length, zneg);
           
-
-            //Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
-
             Textures[t.id] = t;
 
             return t;
@@ -1645,8 +1637,6 @@ namespace Cheetah.Graphics
             CheckError();
             GL.TexImage2D<byte>(TextureTarget.TextureCubeMapNegativeZ, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, zneg);
             
-            //Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
-
             Textures[t.id] = t;
 
             return t;
@@ -2137,8 +2127,8 @@ namespace Cheetah.Graphics
 					States.Disable((int)GetPName.PointSprite);
 					GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadIdentity();
-					Glu.gluOrtho2D(0.0, (double)width, (double)height, 0.0);
+                    global::OpenTK.Matrix4 m2 = global::OpenTK.Matrix4.CreateOrthographicOffCenter(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1000.0f);
+                    GL.LoadMatrix(ref m2);
                     GL.MatrixMode(MatrixMode.Modelview);
 					GL.LoadIdentity();
                     States.Disable((int)GetPName.DepthTest);
