@@ -1,4 +1,3 @@
-using Tao.OpenGl;
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -12,6 +11,8 @@ using System.Threading;
 using System.Text;
 using Cheetah.Graphics;
 
+using OpenTK.Graphics.OpenGL;
+using Tao.OpenGl;
 
 namespace Cheetah.Graphics
 {
@@ -560,12 +561,12 @@ namespace Cheetah.Graphics
                 CurrentShader = ((Shader)s);
                 int id = CurrentShader.ProgramId;
 
-                Gl.glUseProgramObjectARB(id);
+                GL.UseProgram(id);
             }
             else
             {
                 CurrentShader = null;
-                Gl.glUseProgramObjectARB(0);
+                GL.UseProgram(0);
             }
 
         }
@@ -577,20 +578,20 @@ namespace Cheetah.Graphics
             switch (values.Length)
             {
                 case 1:
-                    Gl.glUniform1fARB(location, values[0]);
+                    GL.Uniform1(location, values[0]);
                     break;
                 case 2:
-                    Gl.glUniform2fARB(location, values[0], values[1]);
+                    GL.Uniform2(location, values[0], values[1]);
                     break;
                 case 3:
-                    Gl.glUniform3fARB(location, values[0], values[1], values[2]);
+                    GL.Uniform3(location, values[0], values[1], values[2]);
                     break;
                 case 4:
-                    Gl.glUniform4fARB(location, values[0], values[1], values[2], values[3]);
-                    //Gl.glUniform4fvARB(location, 4, values);
+                    GL.Uniform4(location, values[0], values[1], values[2], values[3]);
+                    //GL.Uniform4fvARB(location, 4, values);
                     break;
                 case 16:
-                    Gl.glUniformMatrix4fvARB(location, 1, 0, values);
+                    GL.UniformMatrix4(location, 1, false, values);
                     break;
                 default:
                     throw new Exception();
@@ -602,20 +603,20 @@ namespace Cheetah.Graphics
             switch (values.Length)
             {
                 case 1:
-                    Gl.glUniform1iARB(location, values[0]);
+                    GL.Uniform1(location, values[0]);
                     break;
                 case 2:
-                    Gl.glUniform2iARB(location, values[0], values[1]);
+                    GL.Uniform2(location, values[0], values[1]);
                     break;
                 case 3:
-                    Gl.glUniform3iARB(location, values[0], values[1], values[2]);
+                    GL.Uniform3(location, values[0], values[1], values[2]);
                     break;
                 case 4:
-                    Gl.glUniform4iARB(location, values[0], values[1], values[2], values[3]);
-                    //Gl.glUniform4fvARB(location, 4, values);
+                    GL.Uniform4(location, values[0], values[1], values[2], values[3]);
+                    //GL.Uniform4fvARB(location, 4, values);
                     break;
                 //case 16:
-                //    Gl.glUniformMatrix4fvARB(location, 1, false, values);
+                //    GL.UniformMatrix4fvARB(location, 1, false, values);
                 //    break;
                 default:
                     throw new Exception();
@@ -626,20 +627,20 @@ namespace Cheetah.Graphics
             switch (values.Length)
             {
                 case 1:
-                    Gl.glVertexAttrib1fARB(location, values[0]);
+                    GL.VertexAttrib1(location, values[0]);
                     break;
                 case 2:
-                    Gl.glVertexAttrib2fARB(location, values[0], values[1]);
+                    GL.VertexAttrib2(location, values[0], values[1]);
                     break;
                 case 3:
-                    Gl.glVertexAttrib3fARB(location, values[0], values[1], values[2]);
+                    GL.VertexAttrib3(location, values[0], values[1], values[2]);
                     break;
                 case 4:
-                    Gl.glVertexAttrib4fARB(location, values[0], values[1], values[2], values[3]);
-                    //Gl.glUniform4fvARB(location, 4, values);
+                    GL.VertexAttrib4(location, values[0], values[1], values[2], values[3]);
+                    //GL.Uniform4fvARB(location, 4, values);
                     break;
                 case 16:
-                    //Gl.glVertexAttribArrayObjectATI(location, 1, false, values);
+                    //GL.VertexAttribArrayObjectATI(location, 1, false, values);
                     break;
                 default:
                     throw new Exception();
@@ -663,24 +664,24 @@ namespace Cheetah.Graphics
 
             int index;
             int[] tmp = new int[1];
-            Gl.glGenFramebuffersEXT(1, tmp);
+            GL.GenFramebuffers(1, tmp);
             index = tmp[0];
             if (index <= 0)
                 throw new Exception("cant create framebuffer.");
 
-            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, index);
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, index);
 
-            //Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_TEXTURE_2D, d, 0);
+            //GL.FramebufferTexture2DEXT(GL._FRAMEBUFFER_EXT, GL._DEPTH_ATTACHMENT_EXT, TextureTarget.Texture2D, d, 0);
             if (depth != null)
             {
-                Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_DEPTH_ATTACHMENT_EXT, Gl.GL_TEXTURE_2D, ((TextureId)depth).id, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt,TextureTarget.Texture2D, ((TextureId)depth).id, 0);
             }
 
-            Gl.glFramebufferTexture2DEXT(Gl.GL_FRAMEBUFFER_EXT, Gl.GL_COLOR_ATTACHMENT0_EXT, Gl.GL_TEXTURE_2D, ((TextureId)texture).id, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, ((TextureId)texture).id, 0);
 
 
-            int status = Gl.glCheckFramebufferStatusEXT(Gl.GL_FRAMEBUFFER_EXT);
-            if (status == Gl.GL_FRAMEBUFFER_COMPLETE_EXT)
+            FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.FramebufferExt);
+            if (status == FramebufferErrorCode.FramebufferCompleteExt)
             {
             }
             else
@@ -688,7 +689,7 @@ namespace Cheetah.Graphics
                 throw new Exception("framebuffer check failed.");
             }
 
-            Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0);
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
 
             return new RenderTarget(index,(TextureId)texture);
         }
@@ -699,46 +700,37 @@ namespace Cheetah.Graphics
             {
                 currentwidth=((TextureId)target.Texture).w;
                 currentheight = ((TextureId)target.Texture).h;
-                Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, ((RenderTarget)target).id);
+                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, ((RenderTarget)target).id);
             }
             else
             {
                 currentwidth = width;
                 currentheight = height;
-                Gl.glBindFramebufferEXT(Gl.GL_FRAMEBUFFER_EXT, 0);
+                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
             }
         }
 
-        protected int GlCreateShader(string code, int type)
+        protected int GlCreateShader(string code, ShaderType type)
         {
-            int[] l3 = new int[1];
-            int id = Gl.glCreateShaderObjectARB(type);
+            int id = GL.CreateShader(type);
 
-            Gl.glShaderSourceARB(id, 1, new string[] { code }, new int[] { code.Length });
-            Gl.glCompileShaderARB(id);
-            Gl.glGetObjectParameterivARB(id, Gl.GL_OBJECT_COMPILE_STATUS_ARB, l3);
-            int ok = l3[0];
+            int ok;
+            GL.ShaderSource(id, code);
+            GL.CompileShader(id);
+            GL.GetShader(id, ShaderParameter.CompileStatus, out ok);
 
             if (ok != 1)
             {
-                int l, l2;
-                Gl.glGetObjectParameterivARB(id, Gl.GL_OBJECT_INFO_LOG_LENGTH_ARB, l3);
-                l = l3[0];
-                StringBuilder str = new StringBuilder(l);
-                Gl.glGetInfoLogARB(id, l, l3, str);
-                l2 = l3[0];
-                string log = str.ToString();
-
-                //string log = OpenTK.Graphics.GL.GetProgramInfoLog(id);
+                string log=GL.GetShaderInfoLog(id);
 
                 System.Console.WriteLine(log);
                 switch (type)
                 {
-                    case Gl.GL_VERTEX_SHADER_ARB:
+                    case ShaderType.VertexShader:
                         throw new Exception("cant compile vertexshader");
-                    case Gl.GL_FRAGMENT_SHADER_ARB:
+                    case ShaderType.FragmentShader:
                         throw new Exception("cant compile fragmentshader");
-                    case Gl.GL_GEOMETRY_SHADER_EXT:
+                    case ShaderType.GeometryShader:
                         throw new Exception("cant compile geometryshader");
                 }
             }
@@ -750,18 +742,18 @@ namespace Cheetah.Graphics
             int vertexid = 0;
             if (vertex != null)
             {
-                vertexid = GlCreateShader(vertex, Gl.GL_VERTEX_SHADER_ARB);
+                vertexid = GlCreateShader(vertex, ShaderType.VertexShader);
             }
             
             int fragmentid = 0;
             if (fragment != null)
             {
-                fragmentid = GlCreateShader(fragment, Gl.GL_FRAGMENT_SHADER_ARB);
+                fragmentid = GlCreateShader(fragment, ShaderType.FragmentShader);
             }
             int geometryid = 0;
             if (geometry != null && GeometryShadersSupported)
             {
-                geometryid = GlCreateShader(geometry, Gl.GL_GEOMETRY_SHADER_EXT);
+                geometryid = GlCreateShader(geometry, ShaderType.GeometryShader);
             }
 
             if (vertexid == 0 && fragmentid == 0)
@@ -785,35 +777,28 @@ namespace Cheetah.Graphics
 
             int ok;
 
-            int p = Gl.glCreateProgramObjectARB();
+            int p = GL.CreateProgram();
 
             if (vertex != 0)
-                Gl.glAttachObjectARB(p, vertex);
+                GL.AttachShader(p, vertex);
             if (fragment != 0)
-                Gl.glAttachObjectARB(p, fragment);
+                GL.AttachShader(p, fragment);
 
             if (geometry != 0)
             {
-                Gl.glAttachObjectARB(p, geometry);
+                GL.AttachShader(p, geometry);
                 GlSetProgramPrimitiveType(p, input, output);
-                Gl.glGetIntegerv(Gl.GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT, l3);
+                //GL.GetIntegerv(GL._MAX_GEOMETRY_OUTPUT_VERTICES_EXT, l3);
 
-                Gl.glProgramParameteriEXT(p, Gl.GL_GEOMETRY_VERTICES_OUT_EXT, l3[0]);
+                //GL.ProgramParameteriEXT(p, GL._GEOMETRY_VERTICES_OUT_EXT, l3[0]);
 
             }
 
-            Gl.glLinkProgramARB(p);
-            Gl.glGetObjectParameterivARB(p, Gl.GL_OBJECT_LINK_STATUS_ARB, l3);
-            ok = l3[0];
+            GL.LinkProgram(p);
+            GL.GetProgram(p, ProgramParameter.LinkStatus, out ok);
             if (ok != 1)
             {
-                int l, l2;
-                Gl.glGetObjectParameterivARB(p, Gl.GL_OBJECT_INFO_LOG_LENGTH_ARB, l3);
-                l = l3[0];
-                StringBuilder str = new StringBuilder();
-                Gl.glGetInfoLogARB(p, l, l3, str);
-                l2 = l3[0];
-                string log = str.ToString();
+                string log = GL.GetProgramInfoLog(p);
 
                 //string log = OpenTK.Graphics.GL.GetProgramInfoLog(p);
 
@@ -825,52 +810,52 @@ namespace Cheetah.Graphics
             return p;
         }
 
-        protected int GlPrimitiveInputType(PrimitiveType type)
+        protected BeginMode GlPrimitiveInputType(PrimitiveType type)
         {
-            int t;
+            BeginMode t;
             switch (type)
             {
                 case PrimitiveType.POINTS:
-                    t = Gl.GL_POINTS;
+                    t = BeginMode.Points;
                     break;
                 case PrimitiveType.LINES:
-                    t = Gl.GL_LINES;
+                    t = BeginMode.Lines;
                     break;
                 case PrimitiveType.TRIANGLES:
-                    t = Gl.GL_TRIANGLES;
+                    t = BeginMode.Triangles;
                     break;
                 case PrimitiveType.TRIANGLESTRIP:
-                    t = Gl.GL_TRIANGLES_ADJACENCY_EXT;
+                    t = BeginMode.TriangleStrip;
                     break;
                 case PrimitiveType.LINESTRIP:
-                    t = Gl.GL_LINES_ADJACENCY_EXT;
+                    t = BeginMode.LineStrip;
                     break;
                 default:
                     throw new Exception("wrong input primitive type: " + type.ToString());
             }
             return t;
         }
-        protected int GlPrimitiveOutputType(PrimitiveType type)
+        protected BeginMode GlPrimitiveOutputType(PrimitiveType type)
         {
-            int t;
+            BeginMode t;
             switch (type)
             {
                 case PrimitiveType.POINTS:
-                    t = Gl.GL_POINTS;
+                    t = BeginMode.Points;
                     break;
                 case PrimitiveType.TRIANGLESTRIP:
-                    t = Gl.GL_TRIANGLE_STRIP;
+                    t = BeginMode.TriangleStrip;
                     break;
                 case PrimitiveType.LINESTRIP:
-                    t = Gl.GL_LINE_STRIP;
+                    t = BeginMode.LineStrip;
                     break;
 
                 //HACK
                 /*case PrimitiveType.LINES:
-                    t = Gl.GL_LINES;
+                    t = GL._LINES;
                     break;
                 case PrimitiveType.TRIANGLES:
-                    t = Gl.GL_TRIANGLES;
+                    t = GL._TRIANGLES;
                     break;*/
 
                 default:
@@ -880,8 +865,8 @@ namespace Cheetah.Graphics
         }
         protected void GlSetProgramPrimitiveType(int p, PrimitiveType input, PrimitiveType output)
         {
-            Gl.glProgramParameteriEXT(p, Gl.GL_GEOMETRY_INPUT_TYPE_EXT, GlPrimitiveInputType(input));
-            Gl.glProgramParameteriEXT(p, Gl.GL_GEOMETRY_OUTPUT_TYPE_EXT, GlPrimitiveOutputType(output));
+            GL.ProgramParameter(p, Version32.GeometryInputType, (int)GlPrimitiveInputType(input));
+            GL.ProgramParameter(p, Version32.GeometryOutputType, (int)GlPrimitiveOutputType(output));
         }
 
         public void FreeShader(Cheetah.Graphics.Shader s)
@@ -931,7 +916,7 @@ namespace Cheetah.Graphics
                 }
                 catch (KeyNotFoundException)
                 {
-                    int i = Gl.glGetUniformLocationARB(ProgramId, name);
+                    int i = GL.GetUniformLocation(ProgramId, name);
                     UniformLocations[name] = i;
                     return i;
                 }
@@ -946,51 +931,12 @@ namespace Cheetah.Graphics
                 }
                 catch (KeyNotFoundException)
                 {
-                    int i=Gl.glGetAttribLocationARB(ProgramId, name);
+                    int i=GL.GetAttribLocation(ProgramId, name);
                     AttributeLocations[name] = i;
                     return i;
                 }
             }
         }
-        /*
-		protected class CgGlEffect : CgEffect
-		{
-			static CgGlEffect()
-			{
-				Tao.Cg.CgGl.cgGLRegisterStates(cgContext);
-			}
-
-			public CgGlEffect(string code) : base(code)
-			{
-			}
-			public override void SetParameter(EffectParameter param, Texture t)
-			{
-				CgEffectParameter e = (CgEffectParameter)param;
-				if (t == null)
-				{
-					CgGl.cgGLSetTextureParameter(e.ptr, 0);
-					return;
-				}
-
-				Cheetah.TextureId id= t.Id;
-				CgGl.cgGLSetTextureParameter(e.ptr, ((OpenGL.TextureId)id).id);
-			}
-
-			public override void BeginPass(int pass)
-			{
-				base.BeginPass(pass);
-
-				IntPtr p=Cg.cgGetEffectParameterBySemantic(cgEffect, "ModelViewProjection");
-				if(p!=IntPtr.Zero)
-					CgGl.cgGLSetStateMatrixParameter(p, CgGl.CG_GL_MODELVIEW_PROJECTION_MATRIX, CgGl.CG_GL_MATRIX_IDENTITY);
-				
-				p = Cg.cgGetEffectParameterBySemantic(cgEffect, "ModelView");
-				if (p != IntPtr.Zero)
-					CgGl.cgGLSetStateMatrixParameter(p, CgGl.CG_GL_MODELVIEW_MATRIX, CgGl.CG_GL_MATRIX_IDENTITY);
-
-			}
-		}
-        */
 		public class Exception : System.Exception
 		{
 			public Exception(string text)
@@ -1037,15 +983,15 @@ namespace Cheetah.Graphics
 
 			public override IntPtr Lock()
 			{
-				Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, id);
-				return Gl.glMapBufferARB(Gl.GL_ARRAY_BUFFER_ARB, Gl.GL_WRITE_ONLY_ARB);
+				GL.BindBuffer(BufferTarget.ArrayBuffer, id);
+                return GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.WriteOnly);
 			}
 
 			public override void Unlock()
 			{
-				Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, id);
-				Gl.glUnmapBufferARB(Gl.GL_ARRAY_BUFFER_ARB);
-				Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, 0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, id);
+                GL.UnmapBuffer(BufferTarget.ArrayBuffer);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			}
 
 			OpenGL gl;
@@ -1061,13 +1007,13 @@ namespace Cheetah.Graphics
                 {
                     if (!v)
                     {
-                        Gl.glEnable(state);
+                        GL.Enable((EnableCap)state);
                         boolstate[state] = true;
                     }
                 }
                 else
                 {
-                    Gl.glEnable(state);
+                    GL.Enable((EnableCap)state);
                     boolstate[state] = true;
                 }
             }
@@ -1078,13 +1024,13 @@ namespace Cheetah.Graphics
                 {
                     if (v)
                     {
-                        Gl.glDisable(state);
+                        GL.Disable((EnableCap)state);
                         boolstate[state] = false;
                     }
                 }
                 else
                 {
-                    Gl.glDisable(state);
+                    GL.Disable((EnableCap)state);
                     boolstate[state] = false;
                 }
             }
@@ -1097,13 +1043,13 @@ namespace Cheetah.Graphics
                 {
                     if (!v)
                     {
-                        Gl.glEnableVertexAttribArray(state);
+                        GL.EnableVertexAttribArray(state);
                         boolstate[state] = true;
                     }
                 }
                 else
                 {
-                    Gl.glEnableVertexAttribArray(state);
+                    GL.EnableVertexAttribArray(state);
                     boolstate[state] = true;
                 }
             }
@@ -1114,13 +1060,13 @@ namespace Cheetah.Graphics
                 {
                     if (v)
                     {
-                        Gl.glDisableVertexAttribArray(state);
+                        GL.DisableVertexAttribArray(state);
                         boolstate[state] = false;
                     }
                 }
                 else
                 {
-                    Gl.glDisableVertexAttribArray(state);
+                    GL.DisableVertexAttribArray(state);
                     boolstate[state] = false;
                 }
             }
@@ -1133,13 +1079,13 @@ namespace Cheetah.Graphics
                 {
                     if (!v)
                     {
-                        Gl.glEnableClientState(state);
+                        GL.EnableClientState((ArrayCap)state);
                         boolstate[state] = true;
                     }
                 }
                 else
                 {
-                    Gl.glEnableClientState(state);
+                    GL.EnableClientState((ArrayCap)state);
                     boolstate[state] = true;
                 }
             }
@@ -1150,13 +1096,13 @@ namespace Cheetah.Graphics
                 {
                     if (v)
                     {
-                        Gl.glDisableClientState(state);
+                        GL.DisableClientState((ArrayCap)state);
                         boolstate[state] = false;
                     }
                 }
                 else
                 {
-                    Gl.glDisableClientState(state);
+                    GL.DisableClientState((ArrayCap)state);
                     boolstate[state] = false;
                 }
             }
@@ -1165,7 +1111,7 @@ namespace Cheetah.Graphics
             {
                 if (state != activetexture)
                 {
-                    Gl.glActiveTextureARB(state);
+                    GL.ActiveTexture((TextureUnit)state);
                     activetexture = state;
                 }
             }
@@ -1173,7 +1119,7 @@ namespace Cheetah.Graphics
             {
                 if (state != clientactivetexture)
                 {
-                    Gl.glClientActiveTextureARB(state);
+                    GL.ClientActiveTexture((TextureUnit)state);
                     clientactivetexture = state;
                 }
             }
@@ -1223,12 +1169,12 @@ namespace Cheetah.Graphics
 
 		public void PushMatrix()
 		{
-			Gl.glPushMatrix();
+            GL.PushMatrix();
 		}
 
 		public void PopMatrix()
 		{
-			Gl.glPopMatrix();
+			GL.PopMatrix();
 		}
 
 		public IEffect CreateEffect(string code)
@@ -1243,32 +1189,6 @@ namespace Cheetah.Graphics
 			e.Dispose();
 		}
 
-		public void SetFog(Fog f)
-		{
-			if (f != null)
-			{
-				int mode;
-				switch (f.Mode)
-				{
-					case Fog.FogMode.LINEAR:
-						mode = Gl.GL_LINEAR;
-						break;
-					default:
-						throw new Exception("unknown fogmode.");
-				}
-				States.Enable(Gl.GL_FOG);
-				Gl.glFogi(Gl.GL_FOG_MODE, mode);
-				Gl.glFogfv(Gl.GL_FOG_COLOR, new float[] { f.Color.r, f.Color.g, f.Color.b, f.Color.a });
-				Gl.glFogf(Gl.GL_FOG_DENSITY, f.Density);
-				Gl.glHint(Gl.GL_FOG_HINT, Gl.GL_DONT_CARE);
-				Gl.glFogf(Gl.GL_FOG_START, f.Start);
-				Gl.glFogf(Gl.GL_FOG_END, f.End);
-			}
-			else
-			{
-				States.Disable(Gl.GL_FOG);
-			}
-		}
 
         public Point WindowSize
         {
@@ -1288,20 +1208,20 @@ namespace Cheetah.Graphics
 
 		public void LoadMatrix(Matrix3 m)
 		{
-			Gl.glLoadMatrixf((float[])m);
+			GL.LoadMatrix((float[])m);
 		}
 
 		public void MultMatrix(Matrix3 m)
 		{
-			Gl.glMultMatrixf((float[])m);
+			GL.MultMatrix((float[])m);
 		}
 
 		public void GetMatrix(float[] modelview, float[] projection)
 		{
 			if (projection != null)
-				Gl.glGetFloatv(Gl.GL_PROJECTION_MATRIX, projection);
+				GL.GetFloat(GetPName.ProjectionMatrix, projection);
 			if (modelview != null)
-				Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, modelview);
+				GL.GetFloat(GetPName.ModelviewMatrix, modelview);
 		}
 
         public float[] UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
@@ -1322,12 +1242,12 @@ namespace Cheetah.Graphics
             {
                 proj= new float[16];
                 model = new float[16];
-                Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection);
-                Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, modelview);
-                Gl.glGetIntegerv(Gl.GL_VIEWPORT, _viewport);
-                Gl.glGetFloatv(Gl.GL_PROJECTION_MATRIX, proj);
-                Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, model);
-                Gl.glGetIntegerv(Gl.GL_VIEWPORT, _viewport);
+                GL.GetDouble(GetPName.ProjectionMatrix, projection);
+                GL.GetDouble(GetPName.ModelviewMatrix, modelview);
+                GL.GetInteger(GetPName.Viewport, _viewport);
+                GL.GetFloat(GetPName.ProjectionMatrix, proj);
+                GL.GetFloat(GetPName.ModelviewMatrix, model);
+                GL.GetInteger(GetPName.Viewport, _viewport);
             }
             double objx, objy, objz;
             Glu.gluUnProject((double)winxyz[0], (double)winxyz[1], (double)winxyz[2], modelview, projection, _viewport, out objx, out objy, out objz);
@@ -1341,9 +1261,9 @@ namespace Cheetah.Graphics
 			double[] modelview = new double[16];
 			int[] viewport = new int[4];
 
-			Gl.glGetDoublev(Gl.GL_PROJECTION_MATRIX, projection);
-			Gl.glGetDoublev(Gl.GL_MODELVIEW_MATRIX, modelview);
-			Gl.glGetIntegerv(Gl.GL_VIEWPORT, viewport);
+            GL.GetDouble(GetPName.ProjectionMatrix, projection);
+            GL.GetDouble(GetPName.ModelviewMatrix, modelview);
+            GL.GetInteger(GetPName.Viewport, viewport);
 
 			double x, y, z;
 			Glu.gluProject((double)pos3d[0], (double)pos3d[1], (double)pos3d[2],
@@ -1360,39 +1280,39 @@ namespace Cheetah.Graphics
 
             //if (CompabilityMode)
             //{
-            //    Gl.glPushMatrix();
-            //    Gl.glLoadIdentity();
-            //    Gl.glMatrixMode(Gl.GL_PROJECTION);
-            //    Gl.glPushMatrix();
-            //    Gl.glLoadIdentity();
-            //    Gl.glOrtho(0, 1, 1, 0, -1, 10);
-            //    Gl.glColor4f(color.r, color.g, color.b, color.a);
+            //    GL.PushMatrix();
+            //    GL.LoadIdentity();
+            //    GL.MatrixMode(GL._PROJECTION);
+            //    GL.PushMatrix();
+            //    GL.LoadIdentity();
+            //    GL.Ortho(0, 1, 1, 0, -1, 10);
+            //    GL.Color4f(color.r, color.g, color.b, color.a);
 
             //    for (int i = 0; i < text.Length; ++i)
             //    {
             //        int a = text[i];
             //        float xf = a % c, yf = a / c;
 
-            //        Gl.glBegin(Gl.GL_QUADS);
+            //        GL.Begin(GL._QUADS);
 
-            //        Gl.glTexCoord2f(xf * f, yf * f);
-            //        Gl.glVertex2f(x + (float)i * sx, y);
+            //        GL.TexCoord2f(xf * f, yf * f);
+            //        GL.Vertex2f(x + (float)i * sx, y);
 
-            //        Gl.glTexCoord2f(xf * f + f, yf * f);
-            //        Gl.glVertex2f(x + sx + (float)i * sx, y);
+            //        GL.TexCoord2f(xf * f + f, yf * f);
+            //        GL.Vertex2f(x + sx + (float)i * sx, y);
 
-            //        Gl.glTexCoord2f(xf * f + f, yf * f + f);
-            //        Gl.glVertex2f(sx + x + (float)i * sx, sy + y);
+            //        GL.TexCoord2f(xf * f + f, yf * f + f);
+            //        GL.Vertex2f(sx + x + (float)i * sx, sy + y);
 
-            //        Gl.glTexCoord2f(xf * f, yf * f + f);
-            //        Gl.glVertex2f(x + (float)i * sx, y + sy);
+            //        GL.TexCoord2f(xf * f, yf * f + f);
+            //        GL.Vertex2f(x + (float)i * sx, y + sy);
 
 
-            //        Gl.glEnd();
+            //        GL.End();
             //    }
-            //    Gl.glPopMatrix();
-            //    Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            //    Gl.glPopMatrix();
+            //    GL.PopMatrix();
+            //    GL.MatrixMode(GL._MODELVIEW);
+            //    GL.PopMatrix();
             //}
             //else
             {
@@ -1421,12 +1341,12 @@ namespace Cheetah.Graphics
                     SetAttribute(charposindex, new float[] { xf, yf });
                     SetAttribute(posindex, new float[] { x + ((float)i) * width, y });
 
-                    Gl.glBegin(Gl.GL_QUADS);
-                    Gl.glVertex2f(0, 0);
-                    Gl.glVertex2f(1, 0);
-                    Gl.glVertex2f(1, 1);
-                    Gl.glVertex2f(0, 1);
-                    Gl.glEnd();
+                    GL.Begin(BeginMode.Quads);
+                    GL.Vertex2(0, 0);
+                    GL.Vertex2(1, 0);
+                    GL.Vertex2(1, 1);
+                    GL.Vertex2(0, 1);
+                    GL.End();
                 }
 
                 UseShader(null);
@@ -1442,7 +1362,7 @@ namespace Cheetah.Graphics
 
         bool LoadExtension(string name)
         {
-            if (!Gl.IsExtensionSupported(name))
+            if (!GL.GetString(StringName.Extensions).Contains(name))
             {
                 System.Console.WriteLine("extension missing: " + name);
                 return false;
@@ -1455,9 +1375,9 @@ namespace Cheetah.Graphics
 		{
             Root.Instance.UserInterface.Renderer = this;
 
-            System.Console.WriteLine("OpenGL Version: " + Gl.glGetString(Gl.GL_VERSION));
-            System.Console.WriteLine("OpenGL Vendor: " + Gl.glGetString(Gl.GL_VENDOR));
-            System.Console.WriteLine("OpenGL Renderer: " + Gl.glGetString(Gl.GL_RENDERER));
+            System.Console.WriteLine("OpenGL Version: " + GL.GetString(StringName.Version));
+            System.Console.WriteLine("OpenGL Vendor: " + GL.GetString(StringName.Vendor));
+            System.Console.WriteLine("OpenGL Renderer: " + GL.GetString(StringName.Renderer));
 
             LoadExtension("GL_ARB_vertex_program");
             LoadExtension("GL_ARB_point_sprite");
@@ -1486,14 +1406,14 @@ namespace Cheetah.Graphics
 			width = currentwidth=_width;
 			height = currentheight=_height;
 			//video=SDL.Instance.Video;
-            States.Enable(Gl.GL_BLEND);
-			States.Enable(Gl.GL_TEXTURE_2D);
-			States.Enable(Gl.GL_DEPTH_TEST);
-			Gl.glShadeModel(Gl.GL_SMOOTH);
-			Gl.glCullFace(Gl.GL_BACK);
-			States.Enable(Gl.GL_CULL_FACE);
-			//States.Disable(Gl.GL_CULL_FACE);
-			Gl.glLightModelfv(Gl.GL_LIGHT_MODEL_AMBIENT, new float[] { 0, 0, 0, 1 });
+            States.Enable((int)GetPName.Blend);
+			States.Enable((int)GetPName.Texture2D);
+			States.Enable((int)GetPName.DepthTest);
+			GL.ShadeModel(ShadingModel.Smooth);
+			GL.CullFace(CullFaceMode.Back);
+			States.Enable((int)GetPName.CullFace);
+			//States.Disable(GL._CULL_FACE);
+			GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0, 0, 0, 1 });
 
 
 			//if (!CompabilityMode)
@@ -1520,114 +1440,11 @@ namespace Cheetah.Graphics
                 pointsprite = (Shader)Root.Instance.ResourceManager.Load(path + "pointsprite.shader", typeof(Cheetah.Graphics.Shader));
                 
                 
-                States.Enable(Gl.GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
+                States.Enable((int)GetPName.PointSize);
             }
 
 		}
         Shader pointsprite;
-
-		public FragmentProgram CreateFragmentProgram(string code)
-		{
-			FragmentProgram fp = new FragmentProgram();
-
-			int[] id=new int[2];
-			Gl.glGenProgramsARB(1, id);
-			fp.id=id[0];
-			if (fp.id == 0)
-				throw new Exception("cant create vertexprogram.");
-
-			Gl.glBindProgramARB(Gl.GL_FRAGMENT_PROGRAM_ARB, fp.id);
-			Gl.glProgramStringARB(Gl.GL_FRAGMENT_PROGRAM_ARB, Gl.GL_PROGRAM_FORMAT_ASCII_ARB,
-				code.Length, code);
-
-			int error;
-			int[] e = new int[1];
-			Gl.glGetIntegerv(Gl.GL_PROGRAM_ERROR_POSITION_ARB, e);
-			error = e[0];
-
-			if (error != -1)
-			{
-				throw new Exception("");//Gl.glGetString(Gl.GL_PROGRAM_ERROR_STRING_ARB));
-			}
-
-			return fp;
-		}
-
-		public void DeleteFragmentProgram(FragmentProgram fp)
-		{
-            Gl.glDeleteProgramsARB(1, new int[] { fp.id });
-			fp.id = -1;
-		}
-
-		protected void SetVertexProgramParameter(int index, float[] v4)
-		{
-			Gl.glProgramLocalParameter4fvARB(Gl.GL_VERTEX_PROGRAM_ARB, index, v4);
-		}
-
-		public void BindFragmentProgram(FragmentProgram fp)
-		{
-            //if (CompabilityMode)
-            //    return;
-
-			if (fp != null)
-			{
-				Gl.glBindProgramARB(Gl.GL_FRAGMENT_PROGRAM_ARB, fp.id);
-				States.Enable(Gl.GL_FRAGMENT_PROGRAM_ARB);
-			}
-			else
-			{
-				States.Disable(Gl.GL_FRAGMENT_PROGRAM_ARB);
-			}
-		}
-
-		public VertexProgram CreateVertexProgram(string code)
-		{
-			VertexProgram vp = new VertexProgram();
-
-			int[] id=new int[1];
-			Gl.glGenProgramsARB(1, id);
-			vp.id=id[0];
-			if (vp.id == 0)
-				throw new Exception("cant create vertexprogram.");
-
-			Gl.glBindProgramARB(Gl.GL_VERTEX_PROGRAM_ARB, vp.id);
-			Gl.glProgramStringARB(Gl.GL_VERTEX_PROGRAM_ARB, Gl.GL_PROGRAM_FORMAT_ASCII_ARB,
-				code.Length, code);
-
-			int error;
-			int[] e = new int[1];
-			Gl.glGetIntegerv(Gl.GL_PROGRAM_ERROR_POSITION_ARB, e);
-			error = e[0];
-
-			if (error != -1)
-			{
-				throw new Exception("");//Gl.glGetS(Gl.GL_PROGRAM_ERROR_STRING_ARB));
-			}
-			return vp;
-		}
-
-		public void DeleteVertexProgram(VertexProgram vp)
-		{
-            //if (CompabilityMode)
-            //    return;
-            Gl.glDeleteProgramsARB(1, new int[] { vp.id });
-			vp.id = -1;
-		}
-
-		public void BindVertexProgram(VertexProgram vp)
-		{
-            //if (CompabilityMode)
-            //    return;
-            if (vp != null)
-			{
-				Gl.glBindProgramARB(Gl.GL_VERTEX_PROGRAM_ARB, vp.id);
-				States.Enable(Gl.GL_VERTEX_PROGRAM_ARB);
-			}
-			else
-			{
-				States.Disable(Gl.GL_VERTEX_PROGRAM_ARB);
-			}
-		}
 
 		public void SetCamera(Camera c)
 		{
@@ -1636,11 +1453,11 @@ namespace Cheetah.Graphics
             if (c == null)
                 return;
 
-			Gl.glMatrixMode(Gl.GL_PROJECTION);
-            Gl.glLoadMatrixf((float[])c.GetProjectionMatrix());
-			//Gl.glLoadIdentity();
+			GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix((float[])c.GetProjectionMatrix());
+			//GL.LoadIdentity();
 			//Glu.gluPerspective(c.Fov, (float)width / (float)height, c.nearplane, c.farplane);
-			Gl.glMatrixMode(Gl.GL_MODELVIEW);
+            GL.MatrixMode(MatrixMode.Modelview);
 
 			Matrix3 m = c.Matrix;//Matrix3.FromQuaternion(c.Orientation);
 
@@ -1657,9 +1474,9 @@ namespace Cheetah.Graphics
                 pos += c.Shake * VecRandom.Instance.NextUnitVector3();
             }
 
-			Gl.glLoadIdentity();
+			GL.LoadIdentity();
 			Glu.gluLookAt(pos.X, pos.Y, pos.Z, t.X, t.Y, t.Z, y.X, y.Y, y.Z);
-            //Gl.glMultMatrixf((float[])c.GetViewMatrix());
+            //GL.MultMatrixf((float[])c.GetViewMatrix());
 
             Viewport vp;
             if(c.View!=null)
@@ -1672,20 +1489,20 @@ namespace Cheetah.Graphics
                 vp = new Viewport(0, 0, currentwidth, currentheight);
             }
 
-            States.Enable(Gl.GL_SCISSOR_TEST);
-            Gl.glScissor(vp.X, vp.Y, vp.W, vp.H);
-            Gl.glViewport(vp.X, vp.Y, vp.W, vp.H);
+            States.Enable((int)GetPName.ScissorTest);
+            GL.Scissor(vp.X, vp.Y, vp.W, vp.H);
+            GL.Viewport(vp.X, vp.Y, vp.W, vp.H);
 		}
 
 		public unsafe Bitmap Screenshot()
 		{
 			byte[] rgb = new byte[Size.X * Size.Y * 3];
-			Gl.glReadPixels(0, 0, Size.X, Size.Y, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, rgb);
+			GL.ReadPixels(0, 0, Size.X, Size.Y, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, rgb);
 			//return new Image(Size.X, Size.Y, rgb, false);
 
             fixed(void *ptr=rgb)
             {
-                Bitmap b= new Bitmap(Size.X, Size.Y, 3 * Size.X, PixelFormat.Format24bppRgb, new IntPtr(ptr));
+                Bitmap b= new Bitmap(Size.X, Size.Y, 3 * Size.X, System.Drawing.Imaging.PixelFormat.Format24bppRgb, new IntPtr(ptr));
                 
                 return b;
             }
@@ -1693,19 +1510,19 @@ namespace Cheetah.Graphics
         public Cheetah.Graphics.Image Screenshot2()
         {
             byte[] rgb = new byte[Size.X * Size.Y * 3];
-            Gl.glReadPixels(0, 0, Size.X, Size.Y, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, rgb);
+            GL.ReadPixels(0, 0, Size.X, Size.Y, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, rgb);
             return new Cheetah.Graphics.Image(Size.X, Size.Y, rgb, false);
         }
 
 		public void UpdateTexture(Cheetah.TextureId t, byte[] rgba)
 		{
 			TextureId t1 = (TextureId)t;
-			Gl.glBindTexture(Gl.GL_TEXTURE_2D, t1.id);
-			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
-			//Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, t1.w, t1.h,0, Gl.GL_RGB,Gl.GL_UNSIGNED_BYTE,rgba);
-			Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, t1.w, t1.h, 0, Gl.GL_BGR, Gl.GL_UNSIGNED_BYTE, rgba);
-			//Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D,3,t1.w,t1.h,Gl.GL_RGB,Gl.GL_UNSIGNED_BYTE,rgba);
+			GL.BindTexture(TextureTarget.Texture2D, t1.id);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+			//GL.TexImage2D(TextureTarget.Texture2D, 0, 3, t1.w, t1.h,0, GL._RGB,GL._UNSIGNED_BYTE,rgba);
+            GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.w, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
+			//Glu.gluBuild2DMipmaps(TextureTarget.Texture2D,3,t1.w,t1.h,GL._RGB,GL._UNSIGNED_BYTE,rgba);
 		}
 
 		protected bool IsPowerOf2(int x)
@@ -1733,30 +1550,30 @@ namespace Cheetah.Graphics
 
         void CheckError()
         {
-            int error=Gl.glGetError();
-            if (error != Gl.GL_NO_ERROR)
+            ErrorCode error=GL.GetError();
+            if (error != ErrorCode.NoError)
             {
-                throw new Exception(Glu.gluErrorString(error));
+                throw new Exception(Glu.gluErrorString((int)error));
             }
         }
 
         public Cheetah.TextureId CreateCompressedCubeTexture(byte[] xpos, byte[] xneg, byte[] ypos, byte[] yneg, byte[] zpos, byte[] zneg, TextureFormat codec, int w, int h)
         {
-            int format;
+            PixelInternalFormat format;
             switch (codec)
             {
                 case TextureFormat.DXT1:
-                    format = Gl.GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     break;
                 case TextureFormat.DXT2:
                     throw new Exception();
                 case TextureFormat.DXT3:
-                    format = Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                     break;
                 case TextureFormat.DXT4:
                     throw new Exception();
                 case TextureFormat.DXT5:
-                    format = Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 default:
                     throw new Exception();
@@ -1764,30 +1581,30 @@ namespace Cheetah.Graphics
 
             int[] i = new int[1];
 
-            Gl.glGenTextures(1, i);
+            GL.GenTextures(1, i);
 
             TextureId t = new TextureId(i[0], this, w, h, false, true);
 
-            Gl.glBindTexture(Gl.GL_TEXTURE_CUBE_MAP, t.id);
+            GL.BindTexture(TextureTarget.TextureCubeMap, t.id);
             CheckError();
-            Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             CheckError();
 
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, 0, format, w, h, 0, xpos.Length, xpos);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapPositiveX, 0, format, w, h, 0, xpos.Length, xpos);
             CheckError();
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, 0, format, w, h, 0, xneg.Length, xneg);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapNegativeX, 0, format, w, h, 0, xneg.Length, xneg);
             CheckError();
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, 0, format, w, h, 0, ypos.Length, ypos);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapPositiveY, 0, format, w, h, 0, ypos.Length, ypos);
             CheckError();
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, 0, format, w, h, 0, yneg.Length, yneg);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapNegativeY, 0, format, w, h, 0, yneg.Length, yneg);
             CheckError();
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, 0, format, w, h, 0, zpos.Length, zpos);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapPositiveZ, 0, format, w, h, 0, zpos.Length, zpos);
             CheckError();
-            Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, 0, format, w, h, 0, zneg.Length, zneg);
+            GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapNegativeZ, 0, format, w, h, 0, zneg.Length, zneg);
+          
 
-
-            //Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+            //Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
 
             Textures[t.id] = t;
 
@@ -1799,36 +1616,36 @@ namespace Cheetah.Graphics
         {
             int[] i = new int[1];
 
-            Gl.glGenTextures(1, i);
+            GL.GenTextures(1, i);
 
             TextureId t = new TextureId(i[0], this, w, h, false, true);
 
-            Gl.glBindTexture(Gl.GL_TEXTURE_CUBE_MAP, t.id);
+            GL.BindTexture(TextureTarget.TextureCubeMap, t.id);
             CheckError();
 
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
+            //GL.TexParameterf(GL._TEXTURE_CUBE_MAP, TextureParameterName.TextureWrapS, GL._REPEAT);
+            //GL.TexParameterf(GL._TEXTURE_CUBE_MAP, TextureParameterName.TextureWrapT, GL._REPEAT);
 
-            //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
-            //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
+            //GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, GL._CLAMP_TO_EDGE);
+            //GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, GL._CLAMP_TO_EDGE);
 
-            Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_CUBE_MAP, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             CheckError();
 
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, xpos);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapPositiveX, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, xpos);
             CheckError();
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, xneg);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapNegativeX, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, xneg);
             CheckError();
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, ypos);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapPositiveY, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, ypos);
             CheckError();
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, yneg);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapNegativeY, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, yneg);
             CheckError();
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, zpos);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapPositiveZ, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, zpos);
             CheckError();
-            Gl.glTexImage2D(Gl.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, zneg);
+            GL.TexImage2D<byte>(TextureTarget.TextureCubeMapNegativeZ, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, zneg);
             
-            //Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+            //Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
 
             Textures[t.id] = t;
 
@@ -1838,50 +1655,50 @@ namespace Cheetah.Graphics
         public Cheetah.TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec,int w, int h)
         {
             int[] i = new int[1];
-            Gl.glGenTextures(1, i);
+            GL.GenTextures(1, i);
             TextureId t = new TextureId(i[0], this, w, h, true, false);
             t.LastBind = Root.Instance.Time;
 
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, t.id);
+            GL.BindTexture(TextureTarget.Texture2D, t.id);
 
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
             if (mipmaps.Length > 1)
             {
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
             }
             else
             {
                 //disable mipmapping
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             }
 
-            int format;
+            PixelInternalFormat format;
             switch (codec)
             {
                 case TextureFormat.DXT1:
-                    format = Gl.GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     break;
                 case TextureFormat.DXT2:
                     throw new Exception();
                 case TextureFormat.DXT3:
-                    format = Gl.GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                     break;
                 case TextureFormat.DXT4:
                     throw new Exception();
                 case TextureFormat.DXT5:
-                    format = Gl.GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                    format = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 default:
-                    throw new Exception("unknown codec: "+codec.ToString());
+                    throw new Exception();
             }
 
             for (int m = 0; m < mipmaps.Length; ++m)
             {
-                Gl.glCompressedTexImage2DARB(Gl.GL_TEXTURE_2D, m, format, w, h, 0, mipmaps[m].Length, mipmaps[m]);
+                GL.CompressedTexImage2D<byte>(TextureTarget.Texture2D, m, format, w, h, 0, mipmaps[m].Length, mipmaps[m]);
                 w /= 2;
                 h /= 2;
             }
@@ -1894,12 +1711,12 @@ namespace Cheetah.Graphics
         public Cheetah.TextureId CreateDepthTexture(int w, int h)
         {
             int[] i = new int[1];
-            Gl.glGenTextures(1, i);
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, i[0]);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+            GL.GenTextures(1, i);
+            GL.BindTexture(TextureTarget.Texture2D, i[0]);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 
-            Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT32, w, h, 0, Gl.GL_DEPTH_COMPONENT, Gl.GL_FLOAT, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             TextureId t = new TextureId(i[0], this, w, h, false, false);
             Textures[t.id] = t;
             return t;
@@ -1912,41 +1729,24 @@ namespace Cheetah.Graphics
 			//	throw new Exception("Texture sizes must be n^2.");
 			int[] i = new int[1];
 			byte[] data = rgba;
-			Gl.glGenTextures(1, i);
-			//if(Gl.glIsTexture(i[0])!=Gl.GL_TRUE)
+			GL.GenTextures(1, i);
+			//if(GL.IsTexture(i[0])!=GL._TRUE)
 			//	throw new Exception("OpenGL.CreateTexture: glGenTextures failed.");
 
 			TextureId t = new TextureId(i[0], this, w, h, alpha, false);
             t.LastBind = Root.Instance.Time;
 
-			Gl.glBindTexture(Gl.GL_TEXTURE_2D, t.id);
+			GL.BindTexture(TextureTarget.Texture2D, t.id);
 
-			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
-			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
-            //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
-            //Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
-
-			Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             if(mipmap)
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
             else
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
 
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_NEAREST);
-            //Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
-
-			/*
-				if(!(IsPowerOf2(w)&&IsPowerOf2(h)))
-						{
-							int s=CalcGoodSize(w,h);
-							data=new byte[s*s*(alpha?4:3)];
-							if(alpha)
-								Glu.gluScaleImage(Gl.GL_RGBA,w,h,Gl.GL_UNSIGNED_BYTE,rgba,s,s,Gl.GL_UNSIGNED_BYTE,data);
-							else
-								Glu.gluScaleImage(Gl.GL_RGB,w,h,Gl.GL_UNSIGNED_BYTE,rgba,s,s,Gl.GL_UNSIGNED_BYTE,data);
-						}
-			*/
             if (mipmap)
             {
                 if (alpha)
@@ -1957,9 +1757,9 @@ namespace Cheetah.Graphics
             else
             {
                 if (alpha)
-                    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 4, w, h, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Four, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data);
                  else
-                    Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 3, w, h, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
+                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb,PixelType.UnsignedByte, data);
             }
 			//t.width=w;
 			//t.height=h;
@@ -1975,40 +1775,40 @@ namespace Cheetah.Graphics
             //	throw new Exception("Texture sizes must be n^2.");
             int[] i = new int[1];
             //byte[] data = rgba;
-            Gl.glGenTextures(1, i);
-            //if(Gl.glIsTexture(i[0])!=Gl.GL_TRUE)
+            GL.GenTextures(1, i);
+            //if(GL.IsTexture(i[0])!=GL._TRUE)
             //	throw new Exception("OpenGL.CreateTexture: glGenTextures failed.");
 
             TextureId t = new TextureId(i[0], this, w, h, alpha, false);
             t.LastBind = Root.Instance.Time;
 
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, t.id);
+            GL.BindTexture(TextureTarget.Texture2D, t.id);
 
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
-            Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
 
-            Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             if (mipmap)
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
             else
-                Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
 
             if (depth)
-                Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_DEPTH_COMPONENT, w, h, 0, Gl.GL_DEPTH_COMPONENT, Gl.GL_UNSIGNED_SHORT, IntPtr.Zero);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.UnsignedShort, IntPtr.Zero);
             else
-                //Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_COLOR, w, h, 0, Gl.GL_DEPTH_COMPONENT, Gl.GL_UNSIGNED_SHORT, IntPtr.Zero);
+                //GL.TexImage2D(TextureTarget.Texture2D, 0, GL._COLOR, w, h, 0, GL._DEPTH_COMPONENT, GL._UNSIGNED_SHORT, IntPtr.Zero);
                 throw new Exception();
 
-            if (Gl.glGetError() != Gl.GL_NO_ERROR)
+            if (GL.GetError() != ErrorCode.NoError)
                 throw new Exception();
             /*
             if (alpha)
-                Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
+                Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
             else
-                Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 3, w, h, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
+                Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 3, w, h, GL._RGB, GL._UNSIGNED_BYTE, data);
             */
             //t.width=w;
             //t.height=h;
@@ -2019,7 +1819,7 @@ namespace Cheetah.Graphics
 
 		public void BindTexture(Cheetah.TextureId t, int unit)
 		{
-			unit += Gl.GL_TEXTURE0;
+			unit += (int)TextureUnit.Texture0;
 
 
 			if (t != null)
@@ -2028,20 +1828,20 @@ namespace Cheetah.Graphics
                 TextureId t2 = (TextureId)t;
 
                 States.ActiveTexture(unit);
-                //States.Disable(Gl.GL_TEXTURE_2D);
+                //States.Disable(TextureTarget.Texture2D);
 
-                int x = t2.cube ? Gl.GL_TEXTURE_CUBE_MAP_ARB : Gl.GL_TEXTURE_2D;
-				States.Enable(x);
-				Gl.glBindTexture(x, t2.id);
+                TextureTarget x = t2.cube ? TextureTarget.TextureCubeMap : TextureTarget.Texture2D;
+				States.Enable((int)x);
+				GL.BindTexture(x, t2.id);
 			}
 			else
 			{
                 States.ActiveTexture(unit);
-				//Gl.glBindTexture(Gl.GL_TEXTURE_2D,-1);
-				States.Disable(Gl.GL_TEXTURE_2D);
-                States.Disable(Gl.GL_TEXTURE_CUBE_MAP_ARB);
+				//GL.BindTexture(TextureTarget.Texture2D,-1);
+				States.Disable((int)TextureTarget.Texture2D);
+                States.Disable((int)TextureTarget.TextureCubeMap);
             }
-            States.ActiveTexture(Gl.GL_TEXTURE0);
+            States.ActiveTexture((int)TextureUnit.Texture0);
 
 
 		}
@@ -2052,28 +1852,28 @@ namespace Cheetah.Graphics
 			/*if (t != null)
 			{
                 t.LastBind = Root.Instance.Time;
-                States.Enable(Gl.GL_TEXTURE_2D);
-				Gl.glBindTexture(Gl.GL_TEXTURE_2D, ((TextureId)t).id);
+                States.Enable(TextureTarget.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, ((TextureId)t).id);
 			}
 			else
 			{
-				Gl.glBindTexture(Gl.GL_TEXTURE_2D, -1);
-				States.Disable(Gl.GL_TEXTURE_2D);
+				GL.BindTexture(TextureTarget.Texture2D, -1);
+				States.Disable(TextureTarget.Texture2D);
 			}*/
 		}
 		public void FreeTexture(Cheetah.TextureId t)
 		{
 			int[] i = new int[] { ((TextureId)t).id };
-			Gl.glDeleteTextures(1, i);
+			GL.DeleteTextures(1, i);
 			Textures.Remove(i[0]);
 		}
 
 		public void Clear(float r, float g, float b, float a)
 		{
-            //Gl.glViewport(0, 0, width, height);
-            //Gl.glScissor(0, 0, width, height);
-            Gl.glClearColor(r, g, b, a);
-			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+            //GL.Viewport(0, 0, width, height);
+            //GL.Scissor(0, 0, width, height);
+            GL.ClearColor(r, g, b, a);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 		}
 
 		public void SetMaterial(Material m)
@@ -2084,51 +1884,51 @@ namespace Cheetah.Graphics
             //    {
             //        int stage = 0;
 
-            //        States.ActiveTexture(stage + Gl.GL_TEXTURE0);
+            //        States.ActiveTexture(stage + GL._TEXTURE0);
 
             //        if (m.diffusemap != null)
             //        {
             //            BindTexture(m.diffusemap.Id);
-            //            Gl.glMatrixMode(Gl.GL_TEXTURE);
-            //            Gl.glLoadIdentity();
-            //            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            //            States.Disable(Gl.GL_TEXTURE_GEN_S);
-            //            States.Disable(Gl.GL_TEXTURE_GEN_T);
+            //            GL.MatrixMode(GL._TEXTURE);
+            //            GL.LoadIdentity();
+            //            GL.MatrixMode(GL._MODELVIEW);
+            //            States.Disable(GL._TEXTURE_GEN_S);
+            //            States.Disable(GL._TEXTURE_GEN_T);
             //            stage++;
             //        }
             //        else
             //            BindTexture(null);
 
-            //        States.ActiveTexture(stage + Gl.GL_TEXTURE0);
+            //        States.ActiveTexture(stage + GL._TEXTURE0);
 
             //        if (m.DetailMap != null)
             //        {
             //            BindTexture(m.DetailMap.Id);
-            //            Gl.glTexEnvi(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE);
-            //            Gl.glMatrixMode(Gl.GL_TEXTURE);
-            //            Gl.glLoadIdentity();
-            //            Gl.glScalef(256, 256, 256);
-            //            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            //            States.Disable(Gl.GL_TEXTURE_GEN_S);
-            //            States.Disable(Gl.GL_TEXTURE_GEN_T);
+            //            GL.TexEnvi(GL._TEXTURE_ENV, GL._TEXTURE_ENV_MODE, GL._MODULATE);
+            //            GL.MatrixMode(GL._TEXTURE);
+            //            GL.LoadIdentity();
+            //            GL.Scalef(256, 256, 256);
+            //            GL.MatrixMode(GL._MODELVIEW);
+            //            States.Disable(GL._TEXTURE_GEN_S);
+            //            States.Disable(GL._TEXTURE_GEN_T);
             //            stage++;
             //        }
             //        else
             //            BindTexture(null);
 
-            //        States.ActiveTexture(stage + Gl.GL_TEXTURE0);
+            //        States.ActiveTexture(stage + GL._TEXTURE0);
 
             //        if (m.EnvironmentMap != null)
             //        {
             //            BindTexture(m.EnvironmentMap.Id);
-            //            Gl.glMatrixMode(Gl.GL_TEXTURE);
-            //            Gl.glLoadIdentity();
-            //            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            //            Gl.glTexEnvi(Gl.GL_TEXTURE_ENV, Gl.GL_TEXTURE_ENV_MODE, Gl.GL_MODULATE);
-            //            Gl.glTexGeni(Gl.GL_S, Gl.GL_TEXTURE_GEN_MODE, Gl.GL_SPHERE_MAP);//GL_SPHERE_MAP);
-            //            Gl.glTexGeni(Gl.GL_T, Gl.GL_TEXTURE_GEN_MODE, Gl.GL_SPHERE_MAP);//GL_SPHERE_MAP);
-            //            States.Enable(Gl.GL_TEXTURE_GEN_S);
-            //            States.Enable(Gl.GL_TEXTURE_GEN_T);
+            //            GL.MatrixMode(GL._TEXTURE);
+            //            GL.LoadIdentity();
+            //            GL.MatrixMode(GL._MODELVIEW);
+            //            GL.TexEnvi(GL._TEXTURE_ENV, GL._TEXTURE_ENV_MODE, GL._MODULATE);
+            //            GL.TexGeni(GL._S, GL._TEXTURE_GEN_MODE, GL._SPHERE_MAP);//GL_SPHERE_MAP);
+            //            GL.TexGeni(GL._T, GL._TEXTURE_GEN_MODE, GL._SPHERE_MAP);//GL_SPHERE_MAP);
+            //            States.Enable(GL._TEXTURE_GEN_S);
+            //            States.Enable(GL._TEXTURE_GEN_T);
             //            stage++;
             //        }
             //        else
@@ -2138,18 +1938,18 @@ namespace Cheetah.Graphics
             //            BindTexture(null, i);
 
             //        if (stage > 0)
-            //            States.Enable(Gl.GL_TEXTURE_2D);
+            //            States.Enable(TextureTarget.Texture2D);
             //        else
-            //            States.Disable(Gl.GL_TEXTURE_2D);
+            //            States.Disable(TextureTarget.Texture2D);
 
-            //        Gl.glColor3f(1, 1, 1);
-            //    //Gl.glActiveTextureARB(glActiveTextureARB,Gl.GL_TEXTURE1);
-            //        States.ActiveTexture(Gl.GL_TEXTURE0);
+            //        GL.Color3f(1, 1, 1);
+            //    //GL.ActiveTextureARB(glActiveTextureARB,GL._TEXTURE1);
+            //        States.ActiveTexture(GL._TEXTURE0);
 
             //    if (m.NoLighting)
-            //        States.Disable(Gl.GL_LIGHTING);
+            //        States.Disable(GL._LIGHTING);
             //    else
-            //        States.Enable(Gl.GL_LIGHTING);
+            //        States.Enable(GL._LIGHTING);
 
             //}
 
@@ -2158,64 +1958,64 @@ namespace Cheetah.Graphics
 
 
 
-				int face = Gl.GL_FRONT_AND_BACK;
-				Gl.glMaterialfv(face, Gl.GL_SPECULAR, (float[])m.specular);
+                MaterialFace face = MaterialFace.FrontAndBack;
+				GL.Material(face, MaterialParameter.Specular, (float[])m.specular);
 
-				Gl.glMaterialfv(face, Gl.GL_DIFFUSE, (float[])m.diffuse);
+                GL.Material(face, MaterialParameter.Diffuse, (float[])m.diffuse);
 
-				Gl.glMaterialfv(face, Gl.GL_AMBIENT, (float[])m.ambient);
+                GL.Material(face, MaterialParameter.Ambient, (float[])m.ambient);
 
-				Gl.glMaterialf(face, Gl.GL_SHININESS, m.shininess);
+                GL.Material(face, MaterialParameter.Shininess, m.shininess);
 
 				if (m.wire || WireFrameMode)
-					Gl.glPolygonMode(face, Gl.GL_LINE);
+					GL.PolygonMode(face, PolygonMode.Line);
 				else
-					Gl.glPolygonMode(face, Gl.GL_FILL);
+					GL.PolygonMode(face, PolygonMode.Fill);
 
 				if (m.twosided)
-					States.Disable(Gl.GL_CULL_FACE);
+					States.Disable((int)GetPName.CullFace);
 				else
-					States.Enable(Gl.GL_CULL_FACE);
+                    States.Enable((int)GetPName.CullFace);
 
                 if (m.DepthTest)
-                    States.Enable(Gl.GL_DEPTH_TEST);
+                    States.Enable((int)GetPName.DepthTest);
                 else
-                    States.Disable(Gl.GL_DEPTH_TEST);
-                Gl.glDepthMask(m.DepthWrite?1:0);
+                    States.Disable((int)GetPName.DepthTest);
+                GL.DepthMask(m.DepthWrite);
 
                 if (m.Additive)
 				{
-					//Gl.glBlendFunc(Gl.GL_ONE, Gl.GL_ONE);
-                    Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE);
-                    //States.Disable(Gl.GL_DEPTH_TEST);
-					States.Enable(Gl.GL_BLEND);
-                    Gl.glDepthMask(0);
+					//GL.BlendFunc(GL._ONE, GL._ONE);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+                    //States.Disable(GL._DEPTH_TEST);
+					States.Enable((int)GetPName.Blend);
+                    GL.DepthMask(false);
 				}
 				else
 				{
-                Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
-                    //States.Disable(Gl.GL_BLEND);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    //States.Disable(GL._BLEND);
 				}
 			}
 			else
 			{
-                States.ActiveTexture(Gl.GL_TEXTURE0);
+                States.ActiveTexture((int)TextureUnit.Texture0);
 				BindTexture(null);
-				Gl.glMatrixMode(Gl.GL_TEXTURE);
-				Gl.glLoadIdentity();
-				Gl.glMatrixMode(Gl.GL_MODELVIEW);
-				States.Disable(Gl.GL_TEXTURE_GEN_S);
-				States.Disable(Gl.GL_TEXTURE_GEN_T);
-                Gl.glDepthMask(1);
+				GL.MatrixMode(MatrixMode.Texture);
+				GL.LoadIdentity();
+                GL.MatrixMode(MatrixMode.Modelview);
+				States.Disable((int)GetPName.TextureGenS);
+                States.Disable((int)GetPName.TextureGenT);
+                GL.DepthMask(true);
             }
 		}
 
 		public void SetLighting(bool b)
 		{
 			if (b)
-				States.Enable(Gl.GL_LIGHTING);
+                States.Enable((int)GetPName.Lighting);
 			else
-				States.Disable(Gl.GL_LIGHTING);
+                States.Disable((int)GetPName.Lighting);
 		}
 
 		public Cheetah.Graphics.VertexBuffer CreateStaticVertexBuffer(object data, int length)
@@ -2224,23 +2024,23 @@ namespace Cheetah.Graphics
 			//	return CreateSlowVertexBuffer(data, length);
 			VertexBuffer vb = new VertexBuffer();
             int[] id = new int[1];
-			Gl.glGenBuffersARB(1, id);
+			GL.GenBuffers(1, id);
             vb.id = id[0];
-			Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, vb.id);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, vb.id);
 
 			Type t = data.GetType();
 			if (!t.IsArray)
 				throw new Exception("wrong datatype.");
 
 			//Array a = (Array)data;
-			//IntPtr p = Marshal.UnsafeAddrOfPinnedArrayElement(a, 0);
+			IntPtr p = Marshal.UnsafeAddrOfPinnedArrayElement((Array)data, 0);
 
 
 			//fixed(void *ptr=data)
 			//{
-			Gl.glBufferDataARB(Gl.GL_ARRAY_BUFFER_ARB, new IntPtr(length), data, Gl.GL_STATIC_DRAW_ARB);
+                GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(length), p, BufferUsageHint.StaticDraw);
 			//}
-			Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, 0);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			vb.Size = length;
 			Buffers[vb.id] = vb;
 			BufferMemory += length;
@@ -2271,11 +2071,11 @@ namespace Cheetah.Graphics
 			DynamicVertexBuffer vb = new DynamicVertexBuffer(this);
 			vb.Size = length;
             int[] id = new int[1];
-			Gl.glGenBuffersARB(1, id);
+			GL.GenBuffers(1, id);
             vb.id = id[0];
-			Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, vb.id);
-			Gl.glBufferDataARB(Gl.GL_ARRAY_BUFFER_ARB, new IntPtr(length), new byte[length], Gl.GL_DYNAMIC_DRAW_ARB);
-			Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, 0);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, vb.id);
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(length), new byte[length], BufferUsageHint.DynamicDraw);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			Buffers[vb.id] = vb;
 			BufferMemory += length;
 			return vb;
@@ -2289,6 +2089,9 @@ namespace Cheetah.Graphics
 		public void SetLight(int index, Light l)
         {
             float[] f = new float[4];
+
+            LightName ln = (LightName)(LightName.Light0 + index);
+
 			if (l != null)
 			{
 
@@ -2301,23 +2104,22 @@ namespace Cheetah.Graphics
                 f[2] = pos.Z;
 				f[3] = l.directional ? 0 : 1;
 
+				GL.Light(ln, LightParameter.Position, f);
+                GL.Light(ln, LightParameter.Ambient, (float[])l.ambient);
+                GL.Light(ln, LightParameter.Diffuse, (float[])l.diffuse);
+                GL.Light(ln, LightParameter.Specular, (float[])l.specular);
+                GL.Light(ln, LightParameter.ConstantAttenuation, l.attenuation.X);
+                GL.Light(ln, LightParameter.LinearAttenuation, l.attenuation.Y);
+                GL.Light(ln, LightParameter.QuadraticAttenuation, l.attenuation.Z);
 
-				Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_POSITION, f);
-				Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_AMBIENT, (float[])l.ambient);
-				Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_DIFFUSE, (float[])l.diffuse);
-				Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_SPECULAR, (float[])l.specular);
-				Gl.glLightf(Gl.GL_LIGHT0 + index, Gl.GL_CONSTANT_ATTENUATION, l.attenuation.X);
-				Gl.glLightf(Gl.GL_LIGHT0 + index, Gl.GL_LINEAR_ATTENUATION, l.attenuation.Y);
-				Gl.glLightf(Gl.GL_LIGHT0 + index, Gl.GL_QUADRATIC_ATTENUATION, l.attenuation.Z);
-
-				States.Enable(Gl.GL_LIGHT0 + index);
+                States.Enable((int)ln);
 			}
 			else
 			{
-                Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_AMBIENT, f);
-                Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_DIFFUSE, f);
-                Gl.glLightfv(Gl.GL_LIGHT0 + index, Gl.GL_SPECULAR, f);
-                States.Disable(Gl.GL_LIGHT0 + index);
+                GL.Light(ln, LightParameter.Ambient, f);
+                GL.Light(ln, LightParameter.Diffuse, f);
+                GL.Light(ln, LightParameter.Specular, f);
+                States.Disable((int)ln);
 			}
 		}
 
@@ -2332,69 +2134,68 @@ namespace Cheetah.Graphics
 			switch (m)
 			{
 				case RenderMode.Draw2D:
-					States.Disable(Gl.GL_POINT_SPRITE_ARB);
-					Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
-					Gl.glMatrixMode(Gl.GL_PROJECTION);
-					Gl.glLoadIdentity();
+					States.Disable((int)GetPName.PointSprite);
+					GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadIdentity();
 					Glu.gluOrtho2D(0.0, (double)width, (double)height, 0.0);
-					Gl.glMatrixMode(Gl.GL_MODELVIEW);
-					Gl.glLoadIdentity();
-					States.Disable(Gl.GL_DEPTH_TEST);
-					States.Disable(Gl.GL_CULL_FACE);
-					States.Disable(Gl.GL_LIGHTING);
-					Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
-					States.Enable(Gl.GL_BLEND);
+                    GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadIdentity();
+                    States.Disable((int)GetPName.DepthTest);
+                    States.Disable((int)GetPName.CullFace);
+                    States.Disable((int)GetPName.Lighting);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    States.Enable((int)GetPName.Blend);
                     break;
 				case RenderMode.Draw3D:
-					Gl.glDepthMask(Gl.GL_TRUE);
-					States.Disable(Gl.GL_POINT_SPRITE_ARB);
-					Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
-                    States.ActiveTexture(Gl.GL_TEXTURE0);
-					States.Enable(Gl.GL_DEPTH_TEST);
-					States.Enable(Gl.GL_CULL_FACE);
-					Gl.glCullFace(Gl.GL_BACK);
-					Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
-					States.Enable(Gl.GL_BLEND);
-					Gl.glLightModeli(Gl.GL_LIGHT_MODEL_TWO_SIDE, Gl.GL_TRUE);
+					GL.DepthMask(true);
+                    States.Disable((int)GetPName.PointSprite);
+					GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    States.ActiveTexture((int)TextureUnit.Texture0);
+                    States.Enable((int)GetPName.DepthTest);
+                    States.Enable((int)GetPName.CullFace);
+					GL.CullFace(CullFaceMode.Back);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    States.Enable((int)GetPName.Blend);
+                    GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
 					break;
 				case RenderMode.Draw3DWireFrame:
-                    Gl.glDepthMask(Gl.GL_TRUE);
-                    States.Disable(Gl.GL_POINT_SPRITE_ARB);
-                    States.ActiveTexture(Gl.GL_TEXTURE0);
-                    States.Enable(Gl.GL_DEPTH_TEST);
-                    States.Enable(Gl.GL_CULL_FACE);
-                    Gl.glCullFace(Gl.GL_BACK);
-                    Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
-                    States.Enable(Gl.GL_BLEND);
-                    Gl.glLightModeli(Gl.GL_LIGHT_MODEL_TWO_SIDE, Gl.GL_TRUE);
-                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
+                    GL.DepthMask(true);
+                    States.Disable((int)GetPName.PointSprite);
+                    States.ActiveTexture((int)TextureUnit.Texture0);
+                    States.Enable((int)GetPName.DepthTest);
+                    States.Enable((int)GetPName.CullFace);
+                    GL.CullFace(CullFaceMode.Back);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    States.Enable((int)GetPName.Blend);
+                    GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 					break;
 				case RenderMode.Draw3DPointSprite:
-                    States.ActiveTexture(Gl.GL_TEXTURE0);
-                    Gl.glTexEnvi(Gl.GL_POINT_SPRITE_ARB, Gl.GL_COORD_REPLACE_ARB, Gl.GL_TRUE);
-                    States.Enable(Gl.GL_POINT_SPRITE_ARB);
-                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_POINT);
+                    States.ActiveTexture((int)TextureUnit.Texture0);
+                    GL.TexEnv(TextureEnvTarget.PointSprite, TextureEnvParameter.CoordReplace, 1);
+                    States.Enable((int)GetPName.PointSprite);
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                     UseShader(pointsprite);
                     float m1 = 2.0f * (float)Math.Atan(cam.Fov / 2.0 / 180.0 * Math.PI);
                     int[] vp = new int[4];
-                    Gl.glGetIntegerv(Gl.GL_VIEWPORT, vp);
+                    GL.GetInteger(GetPName.Viewport, vp);
                     float v = (float)vp[3];
                     m1 /= v;
                     SetUniform(pointsprite.GetUniformLocation("WorldSize"), new float[] { pointsize });
                     SetUniform(pointsprite.GetUniformLocation("Attenuation"), new float[] { 0,0,m1 });
                     break;
 				case RenderMode.DrawSkyBox:
-                    States.Disable(Gl.GL_POINT_SPRITE_ARB);
-                    Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
-                    States.ActiveTexture(Gl.GL_TEXTURE0);
-                    States.Enable(Gl.GL_CULL_FACE);
-                    Gl.glCullFace(Gl.GL_BACK);
-                    Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
-                    States.Enable(Gl.GL_BLEND);
-                    Gl.glLightModeli(Gl.GL_LIGHT_MODEL_TWO_SIDE, Gl.GL_TRUE);
-                    States.Disable(Gl.GL_DEPTH_TEST);
-					//Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
-					Gl.glDepthMask(Gl.GL_FALSE);
+                    States.Disable((int)GetPName.PointSprite);
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    States.ActiveTexture((int)TextureUnit.Texture0);
+                    States.Enable((int)GetPName.CullFace);
+                    GL.CullFace(CullFaceMode.Back);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    States.Enable((int)GetPName.Blend);
+                    GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
+                    States.Disable((int)GetPName.DepthTest);
+					GL.DepthMask(false);
 
 					break;
 				default:
@@ -2415,7 +2216,7 @@ namespace Cheetah.Graphics
 					if (b is VertexBuffer)
 					{
 						VertexBuffer vb = (VertexBuffer)b;
-						Gl.glDeleteBuffersARB(1, new int[] { vb.id });
+						GL.DeleteBuffers(1, new int[] { vb.id });
 						Buffers.Remove(vb.id);
 						vb.id = -1;
 						BufferMemory -= vb.Size;
@@ -2423,7 +2224,7 @@ namespace Cheetah.Graphics
 					else if(b is DynamicVertexBuffer)
 					{
 						DynamicVertexBuffer vb = (DynamicVertexBuffer)b;
-						Gl.glDeleteBuffersARB(1, new int[] { vb.id });
+						GL.DeleteBuffers(1, new int[] { vb.id });
 						Buffers.Remove(vb.id);
 						vb.id = -1;
 						BufferMemory -= vb.Size;
@@ -2477,13 +2278,13 @@ namespace Cheetah.Graphics
 				switch (e.Type)
 				{
 					case VertexFormat.ElementType.Float:
-						datatype = Gl.GL_FLOAT;
+						datatype = (int)ColorPointerType.Float;
 						break;
 					case VertexFormat.ElementType.Byte:
-						datatype = Gl.GL_BYTE;
+                        datatype = (int)ColorPointerType.Byte;
 						break;
 					case VertexFormat.ElementType.Int:
-						datatype = Gl.GL_INT;
+                        datatype = (int)ColorPointerType.Int;
 						break;
 					default:
 						throw new Exception();
@@ -2492,20 +2293,20 @@ namespace Cheetah.Graphics
 				switch (e.Name)
 				{
 					case VertexFormat.ElementName.Color:
-						Gl.glColorPointer(e.Count, datatype, vertexsize, (IntPtr)(buffer + offset2));
-						States.EnableClientState(Gl.GL_COLOR_ARRAY);
+						GL.ColorPointer(e.Count, (ColorPointerType)datatype, vertexsize, (IntPtr)(buffer + offset2));
+						States.EnableClientState((int)GetPName.ColorArray);
 						break;
 					case VertexFormat.ElementName.Position:
-						Gl.glVertexPointer(e.Count, datatype, vertexsize, (IntPtr)(buffer + offset2));
-                        States.EnableClientState(Gl.GL_VERTEX_ARRAY);
+                        GL.VertexPointer(e.Count, (VertexPointerType)datatype, vertexsize, (IntPtr)(buffer + offset2));
+                        States.EnableClientState((int)GetPName.VertexArray);
 						break;
 					case VertexFormat.ElementName.Texture0:
-						Gl.glTexCoordPointer(e.Count, datatype, vertexsize, (IntPtr)(buffer + offset2));
-                        States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
+                        GL.TexCoordPointer(e.Count, (TexCoordPointerType)datatype, vertexsize, (IntPtr)(buffer + offset2));
+                        States.EnableClientState((int)GetPName.TextureCoordArray);
 						break;
 					case VertexFormat.ElementName.Normal:
-						Gl.glNormalPointer(datatype, vertexsize, (IntPtr)(buffer + offset2));
-                        States.EnableClientState(Gl.GL_NORMAL_ARRAY);
+                        GL.NormalPointer((NormalPointerType)datatype, vertexsize, (IntPtr)(buffer + offset2));
+                        States.EnableClientState((int)GetPName.NormalArray);
 						break;
 					default:
 						throw new Exception();
@@ -2514,26 +2315,26 @@ namespace Cheetah.Graphics
 				offset2 += elementsize;
 			}
 
-			int gltype;
+			BeginMode gltype;
 			switch (type)
 			{
 				case PrimitiveType.QUADS:
-					gltype = Gl.GL_QUADS;
+					gltype = BeginMode.Quads;
 					break;
 				case PrimitiveType.TRIANGLESTRIP:
-					gltype = Gl.GL_TRIANGLE_STRIP;
+					gltype = BeginMode.TriangleStrip;
 					break;
 				case PrimitiveType.TRIANGLES:
-					gltype = Gl.GL_TRIANGLES;
+					gltype = BeginMode.Triangles;
 					break;
 				case PrimitiveType.LINES:
-					gltype = Gl.GL_LINES;
+					gltype = BeginMode.Lines;
 					break;
 				case PrimitiveType.LINESTRIP:
-					gltype = Gl.GL_LINE_STRIP;
+					gltype = BeginMode.LineStrip;
 					break;
 				case PrimitiveType.POINTS:
-					gltype = Gl.GL_POINTS;
+                    gltype = BeginMode.Points;
 					break;
 				default:
 					throw new Exception();
@@ -2541,16 +2342,16 @@ namespace Cheetah.Graphics
 
 			if (ib == null)
 			{
-				Gl.glDrawArrays(gltype, offset, count);
+				GL.DrawArrays(gltype, offset, count);
 			}
 			else
 			{
-				Gl.glDrawElements(gltype, count, Gl.GL_UNSIGNED_INT, ib.buffer);
+				GL.DrawElements(gltype, count, DrawElementsType.UnsignedInt, ib.buffer);
 			}
-			States.DisableClientState(Gl.GL_COLOR_ARRAY);
-            States.DisableClientState(Gl.GL_VERTEX_ARRAY);
-            States.DisableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
-            States.DisableClientState(Gl.GL_NORMAL_ARRAY);
+            States.DisableClientState((int)GetPName.ColorArray);
+            States.DisableClientState((int)GetPName.VertexArray);
+            States.DisableClientState((int)GetPName.TextureCoordArray);
+            States.DisableClientState((int)GetPName.NormalArray);
 		}
 
         public void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
@@ -2574,13 +2375,13 @@ namespace Cheetah.Graphics
 			{
 				VertexBuffer vb = (VertexBuffer)vertices;
 				format = vertices.Format;
-				Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, vb.id);
+				GL.BindBuffer(BufferTarget.ArrayBuffer, vb.id);
 			}
 			else if (vertices is DynamicVertexBuffer)
 			{
 				DynamicVertexBuffer vb = (DynamicVertexBuffer)vertices;
 				format = vertices.Format;
-				Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, vb.id);
+				GL.BindBuffer(BufferTarget.ArrayBuffer, vb.id);
 			}
 			else
 				throw new Exception("wrong vertexbuffer type: "+vertices.GetType().ToString());
@@ -2611,16 +2412,16 @@ namespace Cheetah.Graphics
                     switch (e.Type)
                     {
                         case VertexFormat.ElementType.Float:
-                            datatype = Gl.GL_FLOAT;
+                            datatype = (int)ColorPointerType.Float;
                             break;
                         case VertexFormat.ElementType.Byte:
-                            datatype = Gl.GL_BYTE;
+                            datatype = (int)ColorPointerType.Byte;
                             break;
                         case VertexFormat.ElementType.Int:
-                            datatype = Gl.GL_INT;
+                            datatype = (int)ColorPointerType.Int;
                             break;
                         default:
-                            throw new Exception("unknown vertexformat element.");
+                            throw new Exception();
                     }
 
                     int startwithoffset = start;
@@ -2630,30 +2431,30 @@ namespace Cheetah.Graphics
                     switch (e.Name)
                     {
                         case VertexFormat.ElementName.Color:
-                            Gl.glColorPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
+                            GL.ColorPointer(e.Count, (ColorPointerType)datatype, vertexsize, new IntPtr(startwithoffset));
                             GL_COLOR_ARRAY = true;
-                            //States.EnableClientState(Gl.GL_COLOR_ARRAY);
+                            //States.EnableClientState(GL._COLOR_ARRAY);
                             break;
                         case VertexFormat.ElementName.Position:
-                            Gl.glVertexPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
+                            GL.VertexPointer(e.Count, (VertexPointerType)datatype, vertexsize, new IntPtr(startwithoffset));
                             GL_VERTEX_ARRAY = true;
-                            //States.EnableClientState(Gl.GL_VERTEX_ARRAY);
+                            //States.EnableClientState(GL._VERTEX_ARRAY);
                             break;
                         case VertexFormat.ElementName.Texture0:
                             GL_TEXTURE_COORD_ARRAY = true;
-                            States.ClientActiveTexture(Gl.GL_TEXTURE0);
-                            Gl.glTexCoordPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
-                            States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
-                            /*States.ClientActiveTexture(Gl.GL_TEXTURE1);
-                            Gl.glTexCoordPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
-                            States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
-                            States.ClientActiveTexture(Gl.GL_TEXTURE0);*/
+                            States.ClientActiveTexture((int)TextureUnit.Texture0);
+                            GL.TexCoordPointer(e.Count, (TexCoordPointerType)datatype, vertexsize, new IntPtr(startwithoffset));
+                            States.EnableClientState((int)GetPName.TextureCoordArray);
+                            /*States.ClientActiveTexture(GL._TEXTURE1);
+                            GL.TexCoordPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
+                            States.EnableClientState(GL._TEXTURE_COORD_ARRAY);
+                            States.ClientActiveTexture(GL._TEXTURE0);*/
                             break;
                         case VertexFormat.ElementName.Normal:
-                            Gl.glNormalPointer(datatype, vertexsize, new IntPtr(startwithoffset));
+                            GL.NormalPointer((NormalPointerType)datatype, vertexsize, new IntPtr(startwithoffset));
                             GL_NORMAL_ARRAY = true;
-                            //Gl.glVertexAttribPointer(14, 3, Gl.GL_FLOAT, false, vertexsize, new IntPtr(start));
-                            //Gl.glEnableVertexAttribArray(14);
+                            //GL.VertexAttribPointer(14, 3, GL._FLOAT, false, vertexsize, new IntPtr(start));
+                            //GL.EnableVertexAttribArray(14);
                             break;
                         case VertexFormat.ElementName.Tangent:
                             if (CurrentShader != null)
@@ -2661,7 +2462,7 @@ namespace Cheetah.Graphics
                                 int loc = CurrentShader.GetAttributeLocation("tangent");
                                 if (loc >= 0)
                                 {
-                                    Gl.glVertexAttribPointer(loc, e.Count, Gl.GL_FLOAT, 0, vertexsize, new IntPtr(startwithoffset));
+                                    GL.VertexAttribPointer(loc, e.Count, VertexAttribPointerType.Float, false, vertexsize, new IntPtr(startwithoffset));
                                     attribs[loc]=true;
                                 }
                             }
@@ -2672,24 +2473,24 @@ namespace Cheetah.Graphics
                                 int loc = CurrentShader.GetAttributeLocation("binormal");
                                 if (loc >= 0)
                                 {
-                                    Gl.glVertexAttribPointer(loc, e.Count, Gl.GL_FLOAT, 0, vertexsize, new IntPtr(startwithoffset));
+                                    GL.VertexAttribPointer(loc, e.Count, VertexAttribPointerType.Float, false, vertexsize, new IntPtr(startwithoffset));
                                     attribs[loc] = true;
                                 }
                             }
                             break;
                         case VertexFormat.ElementName.Texture1:
-                            States.ClientActiveTexture(Gl.GL_TEXTURE1);
-                            Gl.glTexCoordPointer(e.Count, datatype, vertexsize, new IntPtr(startwithoffset));
+                            States.ClientActiveTexture((int)TextureUnit.Texture1);
+                            GL.TexCoordPointer(e.Count, (TexCoordPointerType)datatype, vertexsize, new IntPtr(startwithoffset));
                             GL_TEXTURE_COORD_ARRAY = true;
-                            States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
-                            States.ClientActiveTexture(Gl.GL_TEXTURE0);
+                            States.EnableClientState((int)GetPName.TextureCoordArray);
+                            States.ClientActiveTexture((int)TextureUnit.Texture0);
                             break;
                         /*case VertexFormat.ElementName.None:
                             if (CurrentShader == null)
                                 throw new Exception("");
                             int loc=CurrentShader.GetAttributeLocation(e.Attrib);
-                            Gl.glVertexAttribPointer(loc, e.Count, Gl.GL_FLOAT, false, vertexsize, new IntPtr(start));
-                            Gl.glEnableVertexAttribArray(loc);
+                            GL.VertexAttribPointer(loc, e.Count, GL._FLOAT, false, vertexsize, new IntPtr(start));
+                            GL.EnableVertexAttribArray(loc);
                             break;*/
                         default:
                             throw new Exception("unknown vertexformat name.");
@@ -2701,7 +2502,7 @@ namespace Cheetah.Graphics
                         int loc = CurrentShader.GetAttributeLocation(e.Attrib);
                         if (loc >= 0)
                         {
-                            Gl.glVertexAttribPointer(loc, e.Count, Gl.GL_FLOAT, 0, vertexsize, new IntPtr(startwithoffset));
+                            GL.VertexAttribPointer(loc, e.Count, VertexAttribPointerType.Float, false, vertexsize, new IntPtr(startwithoffset));
                             attribs[loc] = true;
                         }
                     }
@@ -2725,81 +2526,81 @@ namespace Cheetah.Graphics
 
 
                 if(GL_COLOR_ARRAY)
-                    States.EnableClientState(Gl.GL_COLOR_ARRAY);
+                    States.EnableClientState((int)GetPName.ColorArray);
                 else
-                    States.DisableClientState(Gl.GL_COLOR_ARRAY);
+                    States.DisableClientState((int)GetPName.ColorArray);
                 if (GL_VERTEX_ARRAY)
-                    States.EnableClientState(Gl.GL_VERTEX_ARRAY);
+                    States.EnableClientState((int)GetPName.VertexArray);
                 else
-                    States.DisableClientState(Gl.GL_VERTEX_ARRAY);
+                    States.DisableClientState((int)GetPName.VertexArray);
                 if (GL_NORMAL_ARRAY)
-                    States.EnableClientState(Gl.GL_NORMAL_ARRAY);
+                    States.EnableClientState((int)GetPName.NormalArray);
                 else
-                    States.DisableClientState(Gl.GL_NORMAL_ARRAY);
+                    States.DisableClientState((int)GetPName.NormalArray);
 
                 /*
-                States.ClientActiveTexture(Gl.GL_TEXTURE1);
+                States.ClientActiveTexture(GL._TEXTURE1);
                 if (GL_TEXTURE_COORD_ARRAY)
-                    States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
+                    States.EnableClientState(GL._TEXTURE_COORD_ARRAY);
                 else
-                    States.DisableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
-                States.ClientActiveTexture(Gl.GL_TEXTURE0);
+                    States.DisableClientState(GL._TEXTURE_COORD_ARRAY);
+                States.ClientActiveTexture(GL._TEXTURE0);
                 if (GL_TEXTURE_COORD_ARRAY)
-                    States.EnableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
+                    States.EnableClientState(GL._TEXTURE_COORD_ARRAY);
                 else
-                    States.DisableClientState(Gl.GL_TEXTURE_COORD_ARRAY);
+                    States.DisableClientState(GL._TEXTURE_COORD_ARRAY);
                 */
                 //lastformat = format;
                 //lastbuffer = vertices;
                 //lastshader = CurrentShader;
             }
 
-			int gltype;
-			switch (type)
-			{
-				case PrimitiveType.QUADS:
-					gltype = Gl.GL_QUADS;
-					break;
-				case PrimitiveType.TRIANGLESTRIP:
-					gltype = Gl.GL_TRIANGLE_STRIP;
-					break;
-				case PrimitiveType.TRIANGLES:
-					gltype = Gl.GL_TRIANGLES;
-					break;
-				case PrimitiveType.LINES:
-					gltype = Gl.GL_LINES;
-					break;
-				case PrimitiveType.LINESTRIP:
-					gltype = Gl.GL_LINE_STRIP;
-					break;
-				case PrimitiveType.POINTS:
-					gltype = Gl.GL_POINTS;
-					break;
-				default:
-					throw new Exception("unknown primitive type.");
-			}
+            BeginMode gltype;
+            switch (type)
+            {
+                case PrimitiveType.QUADS:
+                    gltype = BeginMode.Quads;
+                    break;
+                case PrimitiveType.TRIANGLESTRIP:
+                    gltype = BeginMode.TriangleStrip;
+                    break;
+                case PrimitiveType.TRIANGLES:
+                    gltype = BeginMode.Triangles;
+                    break;
+                case PrimitiveType.LINES:
+                    gltype = BeginMode.Lines;
+                    break;
+                case PrimitiveType.LINESTRIP:
+                    gltype = BeginMode.LineStrip;
+                    break;
+                case PrimitiveType.POINTS:
+                    gltype = BeginMode.Points;
+                    break;
+                default:
+                    throw new Exception();
+            }
 
 			if (ib == null)
 			{
-				Gl.glDrawArrays(gltype, offset, count);
+				GL.DrawArrays(gltype, offset, count);
 			}
 			else
 			{
-				//Gl.glDrawElements(gltype, count, Gl.GL_UNSIGNED_INT, ib.buffer);
+				//GL.DrawElements(gltype, count, GL._UNSIGNED_INT, ib.buffer);
                 //fixed (int* startindex = ib.buffer)
                 IntPtr startindex = Marshal.UnsafeAddrOfPinnedArrayElement(ib.buffer, indexoffset);
                 {
-                    //Gl.glDrawElements(gltype, count, Gl.GL_UNSIGNED_INT, new IntPtr(startindex+indexoffset));
-                    Gl.glDrawElements(gltype, count, Gl.GL_UNSIGNED_INT, startindex);
+                    //GL.DrawElements(gltype, count, GL._UNSIGNED_INT, new IntPtr(startindex+indexoffset));
+                    GL.DrawElements(gltype, count, DrawElementsType.UnsignedInt, startindex);
                 }
             }
 
            
 			
             //for(int i=0;i<16;++i)
-             //   Gl.glDisableVertexAttribArray(i);
+             //   GL.DisableVertexAttribArray(i);
             
-			//Gl.glBindBufferARB(Gl.GL_ARRAY_BUFFER_ARB, 0);
+			//GL.BindBufferARB(BufferTarget.ArrayBuffer, 0);
 		}
 
 		//		protected Video video;
