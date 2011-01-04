@@ -9097,7 +9097,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 
 #endregion
     }
-
+    /*
     public class DevIlImageDecoder : IImageDecoder
 	{
 		static DevIlImageDecoder()
@@ -9195,7 +9195,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 		protected int height;
 		protected bool alpha;
 	}
-/*
+
 	public class SDLImageDecoder : IImageDecoder
 	{
 		public unsafe void Load(Stream stream)

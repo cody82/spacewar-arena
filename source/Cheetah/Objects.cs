@@ -2737,17 +2737,6 @@ using Cheetah;");
         protected IImageDecoder CreateDecoder(FileSystemNode n)
         {
             return new DotNetImageDecoder();
-            IImageDecoder i;
-//#if WINDOWS
-            if (n.GetName().ToLower().EndsWith(".bmp"))
-                i = new DotNetImageDecoder();
-            else
-//#endif
-                //i=new SDLImageDecoder();
-                //i=new DotNetImageDecoder();
-                i = new DevIlImageDecoder();
-
-            return i;
         }
 
         public Type LoadType
