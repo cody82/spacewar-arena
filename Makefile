@@ -48,3 +48,4 @@ clean:
 	rm -rf spacewar-arena
 	rm -rf debian/opt
 	mdtool -v build -c:Release -t:Clean source/Spacewar2006/Spacewar2006.sln
+	rm -r source/*/bin/*
