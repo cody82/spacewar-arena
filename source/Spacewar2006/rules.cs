@@ -104,7 +104,7 @@ namespace SpaceWar2006.Rules
             Player p = ship.GetPlayer();
             Announce(p.Name + " captured the " + Team.ColorNames[f.Team] + " flag!");
             int cap = ++((CtfTeam)Teams[p.Team]).Captures;
-            if (cap >= CaptureLimit)
+            if (cap >= CaptureLimit && CaptureLimit > 0)
             {
                 Announce(Team.ColorNames[p.Team] + " wins the match!");
                 EndGame();
