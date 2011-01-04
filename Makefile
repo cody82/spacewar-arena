@@ -38,6 +38,7 @@ zip: compile
 
 	zip -r9 release/spacewar-arena-`date +%Y%m%d`-`hg identify|awk '{print $1}'`.zip spacewar-arena
 	rm -rf spacewar-arena
+	la -la release
 
 upload:
 	#scp spacewar-arena-20100613-c452d2f7d430+.zip cody82,spacewar2006@frs.sourceforge.net:/home/frs/project/s/sp/spacewar2006/
@@ -48,4 +49,4 @@ clean:
 	rm -rf spacewar-arena
 	rm -rf debian/opt
 	mdtool -v build -c:Release -t:Clean source/Spacewar2006/Spacewar2006.sln
-	rm -r source/*/bin/*
+	rm -rf source/*/bin/*
