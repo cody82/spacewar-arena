@@ -100,6 +100,7 @@
     <Compile Include="GlControl.Designer.cs">
       <DependentUpon>GlControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Glu.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="lwo.cs" />
@@ -163,10 +164,6 @@
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.Compatibility, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\OpenTK.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
       <SpecificVersion>False</SpecificVersion>

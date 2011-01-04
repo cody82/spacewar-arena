@@ -12,7 +12,6 @@ using System.Text;
 using Cheetah.Graphics;
 
 using OpenTK.Graphics.OpenGL;
-using Tao.OpenGl;
 
 namespace Cheetah.Graphics
 {
@@ -1243,50 +1242,42 @@ namespace Cheetah.Graphics
 
         public float[] UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
         {
- 			double[] projection = new double[16];
-			double[] modelview = new double[16];
+            global::OpenTK.Matrix4d projection;
+            global::OpenTK.Matrix4d modelview;
             int[] _viewport = new int[4];
 
             if (model != null && proj != null && viewport != null)
             {
-                for (int i = 0; i < 16; ++i)
-                {
-                    projection[i] = (double)proj[16];
-                    modelview[i] = (double)model[16];
-                }
+                throw new Exception("BUG");
             }
             else
             {
-                proj= new float[16];
-                model = new float[16];
-                GL.GetDouble(GetPName.ProjectionMatrix, projection);
-                GL.GetDouble(GetPName.ModelviewMatrix, modelview);
-                GL.GetInteger(GetPName.Viewport, _viewport);
-                GL.GetFloat(GetPName.ProjectionMatrix, proj);
-                GL.GetFloat(GetPName.ModelviewMatrix, model);
+                GL.GetDouble(GetPName.ProjectionMatrix, out projection);
+                GL.GetDouble(GetPName.ModelviewMatrix, out modelview);
                 GL.GetInteger(GetPName.Viewport, _viewport);
             }
-            double objx, objy, objz;
-            Glu.gluUnProject((double)winxyz[0], (double)winxyz[1], (double)winxyz[2], modelview, projection, _viewport, out objx, out objy, out objz);
-            return new float[3]{(float)objx,(float)objy,(float)objz};
+            global::OpenTK.Vector3d obj=new global::OpenTK.Vector3d();
+
+            Imgui.Glu.UnProject(new global::OpenTK.Vector3d((double)winxyz[0], (double)winxyz[1], (double)winxyz[2]), modelview, projection, _viewport, ref obj);
+
+            return new float[3]{(float)obj.X,(float)obj.Y,(float)obj.Z};
             //return (float[])(new Camera().gluUnProject(winxyz[0], winxyz[1], winxyz[2], model, proj, _viewport));
         }
 
         public float[] GetRasterPosition(float[] pos3d)
 		{
-			double[] projection = new double[16];
-			double[] modelview = new double[16];
-			int[] viewport = new int[4];
+            global::OpenTK.Matrix4d projection;
+            global::OpenTK.Matrix4d modelview;
+            int[] viewport = new int[4];
 
-            GL.GetDouble(GetPName.ProjectionMatrix, projection);
-            GL.GetDouble(GetPName.ModelviewMatrix, modelview);
+            GL.GetDouble(GetPName.ProjectionMatrix, out projection);
+            GL.GetDouble(GetPName.ModelviewMatrix, out modelview);
             GL.GetInteger(GetPName.Viewport, viewport);
 
-			double x, y, z;
-			Glu.gluProject((double)pos3d[0], (double)pos3d[1], (double)pos3d[2],
-				modelview, projection, viewport, out x, out y, out z);
+            global::OpenTK.Vector3d win=new global::OpenTK.Vector3d();
+            Imgui.Glu.Project(new global::OpenTK.Vector3d((double)pos3d[0], (double)pos3d[1], (double)pos3d[2]), modelview, projection, viewport, ref win);
 
-			return new float[] { (float)x, (float)y, (float)z };
+			return new float[] { (float)win.X, (float)win.Y, (float)win.Z };
 		}
 
         public void Draw(string text, float x, float y, float sx, float sy, Cheetah.Texture t, Color4f color, float width, RectangleF scissor)

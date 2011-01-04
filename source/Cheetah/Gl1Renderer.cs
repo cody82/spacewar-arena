@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using OpenTK;
-using OpenTK.Math;
 using Cheetah;
 using OpenTK.Graphics.OpenGL;
 

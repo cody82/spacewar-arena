@@ -14,6 +14,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Audio;
+using OpenTK.Audio.OpenAL;
 
 namespace Cheetah.OpenTK
 {
@@ -24,7 +25,8 @@ namespace Cheetah.OpenTK
         public OpenTkSound(Stream s)
             : base(null)
         {
-            AudioReader sound;
+            throw new Exception("audioreader missing(BUG)");
+            /*AudioReader sound;
             try
             {
                 sound = new AudioReader(s);
@@ -35,6 +37,7 @@ namespace Cheetah.OpenTK
                 return;
             }
 
+
             AL.GenBuffers(1, out id);
 
 
@@ -43,7 +46,7 @@ namespace Cheetah.OpenTK
             if (AL.GetError() != ALError.NoError)
             {
                 throw new Exception();
-            }
+            }*/
         }
 
         public override void Dispose()
