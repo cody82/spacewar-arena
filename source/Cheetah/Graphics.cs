@@ -171,14 +171,6 @@ namespace Cheetah.Graphics
 
     }
 
-    /*public class Sphere : IDrawable
-	{
-		public void Draw(IRenderer r)
-		{
-			Glut.glutSolidSphere(50,8,8);
-		}
-	};*/
-
 	public class XFile
 	{
 		public class Template

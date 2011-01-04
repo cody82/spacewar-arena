@@ -556,6 +556,7 @@ namespace Cheetah.Graphics
 
         public void UseShader(Cheetah.Graphics.Shader s)
         {
+            CheckError();
             if (s != null)
             {
                 CurrentShader = ((Shader)s);
@@ -568,6 +569,7 @@ namespace Cheetah.Graphics
                 CurrentShader = null;
                 GL.UseProgram(0);
             }
+            CheckError();
 
         }
 
@@ -575,6 +577,7 @@ namespace Cheetah.Graphics
 
         public void SetUniform(int location, float[] values)
         {
+            CheckError();
             switch (values.Length)
             {
                 case 1:
@@ -600,6 +603,7 @@ namespace Cheetah.Graphics
 
         public void SetUniform(int location, int[] values)
         {
+            CheckError();
             switch (values.Length)
             {
                 case 1:
@@ -624,6 +628,7 @@ namespace Cheetah.Graphics
         }
         public void SetAttribute(int location, float[] values)
         {
+            CheckError();
             switch (values.Length)
             {
                 case 1:
@@ -661,6 +666,7 @@ namespace Cheetah.Graphics
                     throw new Exception();
                 return null;
             }
+            CheckError();
 
             int index;
             int[] tmp = new int[1];
@@ -691,11 +697,13 @@ namespace Cheetah.Graphics
 
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
 
-            return new RenderTarget(index,(TextureId)texture);
+            CheckError();
+            return new RenderTarget(index, (TextureId)texture);
         }
 
         public void BindRenderTarget(Cheetah.RenderTarget target)
         {
+            CheckError();
             if (target != null)
             {
                 currentwidth=((TextureId)target.Texture).w;
@@ -708,10 +716,12 @@ namespace Cheetah.Graphics
                 currentheight = height;
                 GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
             }
+            CheckError();
         }
 
         protected int GlCreateShader(string code, ShaderType type)
         {
+            CheckError();
             int id = GL.CreateShader(type);
 
             int ok;
@@ -734,11 +744,13 @@ namespace Cheetah.Graphics
                         throw new Exception("cant compile geometryshader");
                 }
             }
+            CheckError();
             return id;
         }
 
         public Cheetah.Graphics.Shader CreateShader(string vertex, string fragment, string geometry, PrimitiveType input, PrimitiveType output)
         {
+            CheckError();
             int vertexid = 0;
             if (vertex != null)
             {
@@ -763,6 +775,7 @@ namespace Cheetah.Graphics
 
             int p = GlCreateProgram(vertexid, fragmentid, geometryid, input, output);
 
+            CheckError();
             return new Shader(vertex, fragment, vertexid, fragmentid, p, geometry, geometryid);
         }
 
@@ -773,6 +786,7 @@ namespace Cheetah.Graphics
 
         protected int GlCreateProgram(int vertex, int fragment, int geometry, PrimitiveType input, PrimitiveType output)
         {
+            CheckError();
             int[] l3 = new int[1];
 
             int ok;
@@ -807,6 +821,7 @@ namespace Cheetah.Graphics
             }
 
 
+            CheckError();
             return p;
         }
 
@@ -865,8 +880,10 @@ namespace Cheetah.Graphics
         }
         protected void GlSetProgramPrimitiveType(int p, PrimitiveType input, PrimitiveType output)
         {
+            CheckError();
             GL.ProgramParameter(p, Version32.GeometryInputType, (int)GlPrimitiveInputType(input));
             GL.ProgramParameter(p, Version32.GeometryOutputType, (int)GlPrimitiveOutputType(output));
+            CheckError();
         }
 
         public void FreeShader(Cheetah.Graphics.Shader s)
@@ -1371,6 +1388,8 @@ namespace Cheetah.Graphics
                 return true;
         }
 
+        bool can_generate_mipmaps = false;
+
 		public OpenGL(int _width, int _height)
 		{
             Root.Instance.UserInterface.Renderer = this;
@@ -1379,6 +1398,7 @@ namespace Cheetah.Graphics
             System.Console.WriteLine("OpenGL Vendor: " + GL.GetString(StringName.Vendor));
             System.Console.WriteLine("OpenGL Renderer: " + GL.GetString(StringName.Renderer));
 
+            CheckError();
             LoadExtension("GL_ARB_vertex_program");
             LoadExtension("GL_ARB_point_sprite");
             LoadExtension("GL_ARB_point_parameters");
@@ -1389,15 +1409,21 @@ namespace Cheetah.Graphics
             LoadExtension("GL_ARB_fragment_shader");
             LoadExtension("GL_VERSION_2_0");
             LoadExtension("GL_ARB_vertex_buffer_object");
-            fbo_disabled |= !LoadExtension("GL_EXT_framebuffer_object");
+            CheckError();
+
+            bool b = LoadExtension("GL_ARB_framebuffer_object");
+            fbo_disabled |= !b;
+            can_generate_mipmaps = b;
+            //fbo_disabled |= !LoadExtension("GL_EXT_framebuffer_object");
             LoadExtension("GL_ARB_texture_cube_map");
             LoadExtension("GL_EXT_texture_compression_s3tc");
             LoadExtension("GL_ARB_texture_compression");
+            CheckError();
 
             if (LoadExtension("GL_EXT_geometry_shader4"))
             {
                 System.Console.WriteLine("OpenGL: Geometry Shaders supported!");
-                GeometryShadersSupported = true;
+                GeometryShadersSupported = false;
             }
             LoadExtension("GL_EXT_gpu_shader4");
             LoadExtension("GL_EXT_bindable_uniform");
@@ -1414,36 +1440,23 @@ namespace Cheetah.Graphics
 			States.Enable((int)GetPName.CullFace);
 			//States.Disable(GL._CULL_FACE);
 			GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0, 0, 0, 1 });
+            CheckError();
 
 
-			//if (!CompabilityMode)
-			{
-				string path = "shaders/glsl/";
-				Console.WriteLine("creating shaders...");
-				//StreamReader r;// = new StreamReader(path + "simple3d.vp");
-				//simple3d = CreateVertexProgram(r.ReadToEnd());
+            string path = "shaders/glsl/";
+            Console.WriteLine("creating shaders...");
 
-				//r = new StreamReader(path + "text.vp");
-				//text = CreateVertexProgram(r.ReadToEnd());
+            TextShader = (Shader)Root.Instance.ResourceManager.Load(path + "text.shader", typeof(Cheetah.Graphics.Shader));
+            CheckError();
+            pointsprite = (Shader)Root.Instance.ResourceManager.Load(path + "pointsprite.shader", typeof(Cheetah.Graphics.Shader));
+            CheckError();
 
-				//Console.WriteLine("creating fragment programs...");
-				//r = new StreamReader(path + "simple.fp");
-				//simple = CreateFragmentProgram(r.ReadToEnd());
 
-				//r = new StreamReader(path + "textured.fp");
-				//textured = CreateFragmentProgram(r.ReadToEnd());
+            //States.Enable((int)GetPName.PointSize);
+            States.Enable((int)GetPName.ProgramPointSize);
+            CheckError();
 
-				//r = new StreamReader(path + "terrain.fp");
-				//terrain = CreateFragmentProgram(r.ReadToEnd());
-
-                TextShader = (Shader)Root.Instance.ResourceManager.Load(path + "text.shader", typeof(Cheetah.Graphics.Shader));
-                pointsprite = (Shader)Root.Instance.ResourceManager.Load(path + "pointsprite.shader", typeof(Cheetah.Graphics.Shader));
-                
-                
-                States.Enable((int)GetPName.PointSize);
-            }
-
-		}
+        }
         Shader pointsprite;
 
 		public void SetCamera(Camera c)
@@ -1452,6 +1465,7 @@ namespace Cheetah.Graphics
 
             if (c == null)
                 return;
+            CheckError();
 
 			GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix((float[])c.GetProjectionMatrix());
@@ -1489,6 +1503,8 @@ namespace Cheetah.Graphics
             States.Enable((int)GetPName.ScissorTest);
             GL.Scissor(vp.X, vp.Y, vp.W, vp.H);
             GL.Viewport(vp.X, vp.Y, vp.W, vp.H);
+            CheckError();
+
 		}
 
 		public unsafe Bitmap Screenshot()
@@ -1513,12 +1529,14 @@ namespace Cheetah.Graphics
 
 		public void UpdateTexture(Cheetah.TextureId t, byte[] rgba)
 		{
-			TextureId t1 = (TextureId)t;
+            CheckError();
+            TextureId t1 = (TextureId)t;
 			GL.BindTexture(TextureTarget.Texture2D, t1.id);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.w, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
-		}
+            CheckError();
+        }
 
 		protected bool IsPowerOf2(int x)
 		{
@@ -1548,7 +1566,7 @@ namespace Cheetah.Graphics
             ErrorCode error=GL.GetError();
             if (error != ErrorCode.NoError)
             {
-                throw new Exception(Glu.gluErrorString((int)error));
+                throw new Exception("OpenGL error: "+error.ToString());
             }
         }
 
@@ -1575,8 +1593,10 @@ namespace Cheetah.Graphics
             }
 
             int[] i = new int[1];
+            CheckError();
 
             GL.GenTextures(1, i);
+            CheckError();
 
             TextureId t = new TextureId(i[0], this, w, h, false, true);
 
@@ -1597,7 +1617,8 @@ namespace Cheetah.Graphics
             GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapPositiveZ, 0, format, w, h, 0, zpos.Length, zpos);
             CheckError();
             GL.CompressedTexImage2D<byte>(TextureTarget.TextureCubeMapNegativeZ, 0, format, w, h, 0, zneg.Length, zneg);
-          
+            CheckError();
+    
             Textures[t.id] = t;
 
             return t;
@@ -1606,6 +1627,7 @@ namespace Cheetah.Graphics
         public Cheetah.TextureId CreateCubeTexture(byte[] xpos,byte[] xneg,byte[] ypos,byte[] yneg,byte[] zpos,byte[] zneg, 
             int w, int h)
         {
+            CheckError();
             int[] i = new int[1];
 
             GL.GenTextures(1, i);
@@ -1639,11 +1661,13 @@ namespace Cheetah.Graphics
             
             Textures[t.id] = t;
 
+            CheckError();
             return t;
         }
 
         public Cheetah.TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec,int w, int h)
         {
+            CheckError();
             int[] i = new int[1];
             GL.GenTextures(1, i);
             TextureId t = new TextureId(i[0], this, w, h, true, false);
@@ -1695,12 +1719,14 @@ namespace Cheetah.Graphics
 
             Textures[t.id] = t;
 
+            CheckError();
             return t;
         }
 
         public Cheetah.TextureId CreateDepthTexture(int w, int h)
         {
             int[] i = new int[1];
+            CheckError();
             GL.GenTextures(1, i);
             GL.BindTexture(TextureTarget.Texture2D, i[0]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
@@ -1709,11 +1735,13 @@ namespace Cheetah.Graphics
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             TextureId t = new TextureId(i[0], this, w, h, false, false);
             Textures[t.id] = t;
+            CheckError();
             return t;
         }
 
 		public Cheetah.TextureId CreateTexture(byte[] rgba, int w, int h, bool alpha)
 		{
+            CheckError();
             bool mipmap = IsPowerOf2(w) && IsPowerOf2(h);
 			//if (!(IsPowerOf2(w) && IsPowerOf2(h)))
 			//	throw new Exception("Texture sizes must be n^2.");
@@ -1722,34 +1750,51 @@ namespace Cheetah.Graphics
 			GL.GenTextures(1, i);
 			//if(GL.IsTexture(i[0])!=GL._TRUE)
 			//	throw new Exception("OpenGL.CreateTexture: glGenTextures failed.");
+            CheckError();
 
 			TextureId t = new TextureId(i[0], this, w, h, alpha, false);
             t.LastBind = Root.Instance.Time;
 
 			GL.BindTexture(TextureTarget.Texture2D, t.id);
+            CheckError();
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            CheckError();
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            CheckError();
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            if(mipmap)
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-            else
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            CheckError();
 
             if (mipmap)
             {
-                if (alpha)
-                    Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 4, w, h, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, data);
-                else
-                    Glu.gluBuild2DMipmaps(Gl.GL_TEXTURE_2D, 3, w, h, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, data);
+                if (!can_generate_mipmaps)
+                {
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+                    CheckError();
+                }
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+            }
+            else
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+
+            CheckError();
+
+            if (alpha)
+            {
+                GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Four, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data);
+                CheckError();
             }
             else
             {
-                if (alpha)
-                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Four, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data);
-                 else
-                    GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb,PixelType.UnsignedByte, data);
+                GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, w, h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgb, PixelType.UnsignedByte, data);
+                CheckError();
+            }
+
+            if (can_generate_mipmaps && mipmap)
+            {
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                CheckError();
             }
 			//t.width=w;
 			//t.height=h;
@@ -1760,6 +1805,7 @@ namespace Cheetah.Graphics
 
         public Cheetah.TextureId CreateTexture(int w, int h, bool alpha, bool depth)
         {
+            CheckError();
             bool mipmap = IsPowerOf2(w) && IsPowerOf2(h);
             //if (!(IsPowerOf2(w) && IsPowerOf2(h)))
             //	throw new Exception("Texture sizes must be n^2.");
@@ -1792,17 +1838,10 @@ namespace Cheetah.Graphics
                 //GL.TexImage2D(TextureTarget.Texture2D, 0, GL._COLOR, w, h, 0, GL._DEPTH_COMPONENT, GL._UNSIGNED_SHORT, IntPtr.Zero);
                 throw new Exception();
 
-            if (GL.GetError() != ErrorCode.NoError)
-                throw new Exception();
-            /*
-            if (alpha)
-                Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 4, w, h, GL._RGBA, GL._UNSIGNED_BYTE, data);
-            else
-                Glu.gluBuild2DMipmaps(TextureTarget.Texture2D, 3, w, h, GL._RGB, GL._UNSIGNED_BYTE, data);
-            */
             //t.width=w;
             //t.height=h;
             Textures[t.id] = t;
+            CheckError();
 
             return t;
         }
@@ -1810,6 +1849,7 @@ namespace Cheetah.Graphics
 		public void BindTexture(Cheetah.TextureId t, int unit)
 		{
 			unit += (int)TextureUnit.Texture0;
+            CheckError();
 
 
 			if (t != null)
@@ -1833,6 +1873,7 @@ namespace Cheetah.Graphics
             }
             States.ActiveTexture((int)TextureUnit.Texture0);
 
+            CheckError();
 
 		}
 
@@ -1856,6 +1897,7 @@ namespace Cheetah.Graphics
 			int[] i = new int[] { ((TextureId)t).id };
 			GL.DeleteTextures(1, i);
 			Textures.Remove(i[0]);
+            CheckError();
 		}
 
 		public void Clear(float r, float g, float b, float a)
@@ -1864,7 +1906,8 @@ namespace Cheetah.Graphics
             //GL.Scissor(0, 0, width, height);
             GL.ClearColor(r, g, b, a);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-		}
+            CheckError();
+        }
 
 		public void SetMaterial(Material m)
 		{
@@ -1945,6 +1988,7 @@ namespace Cheetah.Graphics
 
 
 
+                CheckError();
 
 
 
@@ -1998,7 +2042,8 @@ namespace Cheetah.Graphics
                 States.Disable((int)GetPName.TextureGenT);
                 GL.DepthMask(true);
             }
-		}
+            CheckError();
+        }
 
 		public void SetLighting(bool b)
 		{
@@ -2006,11 +2051,13 @@ namespace Cheetah.Graphics
                 States.Enable((int)GetPName.Lighting);
 			else
                 States.Disable((int)GetPName.Lighting);
-		}
+            CheckError();
+        }
 
 		public Cheetah.Graphics.VertexBuffer CreateStaticVertexBuffer(object data, int length)
 		{
-			//if (SlowVertexBuffers || CompabilityMode)
+            CheckError();
+            //if (SlowVertexBuffers || CompabilityMode)
 			//	return CreateSlowVertexBuffer(data, length);
 			VertexBuffer vb = new VertexBuffer();
             int[] id = new int[1];
@@ -2034,7 +2081,8 @@ namespace Cheetah.Graphics
 			vb.Size = length;
 			Buffers[vb.id] = vb;
 			BufferMemory += length;
-			return vb;
+            CheckError();
+            return vb;
 		}
 
 		public Cheetah.Graphics.VertexBuffer CreateSlowVertexBuffer(object data, int length)
@@ -2057,6 +2105,7 @@ namespace Cheetah.Graphics
 		{
 			//if (SlowVertexBuffers || CompabilityMode)
 			//	return CreateSlowDynamicVertexBuffer(length);
+            CheckError();
 
 			DynamicVertexBuffer vb = new DynamicVertexBuffer(this);
 			vb.Size = length;
@@ -2068,7 +2117,8 @@ namespace Cheetah.Graphics
 			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			Buffers[vb.id] = vb;
 			BufferMemory += length;
-			return vb;
+            CheckError();
+            return vb;
 		}
 
         public void FreeVertexBuffer(Cheetah.Graphics.VertexBuffer b)
@@ -2078,6 +2128,7 @@ namespace Cheetah.Graphics
 
 		public void SetLight(int index, Light l)
         {
+            CheckError();
             float[] f = new float[4];
 
             LightName ln = (LightName)(LightName.Light0 + index);
@@ -2111,7 +2162,8 @@ namespace Cheetah.Graphics
                 GL.Light(ln, LightParameter.Specular, f);
                 States.Disable((int)ln);
 			}
-		}
+            CheckError();
+        }
 
         public void SetPointSize(float s)
         {
@@ -2121,7 +2173,8 @@ namespace Cheetah.Graphics
 
 		public void SetMode(RenderMode m)
 		{
-			switch (m)
+            CheckError();
+            switch (m)
 			{
 				case RenderMode.Draw2D:
 					States.Disable((int)GetPName.PointSprite);
@@ -2191,7 +2244,8 @@ namespace Cheetah.Graphics
 				default:
 					throw new Exception("dont know rendermode " + m.ToString());
 			}
-		}
+            CheckError();
+        }
 
 		public void Flip()
 		{
@@ -2238,13 +2292,8 @@ namespace Cheetah.Graphics
         unsafe protected void DrawSlow(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
 		{
 			VertexFormat format = vertices.Format;
-			//DrawContext c=(DrawContext)context;
-			//Type t=vertices.data.GetType();
-			//if(!t.IsArray)
-			//	throw new Exception("wrong datatype.");
-            //lastformat = null;
-            //lastbuffer = null;
-            //lastshader = null;
+            CheckError();
+
 
 			Array a;
 			if (vertices is SlowVertexBuffer)
@@ -2342,7 +2391,8 @@ namespace Cheetah.Graphics
             States.DisableClientState((int)GetPName.VertexArray);
             States.DisableClientState((int)GetPName.TextureCoordArray);
             States.DisableClientState((int)GetPName.NormalArray);
-		}
+            CheckError();
+        }
 
         public void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib)
         {
@@ -2359,6 +2409,7 @@ namespace Cheetah.Graphics
 				DrawSlow(vertices, type, offset, count, ib);
 				return;
 			}
+            CheckError();
 
 			VertexFormat format;
 			if (vertices is VertexBuffer)
@@ -2528,21 +2579,8 @@ namespace Cheetah.Graphics
                 else
                     States.DisableClientState((int)GetPName.NormalArray);
 
-                /*
-                States.ClientActiveTexture(GL._TEXTURE1);
-                if (GL_TEXTURE_COORD_ARRAY)
-                    States.EnableClientState(GL._TEXTURE_COORD_ARRAY);
-                else
-                    States.DisableClientState(GL._TEXTURE_COORD_ARRAY);
-                States.ClientActiveTexture(GL._TEXTURE0);
-                if (GL_TEXTURE_COORD_ARRAY)
-                    States.EnableClientState(GL._TEXTURE_COORD_ARRAY);
-                else
-                    States.DisableClientState(GL._TEXTURE_COORD_ARRAY);
-                */
-                //lastformat = format;
-                //lastbuffer = vertices;
-                //lastshader = CurrentShader;
+                CheckError();
+
             }
 
             BeginMode gltype;
@@ -2585,12 +2623,8 @@ namespace Cheetah.Graphics
                 }
             }
 
-           
-			
-            //for(int i=0;i<16;++i)
-             //   GL.DisableVertexAttribArray(i);
-            
-			//GL.BindBufferARB(BufferTarget.ArrayBuffer, 0);
+            CheckError();
+
 		}
 
 		//		protected Video video;
