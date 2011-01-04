@@ -1,5 +1,5 @@
 ﻿using Cheetah;
-using Ode.NET;
+//using Ode.NET;
 using System;
 using Cheetah.Graphics;
 
@@ -103,22 +103,10 @@ namespace Cheetah.Physics
         {
             get
             {
-                /*Vector3 axis,x,y,z;
-                float angle;
-                Ode.dQuaternion v=PhysicsBody.Quaternion;
-                Quaternion q=new Quaternion(v.X,v.Y,v.Z,v.W);
-                Matrix3 m=Matrix3.FromQuaternion(q);
-                m.ExtractBasis(out x,out y,out z);
-                q.GetAxisAngle(out axis,out angle);
-                //m.
-                return q.GetInverse();*/
                 return Physics.Orientation.GetInverse();
             }
             set
             {
-                //Ode.dQuaternion v=new Ode.dQuaternion(value.X,value.Y,value.Z,value.W);
-                //Quaternion q=new Quaternion(v.X,v.Y,v.Z,v.W);
-                //q=q.GetInverse();
                 Physics.Orientation=value.GetInverse();
                 orientation.Original = value;
             }
@@ -128,21 +116,9 @@ namespace Cheetah.Physics
         //public Mesh PhysicsMesh;
     }
 
+    /*
     public class OdeObject : IPhysicsObject
     {
-        /*public OdeObject(IntPtr world,IntPtr space)
-        {
-            float density = 1.0f;
-            float radius = 1.0f;
-            d.Mass mass;
-
-            d.MassSetSphere(out mass, density, radius);
-            body = d.BodyCreate(world);
-            geom = d.CreateSphere(space, radius);
-            d.GeomSetBody(geom, body);
-            d.BodySetMass(body, ref mass);
-        }*/
-
         public OdeObject(IntPtr b, IntPtr g)
         {
             body = b;
@@ -329,7 +305,7 @@ namespace Cheetah.Physics
         d.Contact contact;
         IntPtr contactgroup;
     }
-
+    */
 
     public interface IPhysicsWorld : ITickable
     {
@@ -344,7 +320,8 @@ namespace Cheetah.Physics
     {
         public static IPhysicsWorld Create()
         {
-            return new OdeWorld();
+            return null;
+            //return new OdeWorld();
         }
 
         public delegate void OneCollisionDelegate(IPhysicsObject o1, IPhysicsObject o2);

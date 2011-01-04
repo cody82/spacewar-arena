@@ -130,10 +130,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
-    <Reference Include="Ode.NET, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Ode.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -230,10 +226,6 @@
     </Content>
     <Content Include="..\libs\native\libtheora.dll">
       <Link>libtheora.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\libs\native\ode.dll">
-      <Link>ode.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
