@@ -300,7 +300,13 @@ namespace SpaceWar2006
 #if !DEBUG
             if (!mailing_done)
             {
-                Cheetah.Bugs.BugReport.Instance.Send(e.Exception);
+				try
+				{
+                	Cheetah.Bugs.BugReport.Instance.Send(e.Exception);
+				}
+				catch(Exception e)
+				{
+				}
                 mailing_done = true;
             }
 #endif
@@ -312,7 +318,13 @@ namespace SpaceWar2006
 #if !DEBUG
             if (!mailing_done)
             {
-                Cheetah.Bugs.BugReport.Instance.Send((Exception)e.ExceptionObject);
+				try
+				{
+                	Cheetah.Bugs.BugReport.Instance.Send((Exception)e.ExceptionObject);
+				}
+				catch(Exception e)
+				{
+				}
                 mailing_done = true;
             }
 #endif

@@ -2691,6 +2691,7 @@ using Cheetah;");
             }
             else
             {
+				//t = new Texture(Root.Instance.UserInterface.Renderer.CreateTexture(new byte[128*128*3], 128, 128, false));
                 if (f.Header.IsCubeMap)
                 {
                     t = new Texture(Root.Instance.UserInterface.Renderer.CreateCompressedCubeTexture(f.CubeMaps[0], f.CubeMaps[1], f.CubeMaps[2], f.CubeMaps[3], f.CubeMaps[4], f.CubeMaps[5], ConvertFormat(f.Format), f.Header.Width, f.Header.Height));

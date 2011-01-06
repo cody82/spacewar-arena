@@ -1380,7 +1380,8 @@ namespace Cheetah.Graphics
         }
 
         bool can_generate_mipmaps = false;
-
+		bool supports_compressed_textures = false;
+		
 		public OpenGL(int _width, int _height)
 		{
             Root.Instance.UserInterface.Renderer = this;
@@ -1407,7 +1408,7 @@ namespace Cheetah.Graphics
             can_generate_mipmaps = b;
             //fbo_disabled |= !LoadExtension("GL_EXT_framebuffer_object");
             LoadExtension("GL_ARB_texture_cube_map");
-            LoadExtension("GL_EXT_texture_compression_s3tc");
+            supports_compressed_textures = LoadExtension("GL_EXT_texture_compression_s3tc");
             LoadExtension("GL_ARB_texture_compression");
             CheckError();
 
@@ -1563,6 +1564,9 @@ namespace Cheetah.Graphics
 
         public Cheetah.TextureId CreateCompressedCubeTexture(byte[] xpos, byte[] xneg, byte[] ypos, byte[] yneg, byte[] zpos, byte[] zneg, TextureFormat codec, int w, int h)
         {
+			if(!supports_compressed_textures)
+				throw new Exception("compressed textures not supported.");
+			
             PixelInternalFormat format;
             switch (codec)
             {
@@ -1658,7 +1662,10 @@ namespace Cheetah.Graphics
 
         public Cheetah.TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec,int w, int h)
         {
-            CheckError();
+			if(!supports_compressed_textures)
+				throw new Exception("compressed textures not supported.");
+
+			CheckError();
             int[] i = new int[1];
             GL.GenTextures(1, i);
             TextureId t = new TextureId(i[0], this, w, h, true, false);
