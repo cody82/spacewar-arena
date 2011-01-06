@@ -304,7 +304,7 @@ namespace SpaceWar2006
 				{
                 	Cheetah.Bugs.BugReport.Instance.Send(e.Exception);
 				}
-				catch(Exception e)
+				catch(Exception e2)
 				{
 				}
                 mailing_done = true;
@@ -322,7 +322,7 @@ namespace SpaceWar2006
 				{
                 	Cheetah.Bugs.BugReport.Instance.Send((Exception)e.ExceptionObject);
 				}
-				catch(Exception e)
+				catch(Exception e2)
 				{
 				}
                 mailing_done = true;
