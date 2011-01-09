@@ -341,12 +341,12 @@ namespace Cheetah.Xna
             throw new System.Exception("The method or operation is not implemented.");
         }
 
-        public void LoadMatrix(Matrix3 m)
+        public void LoadMatrix(Matrix4 m)
         {
             throw new System.Exception("The method or operation is not implemented.");
         }
 
-        public void MultMatrix(Matrix3 m)
+        public void MultMatrix(Matrix4 m)
         {
             throw new System.Exception("The method or operation is not implemented.");
         }

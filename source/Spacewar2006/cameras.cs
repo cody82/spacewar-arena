@@ -15,6 +15,7 @@ using Cheetah;
 using Cheetah.Graphics;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Cameras
 {

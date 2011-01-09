@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Collections.Generic;
 
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace Cheetah.Doom3
 {
@@ -384,8 +385,8 @@ namespace Cheetah.Doom3
 			v.Position.X = p.ReadFloat();
 			v.Position.Y = p.ReadFloat();
 			v.Position.Z = p.ReadFloat();
-			v.TexCoord.x = p.ReadFloat();
-			v.TexCoord.y = p.ReadFloat();
+			v.TexCoord.X = p.ReadFloat();
+			v.TexCoord.Y = p.ReadFloat();
 			v.Normal.X = p.ReadFloat();
 			v.Normal.Y = p.ReadFloat();
 			v.Normal.Z = p.ReadFloat();

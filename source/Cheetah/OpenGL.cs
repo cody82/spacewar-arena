@@ -12,6 +12,7 @@ using System.Text;
 using Cheetah.Graphics;
 
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace Cheetah.Graphics
 {
@@ -355,7 +356,7 @@ namespace Cheetah.Graphics
 	        Output.AppendLine("R = reflect(U,N);");
 	        Output.AppendLine("R.z += 1.0;");
 	        Output.AppendLine("R = normalize(R);");
-	        Output.AppendLine("return R.xy*0.5+0.5;");
+	        Output.AppendLine("return R.Xy*0.5+0.5;");
             Output.AppendLine("}");
         }
 
@@ -393,7 +394,7 @@ namespace Cheetah.Graphics
 
             if (Config.EmissiveMap)
             {
-                Output.AppendLine("vec4 color=texture2D(EmissiveMap, gl_TexCoord[0].xy);");
+                Output.AppendLine("vec4 color=texture2D(EmissiveMap, gl_TexCoord[0].Xy);");
             }
             else
             {
@@ -404,22 +405,22 @@ namespace Cheetah.Graphics
 
             if (Config.ReflectionMap)
             {
-                Output.AppendLine("Reflection=texture2D(ReflectionMap, gl_TexCoord[0].xy);");
+                Output.AppendLine("Reflection=texture2D(ReflectionMap, gl_TexCoord[0].Xy);");
             }
 
             if (Config.DiffuseMap)
             {
-                Output.AppendLine("Diffuse=texture2D(DiffuseMap, gl_TexCoord[0].xy);");
+                Output.AppendLine("Diffuse=texture2D(DiffuseMap, gl_TexCoord[0].Xy);");
             }
             if (Config.BumpMap)
             {
-                Output.AppendLine("Normal = (texture2D(BumpMap, gl_TexCoord[0].xy).xyz -0.5)*2.0;");
+                Output.AppendLine("Normal = (texture2D(BumpMap, gl_TexCoord[0].Xy).Xyz -0.5)*2.0;");
             }
 
 
             if (Config.SpecularMap)
             {
-                Output.AppendLine("Specular = texture2D(SpecularMap, gl_TexCoord[0].xy);");
+                Output.AppendLine("Specular = texture2D(SpecularMap, gl_TexCoord[0].Xy);");
                 Output.AppendLine("Eye = normalize(-VertexPosTangentSpace);");
             }
 
@@ -465,7 +466,7 @@ namespace Cheetah.Graphics
 
             if (Config.SpecularMap||Config.SphereMap)
             {
-                Output.AppendLine("VertexPos=vertexPos.xyz;");
+                Output.AppendLine("VertexPos=vertexPos.Xyz;");
                 if (Config.TangentSpace)
                 {
                     Output.AppendLine("VertexPosTangentSpace=VertexPos*tbn;");
@@ -484,11 +485,11 @@ namespace Cheetah.Graphics
                 Output.AppendLine("{");
                 if (Config.TangentSpace)
                 {
-                    Output.AppendLine("ToLight[i] = (gl_LightSource[i].position - vertexPos).xyz * tbn;");
+                    Output.AppendLine("ToLight[i] = (gl_LightSource[i].position - vertexPos).Xyz * tbn;");
                 }
                 else
                 {
-                    Output.AppendLine("ToLight[i] = (gl_LightSource[i].position - vertexPos).xyz;");
+                    Output.AppendLine("ToLight[i] = (gl_LightSource[i].position - vertexPos).Xyz;");
                 }
                 Output.AppendLine("}");
             }
@@ -705,7 +706,7 @@ namespace Cheetah.Graphics
             CheckError();
             if (target != null)
             {
-                currentwidth=((TextureId)target.Texture).w;
+                currentwidth=((TextureId)target.Texture).W;
                 currentheight = ((TextureId)target.Texture).h;
                 GL.BindFramebuffer(FramebufferTarget.FramebufferExt, ((RenderTarget)target).id);
             }
@@ -1222,12 +1223,12 @@ namespace Cheetah.Graphics
 			get { return new Point(width, height); }
 		}
 
-		public void LoadMatrix(Matrix3 m)
+		public void LoadMatrix(Matrix4 m)
 		{
 			GL.LoadMatrix((float[])m);
 		}
 
-		public void MultMatrix(Matrix3 m)
+		public void MultMatrix(Matrix4 m)
 		{
 			GL.MultMatrix((float[])m);
 		}
@@ -1463,7 +1464,7 @@ namespace Cheetah.Graphics
             GL.LoadMatrix((float[])c.GetProjectionMatrix());
             GL.MatrixMode(MatrixMode.Modelview);
 
-			Matrix3 m = c.Matrix;//Matrix3.FromQuaternion(c.Orientation);
+			Matrix4 m = c.Matrix;//Matrix4.FromQuaternion(c.Orientation);
 
 			Vector3 t = new Vector3();
 			Vector3 x, y;
@@ -1526,7 +1527,7 @@ namespace Cheetah.Graphics
 			GL.BindTexture(TextureTarget.Texture2D, t1.id);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.w, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
+            GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.W, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
             CheckError();
         }
 
@@ -1794,7 +1795,7 @@ namespace Cheetah.Graphics
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                 CheckError();
             }
-			//t.width=w;
+			//t.Width=w;
 			//t.height=h;
 			Textures[t.id] = t;
 
@@ -1836,7 +1837,7 @@ namespace Cheetah.Graphics
                 //GL.TexImage2D(TextureTarget.Texture2D, 0, GL._COLOR, w, h, 0, GL._DEPTH_COMPONENT, GL._UNSIGNED_SHORT, IntPtr.Zero);
                 throw new Exception();
 
-            //t.width=w;
+            //t.Width=w;
             //t.height=h;
             Textures[t.id] = t;
             CheckError();

@@ -13,6 +13,7 @@ using System.Text;
 using System.Globalization;
 //using OpenDe;
 using System.Collections.Generic;
+using OpenTK;
 
 namespace Cheetah.Graphics
 {
@@ -35,8 +36,8 @@ namespace Cheetah.Graphics
                 f[i * vertexfloatsize + 0] = v[i].Position.X;
                 f[i * vertexfloatsize + 1] = v[i].Position.Y;
                 f[i * vertexfloatsize + 2] = v[i].Position.Z;
-                f[i * vertexfloatsize + 3] = v[i].Texture0.x;
-                f[i * vertexfloatsize + 4] = v[i].Texture0.y;
+                f[i * vertexfloatsize + 3] = v[i].Texture0.X;
+                f[i * vertexfloatsize + 4] = v[i].Texture0.Y;
                 f[i * vertexfloatsize + 5] = v[i].Normal.X;
                 f[i * vertexfloatsize + 6] = v[i].Normal.Y;
                 f[i * vertexfloatsize + 7] = v[i].Normal.Z;
@@ -101,10 +102,10 @@ namespace Cheetah.Graphics
                 float z1 = v2.Z - v1.Z;
                 float z2 = v3.Z - v1.Z;
         
-                float s1 = w2.x - w1.x;
-                float s2 = w3.x - w1.x;
-                float t1 = w2.y - w1.y;
-                float t2 = w3.y - w1.y;
+                float s1 = w2.X - w1.X;
+                float s2 = w3.X - w1.X;
+                float t1 = w2.Y - w1.Y;
+                float t2 = w3.Y - w1.Y;
         
                 float r = 1.0F / (s1 * t2 - s2 * t1);
                 Vector3 sdir = new Vector3((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
@@ -132,7 +133,7 @@ namespace Cheetah.Graphics
 
                 vertices[a].BiNormal = Vector3.Cross(vertices[a].Normal, vertices[a].Tangent);
                 // Calculate handedness
-                // tangent[a].w = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
+                // tangent[a].W = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
             }
 
         }
@@ -678,8 +679,8 @@ namespace Cheetah.Graphics
 					  Position.X=p0;
 					  Position.Y=p1;
 					  Position.Z=p2;
-					  Texture0.x=t0;
-					  Texture0.y=t1;
+					  Texture0.X=t0;
+					  Texture0.Y=t1;
 					  Normal.X=n0;
 					  Normal.Y=n1;
 					  Normal.Z=n2;
@@ -696,8 +697,8 @@ namespace Cheetah.Graphics
 				Position.X==v.Position.X&&
 				Position.Y==v.Position.Y&&
 				Position.Z==v.Position.Z&&
-				Texture0.x==v.Texture0.x&&
-				Texture0.y==v.Texture0.y&&
+				Texture0.X==v.Texture0.X&&
+				Texture0.Y==v.Texture0.Y&&
 				Normal.X==v.Normal.X&&
 				Normal.Y==v.Normal.Y&&
 				Normal.Z==v.Normal.Z
@@ -707,7 +708,7 @@ namespace Cheetah.Graphics
 		}
 
 		public Vector3 Position;
-				  public Vector2f Texture0;
+				  public Vector2 Texture0;
 				  public Vector3 Normal;
 			  }
 
@@ -862,8 +863,8 @@ namespace Cheetah.Graphics
 				foreach(ObjVertex v in Vertices)
 				{
 					Normals[j++]=v.Position;
-					Normals[j].X=v.Position.x+v.Normal.x;
-					Normals[j].y=v.Position.y+v.Normal.y;
+					Normals[j].X=v.Position.X+v.Normal.X;
+					Normals[j].Y=v.Position.Y+v.Normal.Y;
 					Normals[j++].z=v.Position.z+v.Normal.z;
 				}*/
 			}
@@ -961,7 +962,7 @@ namespace Cheetah.Graphics
                 else if (line.StartsWith("wire:"))
                 {
                     string val = line.Split(new char[] { ':' })[1].Trim();
-                    m.wire = bool.Parse(val);
+                    m.Wire = bool.Parse(val);
                     continue;
                 }
                 else if (line.StartsWith("depthtest:"))
@@ -1364,8 +1365,8 @@ namespace Cheetah.Graphics
 
                 //if (has_texcoord)
                 {
-                    vertices[i].Texture0.x = GetFloatProperty(split, "s");
-                    vertices[i].Texture0.y = GetFloatProperty(split, "t");
+                    vertices[i].Texture0.X = GetFloatProperty(split, "s");
+                    vertices[i].Texture0.Y = GetFloatProperty(split, "t");
                     //vertices[i * vertexfloatsize + (has_normals ? 6 : 3)] = GetFloatProperty(split, "s");
                     //vertices[i * vertexfloatsize + (has_normals ? 7 : 4)] = GetFloatProperty(split, "t");
                 }
@@ -1636,8 +1637,8 @@ namespace Cheetah.Graphics
                 Normal.X = nx;
                 Normal.Y = ny;
                 Normal.Z = nz;
-                Texture0.x = tu;
-                Texture0.y = tv;
+                Texture0.X = tu;
+                Texture0.Y = tv;
             }
             public Vector3 Position;
             public Vector2 Texture0;
@@ -2863,7 +2864,7 @@ namespace Cheetah.Graphics
                 sm.Material = Material.CreateSimpleMaterial(null);
                 sm.Material.NoLighting = true;
                 sm.Material.Shader = Root.Instance.ResourceManager.LoadShader("emissivemap.shader");
-                //sm.Material.wire = true;
+                //sm.Material.Wire = true;
 
                 sm.Indices = new IndexBuffer();
                 sm.Indices.buffer = p.Triangles.ToArray();
@@ -2880,7 +2881,7 @@ namespace Cheetah.Graphics
                 for (int j = 0; j < v.Length; ++j)
                 {
                     v[j].position = new Vector3(p.Points[j * 3 + 0], p.Points[j * 3 + 1], p.Points[j * 3 + 2]);
-                    Vector2f uv = new Vector2f(p.TextureUV[j * 2 + 0], 1-p.TextureUV[j * 2 + 1]);
+                    Vector2 uv = new Vector2(p.TextureUV[j * 2 + 0], 1-p.TextureUV[j * 2 + 1]);
 
                     v[j].texture0 = uv;
                 }
@@ -2904,7 +2905,7 @@ namespace Cheetah.Graphics
                 {
                     SubMesh sm=(SubMesh)Root.Instance.ResourceManager.Load(n2, typeof(SubMesh));
                     m.SubMeshes.Add(sm);
-                    //sm.Material.wire = true;
+                    //sm.Material.Wire = true;
                 }
             }*/
 
@@ -3093,7 +3094,7 @@ namespace Cheetah.Graphics
 							vn.Add(new Vector3(float.Parse(tokens[1]),float.Parse(tokens[2]),float.Parse(tokens[3])));
 						break;
 					case "vt":
-						vt.Add(new Vector2f(float.Parse(tokens[1]),float.Parse(tokens[2])));
+						vt.Add(new Vector2(float.Parse(tokens[1]),float.Parse(tokens[2])));
 						break;
 					case "scale":
 						Scale=float.Parse(tokens[1]);
@@ -3135,44 +3136,44 @@ namespace Cheetah.Graphics
 							g_usemtl[key]=list=new ArrayList();
 						
 						Vector3 p;
-						Vector2f t;
+						Vector2 t;
 						Vector3 nv;
 
 						p=(Vector3)v[int.Parse(f1[0])-1];
 						if(has_texture)
-							t=(Vector2f)vt[int.Parse(f1[1])-1];
+							t=(Vector2)vt[int.Parse(f1[1])-1];
 						else
-							t=new Vector2f(0,0);
+							t=new Vector2(0,0);
 						if(has_normal)
 							nv=(Vector3)vn[int.Parse(f1[2])-1];
 						else
 							nv=new Vector3(0,0,0);
-						//list.Add(new ObjVertex(p.x,p.y,p.z,t.x,-t.y,nv.x,nv.y,nv.z));
-						face.Vertex1=new ObjVertex(p.X,p.Y,p.Z,t.x,-t.y,nv.X,nv.Y,nv.Z);
+						//list.Add(new ObjVertex(p.X,p.Y,p.z,t.X,-t.Y,nv.X,nv.Y,nv.z));
+						face.Vertex1=new ObjVertex(p.X,p.Y,p.Z,t.X,-t.Y,nv.X,nv.Y,nv.Z);
 
 						p=(Vector3)v[int.Parse(f2[0])-1];
 						if(has_texture)
-							t=(Vector2f)vt[int.Parse(f2[1])-1];
+							t=(Vector2)vt[int.Parse(f2[1])-1];
 						else
-							t=new Vector2f(0,0);
+							t=new Vector2(0,0);
 						if(has_normal)
 							nv=(Vector3)vn[int.Parse(f2[2])-1];
 						else
 							nv=new Vector3(0,0,0);
-						//list.Add(new ObjVertex(p.x,p.y,p.z,t.x,-t.y,nv.x,nv.y,nv.z));
-						face.Vertex2=new ObjVertex(p.X,p.Y,p.Z,t.x,-t.y,nv.X,nv.Y,nv.Z);
+						//list.Add(new ObjVertex(p.X,p.Y,p.z,t.X,-t.Y,nv.X,nv.Y,nv.z));
+						face.Vertex2=new ObjVertex(p.X,p.Y,p.Z,t.X,-t.Y,nv.X,nv.Y,nv.Z);
 
 						p=(Vector3)v[int.Parse(f3[0])-1];
 						if(has_texture)
-							t=(Vector2f)vt[int.Parse(f3[1])-1];
+							t=(Vector2)vt[int.Parse(f3[1])-1];
 						else
-							t=new Vector2f(0,0);
+							t=new Vector2(0,0);
 						if(has_normal)
 							nv=(Vector3)vn[int.Parse(f3[2])-1];
 						else
 							nv=new Vector3(0,0,0);
-						//list.Add(new ObjVertex(p.x,p.y,p.z,t.x,-t.y,nv.x,nv.y,nv.z));
-						face.Vertex3=new ObjVertex(p.X,p.Y,p.Z,t.x,-t.y,nv.X,nv.Y,nv.Z);
+						//list.Add(new ObjVertex(p.X,p.Y,p.z,t.X,-t.Y,nv.X,nv.Y,nv.z));
+						face.Vertex3=new ObjVertex(p.X,p.Y,p.Z,t.X,-t.Y,nv.X,nv.Y,nv.Z);
 						face.SmoothingGroup=sg;
 						list.Add(face);
 						break;
@@ -3260,7 +3261,7 @@ namespace Cheetah.Graphics
 				{
 					ObjVertex vtx=(ObjVertex)mesher.Vertices[i];
 					w.Write(vtx.Position.X*Scale);w.Write(vtx.Position.Y*Scale);w.Write(vtx.Position.Z*Scale);
-					w.Write(vtx.Texture0.x);w.Write(vtx.Texture0.y);
+					w.Write(vtx.Texture0.X);w.Write(vtx.Texture0.Y);
 					w.Write(vtx.Normal.X);w.Write(vtx.Normal.Y);w.Write(vtx.Normal.Z);
 
                     mesh.BBox.Add(vtx.Position*Scale);
@@ -3353,9 +3354,9 @@ namespace Cheetah.Graphics
 				{
 					Vertex v=mesh.GetVertexAt(vi[j]);
 					MsVec3 n=mesh.GetVertexNormalAt(ni[j]);
-					w.Write(v.GetVertex().x);w.Write(v.GetVertex().y);w.Write(v.GetVertex().z);
-					w.Write(v.GetTexCoords().x);w.Write(v.GetTexCoords().y);
-					w.Write(n.x);w.Write(n.y);w.Write(n.z);
+					w.Write(v.GetVertex().X);w.Write(v.GetVertex().Y);w.Write(v.GetVertex().z);
+					w.Write(v.GetTexCoords().X);w.Write(v.GetTexCoords().Y);
+					w.Write(n.X);w.Write(n.Y);w.Write(n.z);
 				}
 			}
 		}
@@ -3427,7 +3428,7 @@ namespace Cheetah.Graphics
                     Math.Max(Math.Abs(Min.Y), Math.Abs(Max.Y)),
                     Math.Max(Math.Abs(Min.Z), Math.Abs(Max.Z))
                     );
-                return (maxsize).GetMagnitude();
+                return (maxsize).Length;
             }
         }
 
@@ -3509,24 +3510,24 @@ namespace Cheetah.Graphics
                 v[i].Tangent = new Vector3(scm.VertexData[i].mTangent.X, scm.VertexData[i].mTangent.Y, scm.VertexData[i].mTangent.Z);
 
                 normals[i * 6].position = v[i].Position;
-                normals[i * 6].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6].color = new Color4f(1.0f, 0.0f, 0.0f, 1.0f);
                 normals[i * 6 + 1].position = v[i].Position + v[i].Tangent;
-                normals[i * 6 + 1].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6 + 1].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6 + 1].color = new Color4f(1.0f, 0.0f, 0.0f, 1.0f);
 
                 normals[i * 6 + 2].position = v[i].Position;
-                normals[i * 6 + 2].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6 + 2].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6 + 2].color = new Color4f(0.0f, 1.0f, 0.0f, 1.0f);
                 normals[i * 6 + 3].position = v[i].Position + v[i].Binormal;
-                normals[i * 6 + 3].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6 + 3].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6 + 3].color = new Color4f(0.0f, 1.0f, 0.0f, 1.0f);
 
                 normals[i * 6 + 4].position = v[i].Position;
-                normals[i * 6 + 4].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6 + 4].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6 + 4].color = new Color4f(0.0f, 0.0f, 1.0f, 1.0f);
                 normals[i * 6 + 5].position = v[i].Position + v[i].Normal;
-                normals[i * 6 + 5].texture0.x = scm.VertexData[i].mBoneIndex0;
+                normals[i * 6 + 5].texture0.X = scm.VertexData[i].mBoneIndex0;
                 normals[i * 6 + 5].color = new Color4f(0.0f, 0.0f, 1.0f, 1.0f);
 
                 bbox.Add(v[i].Position);
@@ -3555,7 +3556,7 @@ namespace Cheetah.Graphics
                 bones[i].Name=scm.BoneNames[i];
                 bones[i].Orientation=new Quaternion(scm.BoneData[i].mRotation.X,scm.BoneData[i].mRotation.Y,scm.BoneData[i].mRotation.Z,-scm.BoneData[i].mRotation.W);
                 bones[i].Position = new Vector3(scm.BoneData[i].mPosition.X, scm.BoneData[i].mPosition.Y, scm.BoneData[i].mPosition.Z);
-                bones[i].RestPoseInverse = new Matrix3();
+                bones[i].RestPoseInverse = new Matrix4();
                 for (int x = 0; x < 4; ++x)
                 {
                     for (int y = 0; y < 4; ++y)
@@ -3646,7 +3647,7 @@ namespace Cheetah.Graphics
             mat.DepthTest = true;
             mat.DepthWrite = true;
             mat.twosided = false;
-            mat.wire = false;
+            mat.Wire = false;
             mat.Shader = Root.Instance.ResourceManager.LoadShader("bones.light.shader");
             mat.NoLighting = false;
             mat.diffusemap = albedotex;
@@ -3799,16 +3800,16 @@ namespace Cheetah.Graphics
         public Bone Parent;
         public List<Bone> Children=new List<Bone>();
         public int Index;
-        public Matrix3 RestPoseInverse;
+        public Matrix4 RestPoseInverse;
 
-        public Matrix3 GetMatrix()
+        public Matrix4 GetMatrix()
         {
-            Matrix3 m = Matrix3.FromQuaternion(Orientation);
+            Matrix4 m = Matrix4.FromQuaternion(Orientation);
             m[12] = Position.X;
             m[13] = Position.Y;
             m[14] = Position.Z;
 
-            //Matrix3 m = Matrix3.FromQuaternion(Orientation) * Matrix3.FromTranslation(Position);
+            //Matrix4 m = Matrix4.FromQuaternion(Orientation) * Matrix4.FromTranslation(Position);
             return m;
         }
     }
@@ -3825,14 +3826,14 @@ namespace Cheetah.Graphics
         {
             public Vector3 Position;
             public Quaternion Orientation;
-            public Matrix3 GetMatrix()
+            public Matrix4 GetMatrix()
             {
-                Matrix3 m = Matrix3.FromQuaternion(Orientation);
+                Matrix4 m = Matrix4.FromQuaternion(Orientation);
                 m[12] = Position.X;
                 m[13] = Position.Y;
                 m[14] = Position.Z;
 
-                //Matrix3 m = Matrix3.FromQuaternion(Orientation) * Matrix3.FromTranslation(Position);
+                //Matrix4 m = Matrix4.FromQuaternion(Orientation) * Matrix4.FromTranslation(Position);
                 return m;
             }
         }
@@ -3985,7 +3986,7 @@ namespace Cheetah.Graphics
 
         public void Draw(IRenderer r, SkeletalAnimation a)
         {
-            Matrix3 m = new Matrix3();
+            Matrix4 m = new Matrix4();
             m.SetToIdentity();
             SetBones(r, Bones[0], m, a, Shader);
             r.Draw(Vertices, PrimitiveType.TRIANGLES, 0, Indices.buffer.Length, Indices);
@@ -4006,15 +4007,15 @@ namespace Cheetah.Graphics
             Draw(r, (SkeletalAnimation)null);
         }
 
-        public void SetBones(IRenderer r, Bone b, Matrix3 m,SkeletalAnimation a, Shader s)
+        public void SetBones(IRenderer r, Bone b, Matrix4 m,SkeletalAnimation a, Shader s)
         {
             int index = s.GetUniformLocation("Bones["+b.Index+"]");
             if (index < 0)
             {
                 throw new Exception("cant get location of bone "+b.Index+".");
             }
-            //Matrix3 m1 = b.GetMatrix() * m;
-            Matrix3 m1;
+            //Matrix4 m1 = b.GetMatrix() * m;
+            Matrix4 m1;
             if (a == null)
             {
                 m1 = m * b.GetMatrix();
@@ -4027,11 +4028,11 @@ namespace Cheetah.Graphics
                 else
                     m1 = m * b.GetMatrix();
             }
-            //Matrix3 m2 = b.RestPoseInverse * m1;
-            Matrix3 m2 = m1 * b.RestPoseInverse;
+            //Matrix4 m2 = b.RestPoseInverse * m1;
+            Matrix4 m2 = m1 * b.RestPoseInverse;
 
-            //Matrix3 m1 = b.GetMatrix() * m;
-            //Matrix3 m2 = b.RestPoseInverse * b.GetMatrix() * m;
+            //Matrix4 m1 = b.GetMatrix() * m;
+            //Matrix4 m2 = b.RestPoseInverse * b.GetMatrix() * m;
 
             //m2[12] = m2[13] = m2[14] = 0;
             //m2.SetToIdentity();
@@ -4192,7 +4193,7 @@ namespace Cheetah.Graphics
 				m.specular.r=r.ReadSingle();
 				m.specular.g=r.ReadSingle();
 				m.specular.b=r.ReadSingle();
-				m.wire=r.ReadBoolean();
+				m.Wire=r.ReadBoolean();
 				m.twosided=r.ReadBoolean();
 				if(r.ReadBoolean())
 				{
@@ -4381,13 +4382,13 @@ namespace Cheetah.Graphics
             {
                 vertices = new VertexP3T2[4];
                 vertices[2].position = new Vector3(-size, -size, 0);
-                vertices[2].texture0 = new Vector2f(0, 1);
+                vertices[2].texture0 = new Vector2(0, 1);
                 vertices[1].position = new Vector3(size, -size, 0);
-                vertices[1].texture0 = new Vector2f(1, 1);
+                vertices[1].texture0 = new Vector2(1, 1);
                 vertices[3].position = new Vector3(-size, size, 0);
-                vertices[3].texture0 = new Vector2f(0, 0);
+                vertices[3].texture0 = new Vector2(0, 0);
                 vertices[0].position = new Vector3(size, size, 0);
-                vertices[0].texture0 = new Vector2f(1, 0);
+                vertices[0].texture0 = new Vector2(1, 0);
 
                 Buffer = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, 5 * 4 * 4);
                 Buffer.Format = VertexFormat.VF_P3T2;
@@ -4430,7 +4431,7 @@ namespace Cheetah.Graphics
             r.GetMatrix(modelview, projection);
             r.PushMatrix();
 
-            Matrix3 m = new Matrix3(modelview);
+            Matrix4 m = new Matrix4(modelview);
             Vector3 pos = m.ExtractTranslation();
             m.SetToIdentity();
             m.Translate(pos);
@@ -4609,8 +4610,8 @@ namespace Cheetah.Graphics
 
         public override void OnResize()
         {
-            Layout.Widths[0] = Size.y;
-            Layout.Widths[1] = Size.x - Layout.Widths[0];
+            Layout.Widths[0] = Size.Y;
+            Layout.Widths[1] = Size.X - Layout.Widths[0];
             base.OnResize();
         }
         public Button Picture;
@@ -4648,7 +4649,7 @@ namespace Cheetah.Graphics
         }
         public override void OnResize()
         {
-            //ItemHeight = Size.x/2;
+            //ItemHeight = Size.X/2;
             base.OnResize();
         }
         public ImageListBox()
@@ -4726,8 +4727,8 @@ namespace Cheetah.Graphics
             if(Items!=null)
             for (int i = 0; i < Items.Length; ++i)
             {
-                ItemButtons[i].Size = new Vector2(size.x/(float)ItemsPerRow, ItemHeight);
-                ItemButtons[i].Position = new Vector2((i % ItemsPerRow) * size.x / (float)ItemsPerRow, ItemHeight * (i / ItemsPerRow));
+                ItemButtons[i].Size = new Vector2(size.X/(float)ItemsPerRow, ItemHeight);
+                ItemButtons[i].Position = new Vector2((i % ItemsPerRow) * size.X / (float)ItemsPerRow, ItemHeight * (i / ItemsPerRow));
             }
         }
 
@@ -4735,7 +4736,7 @@ namespace Cheetah.Graphics
         {
             index=Math.Max(Math.Min(index,Items.Length-1),0);
 
-            ScrollPosition.y = -ItemButtons[index].Position.y;
+            ScrollPosition.Y = -ItemButtons[index].Position.Y;
             ScrollIndex = index;
         }
 
@@ -4774,17 +4775,17 @@ namespace Cheetah.Graphics
             Vector2 min, max;
             if (GetChildBounding(out min, out max))
             {
-                float v = y / Size.y;
-                ScrollPosition.y = CurrentScrollPosition.y = -v * (max.y - min.y) + Size.y / 2.0f;
-                if (-ScrollPosition.y + Size.y > max.y)
-                    ScrollPosition.y = CurrentScrollPosition.y = -max.y + Size.y;
-                else if (ScrollPosition.y > min.y)
-                    ScrollPosition.y = CurrentScrollPosition.y = min.y;
+                float v = y / Size.Y;
+                ScrollPosition.Y = CurrentScrollPosition.Y = -v * (max.Y - min.Y) + Size.Y / 2.0f;
+                if (-ScrollPosition.Y + Size.Y > max.Y)
+                    ScrollPosition.Y = CurrentScrollPosition.Y = -max.Y + Size.Y;
+                else if (ScrollPosition.Y > min.Y)
+                    ScrollPosition.Y = CurrentScrollPosition.Y = min.Y;
                 
-                if (ScrollPosition.y > 0)
-                    ScrollPosition.y = CurrentScrollPosition.y = 0;
-                else if (ItemHeight * Items.Length > Size.y && ScrollPosition.y < Size.y - ItemHeight * Items.Length)
-                    ScrollPosition.y = CurrentScrollPosition.y = Size.y - ItemHeight * Items.Length;
+                if (ScrollPosition.Y > 0)
+                    ScrollPosition.Y = CurrentScrollPosition.Y = 0;
+                else if (ItemHeight * Items.Length > Size.Y && ScrollPosition.Y < Size.Y - ItemHeight * Items.Length)
+                    ScrollPosition.Y = CurrentScrollPosition.Y = Size.Y - ItemHeight * Items.Length;
 
             }
         }
@@ -4793,10 +4794,10 @@ namespace Cheetah.Graphics
             if (Items != null)
             {
                 //Cheetah.Console.WriteLine(Items.Length.ToString());
-                if (ScrollPosition.y > 0)
-                    ScrollPosition.y = 0;
-                else if (ItemHeight * Items.Length>Size.y&&ScrollPosition.y < Size.y - ItemHeight * Items.Length)
-                    ScrollPosition.y = Size.y - ItemHeight * Items.Length;
+                if (ScrollPosition.Y > 0)
+                    ScrollPosition.Y = 0;
+                else if (ItemHeight * Items.Length>Size.Y&&ScrollPosition.Y < Size.Y - ItemHeight * Items.Length)
+                    ScrollPosition.Y = Size.Y - ItemHeight * Items.Length;
             }
             base.Tick(dtime);
         }
@@ -4828,7 +4829,7 @@ namespace Cheetah.Graphics
             foreach (Window w in Targets)
             {
                 if(w is ListBox)
-                    ((ListBox)w).ScrollItem((int)ScrollDelta.y);
+                    ((ListBox)w).ScrollItem((int)ScrollDelta.Y);
                 else
                     w.ScrollPosition -= ScrollDelta;
             }
@@ -4868,15 +4869,15 @@ namespace Cheetah.Graphics
             base.OnMouseMove(x, y);
 
             //Console.WriteLine(y.ToString());
-            float v = y / Size.y;
+            float v = y / Size.Y;
             Vector2 min,max;
             if (Target.GetChildBounding(out min, out max))
             {
-                Target.ScrollPosition.y = Target.CurrentScrollPosition.y = - v * (max.y - min.y)+Target.Size.y/2.0f;
-                if (-Target.ScrollPosition.y + Target.Size.y > max.y)
-                    Target.ScrollPosition.y = Target.CurrentScrollPosition.y = -max.y + Target.Size.y;
-                else if (Target.ScrollPosition.y > min.y)
-                    Target.ScrollPosition.y = Target.CurrentScrollPosition.y = min.y;
+                Target.ScrollPosition.Y = Target.CurrentScrollPosition.Y = - v * (max.Y - min.Y)+Target.Size.Y/2.0f;
+                if (-Target.ScrollPosition.Y + Target.Size.Y > max.Y)
+                    Target.ScrollPosition.Y = Target.CurrentScrollPosition.Y = -max.Y + Target.Size.Y;
+                else if (Target.ScrollPosition.Y > min.Y)
+                    Target.ScrollPosition.Y = Target.CurrentScrollPosition.Y = min.Y;
 
             }
         }
@@ -4901,8 +4902,8 @@ namespace Cheetah.Graphics
             Vector2 min, max;
             if (Target.GetChildBounding(out min, out max))
             {
-                Value1 = (-Target.CurrentScrollPosition.y - min.y) / (max.y - min.y);
-                Value2 = (-Target.CurrentScrollPosition.y + Target.Size.y - min.y) / (max.y - min.y);
+                Value1 = (-Target.CurrentScrollPosition.Y - min.Y) / (max.Y - min.Y);
+                Value2 = (-Target.CurrentScrollPosition.Y + Target.Size.Y - min.Y) / (max.Y - min.Y);
             }
             else
             {
@@ -4954,7 +4955,7 @@ namespace Cheetah.Graphics
 
         public override void Draw(IRenderer r, RectangleF rect)
 		{
-			//Matrix3 pos=Matrix3.FromTranslation(position.x,position.y,0);//*Matrix3.FromScale(size.x,size.y,0);
+			//Matrix4 pos=Matrix4.FromTranslation(position.X,position.Y,0);//*Matrix4.FromScale(size.X,size.Y,0);
 			//r.BindTexture(texture);
 			//r.PushMatrix();
 			//r.MultMatrix(pos);
@@ -4968,7 +4969,7 @@ namespace Cheetah.Graphics
 			if(MultiLine)
 			{
                 if (CenterText)
-                    pos = new Vector2(AbsoluteCenterPosition.x,AbsolutePosition.y);
+                    pos = new Vector2(AbsoluteCenterPosition.X,AbsolutePosition.Y);
                 else
                     pos = AbsolutePosition;
             }
@@ -4982,20 +4983,20 @@ namespace Cheetah.Graphics
             if (Fade >= 0)
                 c.a *= Fade;
 
-            rect.Offset(-position.x, -position.y);
-            rect.Offset(AbsolutePosition.x, AbsolutePosition.y);
+            rect.Offset(-position.X, -position.Y);
+            rect.Offset(AbsolutePosition.X, AbsolutePosition.Y);
 
             for (int i = FirstLine; i <= LastLine; ++i)
             {
                 string line=(string)lines[i];
-                f.Draw(r, line, pos.x-(CenterText?(0.5f*f.size*(float)line.Length):0), pos.y + (i - FirstLine) * f.size,c,rect);
+                f.Draw(r, line, pos.X-(CenterText?(0.5f*f.size*(float)line.Length):0), pos.Y + (i - FirstLine) * f.size,c,rect);
             }
 
             if(!ReadOnly&&CursorVisible)
 			{
                 int l = Math.Max(LastLine, 0);
-				//f.Draw(r,"_",pos.x+GetLine(LastLine).Length*f.size*0.5f,pos.y+(l-FirstLine)*f.size);
-                f.Draw(r, "_", pos.x + GetLine(LastLine).Length * f.Width, pos.y + (l - FirstLine) * f.size, c, rect);
+				//f.Draw(r,"_",pos.X+GetLine(LastLine).Length*f.size*0.5f,pos.Y+(l-FirstLine)*f.size);
+                f.Draw(r, "_", pos.X + GetLine(LastLine).Length * f.Width, pos.Y + (l - FirstLine) * f.size, c, rect);
             }
 
 			//r.PopMatrix();
@@ -5099,7 +5100,7 @@ namespace Cheetah.Graphics
 			get
 			{
 				if(MultiLine)
-					return (int)(Size.y/Root.Instance.Gui.DefaultFont.size);
+					return (int)(Size.Y/Root.Instance.Gui.DefaultFont.size);
 				else
 					return 1;
 			}
@@ -5497,9 +5498,9 @@ namespace Cheetah.Graphics
                 if (Fade >= 0)
                     c.a *= Fade;
 
-                rect.Offset(-position.x, -position.y);
-                rect.Offset(AbsolutePosition.x, AbsolutePosition.y);
-                f.Draw(r, Caption, pos.x, pos.y, c, rect);
+                rect.Offset(-position.X, -position.Y);
+                rect.Offset(AbsolutePosition.X, AbsolutePosition.Y);
+                f.Draw(r, Caption, pos.X, pos.Y, c, rect);
             }
 			//f.size=old;
 			//r.PopMatrix();
@@ -5552,8 +5553,8 @@ namespace Cheetah.Graphics
 					for(int i=0;i<c.Windows.Count;++i)
 					{
 						Window w=(Window)c.Windows[i];
-						w.Position=new Vector2(cp.x*totalsize.x+Spacing,cp.y*totalsize.y+Spacing);
-						w.Size=new Vector2(cs.x*totalsize.x-2*Spacing,cs.y*totalsize.y-2*Spacing);
+						w.Position=new Vector2(cp.X*totalsize.X+Spacing,cp.Y*totalsize.Y+Spacing);
+						w.Size=new Vector2(cs.X*totalsize.X-2*Spacing,cs.Y*totalsize.Y-2*Spacing);
                         //if (w.Layout != null)
                         //    w.Layout.Update(w.Size);
 					}
@@ -5707,11 +5708,11 @@ namespace Cheetah.Graphics
             switch (Orientation)
             {
                 case OrientationType.Horizontal:
-                    Size = new Vector2(Value * Size.x, Size.y);
+                    Size = new Vector2(Value * Size.X, Size.Y);
                     break;
                 case OrientationType.Vertical:
-                    Size = new Vector2(Size.x, Value*Size.y);
-                    Position = new Vector2(Position.x, oldposition.y+(1.0f - Value) * oldsize.y);
+                    Size = new Vector2(Size.X, Value*Size.Y);
+                    Position = new Vector2(Position.X, oldposition.Y+(1.0f - Value) * oldsize.Y);
                     break;
             }
             Color = BarColor;
@@ -5793,11 +5794,11 @@ namespace Cheetah.Graphics
             base.DrawInternal(r, rect);
 
             r.PushMatrix();
-            r.MultMatrix(Matrix3.FromScale(Size.x, -Size.y, 0));
-            r.MultMatrix(Matrix3.FromTranslation(0,-1,0));
-            r.MultMatrix(Matrix3.FromTranslation(0.5f, 0.5f, 0));
-            r.MultMatrix(Matrix3.FromScale(Scale.x, Scale.y, 0));
-            //r.MultMatrix(Matrix3.FromAngleAxis(Vector3.ZAxis, Root.Instance.Time));
+            r.MultMatrix(Matrix4.FromScale(Size.X, -Size.Y, 0));
+            r.MultMatrix(Matrix4.FromTranslation(0,-1,0));
+            r.MultMatrix(Matrix4.FromTranslation(0.5f, 0.5f, 0));
+            r.MultMatrix(Matrix4.FromScale(Scale.X, Scale.Y, 0));
+            //r.MultMatrix(Matrix4.FromAngleAxis(Vector3.ZAxis, Root.Instance.Time));
             //r.UseShader(Mesh.Material.Shader);
             Mesh.Draw(r,null);
             r.PopMatrix();
@@ -5828,10 +5829,10 @@ namespace Cheetah.Graphics
             base.DrawInternal(r, rect);
 
             //r.PushMatrix();
-            //r.MultMatrix(Matrix3.FromTranslation(0, -1, 0));
+            //r.MultMatrix(Matrix4.FromTranslation(0, -1, 0));
             //r.UseShader(Mesh.Material.Shader);
             Vector2 pos = (Size/2)+new Vector2(-Font.Width * (float)Caption.Length*0.5f, -Font.size/2);
-            Font.Draw(r,Caption,pos.x,pos.y,new Color4f(1,1,1),false,32,48);
+            Font.Draw(r,Caption,pos.X,pos.Y,new Color4f(1,1,1),false,32,48);
             //r.PopMatrix();
         }
 
@@ -5847,10 +5848,10 @@ namespace Cheetah.Graphics
         }
         public Window(float x, float y, float w, float h)
 		{
-			position.x=x;
-			position.y=y;
-			size.x=w;
-			size.y=h;
+			position.X=x;
+			position.Y=y;
+			size.X=w;
+			size.Y=h;
 			vertices=CreateVB();
 			FillVB();
 		}
@@ -5898,10 +5899,10 @@ namespace Cheetah.Graphics
 
 		public Window(float x,float y,float w,float h,Layout lo)
 		{
-			position.x=x;
-			position.y=y;
-			size.x=w;
-			size.y=h;
+			position.X=x;
+			position.Y=y;
+			size.X=w;
+			size.Y=h;
 			vertices=CreateVB();
 			Layout=lo;
 			FillVB();
@@ -5916,14 +5917,14 @@ namespace Cheetah.Graphics
             if (!Visible)
                 return;
 
-            rect.Offset(-position.x-CurrentScrollPosition.x, -position.y-CurrentScrollPosition.y);
+            rect.Offset(-position.X-CurrentScrollPosition.X, -position.Y-CurrentScrollPosition.Y);
             //RectangleF rect2 = rect;
-            rect.Intersect(new RectangleF(-CurrentScrollPosition.x, -CurrentScrollPosition.y, size.x, size.y));
+            rect.Intersect(new RectangleF(-CurrentScrollPosition.X, -CurrentScrollPosition.Y, size.X, size.Y));
             float[] Scissor = new float[] { rect.Left, rect.Top, rect.Right, rect.Bottom };
-            //rect.Intersect(new RectangleF(CurrentScrollPosition.x, CurrentScrollPosition.y, size.x, size.y));
+            //rect.Intersect(new RectangleF(CurrentScrollPosition.X, CurrentScrollPosition.Y, size.X, size.Y));
    
            
-            Matrix3 pos=Matrix3.FromTranslation(position.x,position.y,0);//*Matrix3.FromScale(size.x,size.y,0);
+            Matrix4 pos=Matrix4.FromTranslation(position.X,position.Y,0);//*Matrix4.FromScale(size.X,size.Y,0);
 			if(texture!=null)
 				r.BindTexture(texture.Id);
 			else
@@ -5939,7 +5940,7 @@ namespace Cheetah.Graphics
 
                 if (Shader != null)
                 {
-                    r.SetUniform(Shader.GetUniformLocation("WindowSize"), new float[] { size.x, size.y });
+                    r.SetUniform(Shader.GetUniformLocation("WindowSize"), new float[] { size.X, size.Y });
                     r.SetUniform(Shader.GetUniformLocation("Time"), new float[] { Root.Instance.Time });
 
                     int loc = Shader.GetUniformLocation("Scissor");
@@ -5954,13 +5955,13 @@ namespace Cheetah.Graphics
             }
 
 
-            Matrix3 scroll = Matrix3.FromTranslation(CurrentScrollPosition.x, CurrentScrollPosition.y, 0);
+            Matrix4 scroll = Matrix4.FromTranslation(CurrentScrollPosition.X, CurrentScrollPosition.Y, 0);
             r.MultMatrix(scroll);
             foreach (Window w in Children)
 			{
                 if (
-                    w.Position.x + CurrentScrollPosition.x + w.Size.x < 0 || w.Position.x + CurrentScrollPosition.x  > Size.x ||
-                    w.Position.y + CurrentScrollPosition.y + w.Size.y < 0 || w.Position.y + CurrentScrollPosition.y  > Size.y
+                    w.Position.X + CurrentScrollPosition.X + w.Size.X < 0 || w.Position.X + CurrentScrollPosition.X  > Size.X ||
+                    w.Position.Y + CurrentScrollPosition.Y + w.Size.Y < 0 || w.Position.Y + CurrentScrollPosition.Y  > Size.Y
                     )
                 {
                     continue;
@@ -6002,21 +6003,21 @@ namespace Cheetah.Graphics
             if (Fade >= 0)
                 alpha *= Fade;
 
-            data[0].position.x = 0; data[0].position.y = 0;
+            data[0].position.X = 0; data[0].position.Y = 0;
             data[0].color.r = color.r; data[0].color.g = color.g; data[0].color.b = color.b; data[0].color.a = alpha;
-            data[0].texture0.x = u1; data[0].texture0.y = v1;
+            data[0].texture0.X = u1; data[0].texture0.Y = v1;
 
-            data[1].position.x = size.x; data[1].position.y = 0;
+            data[1].position.X = size.X; data[1].position.Y = 0;
             data[1].color.r = color.r; data[1].color.g = color.g; data[1].color.b = color.b; data[1].color.a = alpha;
-            data[1].texture0.x = u2; data[1].texture0.y = v1;
+            data[1].texture0.X = u2; data[1].texture0.Y = v1;
 
-            data[2].position.x = size.x; data[2].position.y = size.y;
+            data[2].position.X = size.X; data[2].position.Y = size.Y;
             data[2].color.r = color.r; data[2].color.g = color.g; data[2].color.b = color.b; data[2].color.a = alpha;
-            data[2].texture0.x = u2; data[2].texture0.y = v2;
+            data[2].texture0.X = u2; data[2].texture0.Y = v2;
 
-            data[3].position.x = 0; data[3].position.y = size.y;
+            data[3].position.X = 0; data[3].position.Y = size.Y;
             data[3].color.r = color.r; data[3].color.g = color.g; data[3].color.b = color.b; data[3].color.a = alpha;
-            data[3].texture0.x = u1; data[3].texture0.y = v2;
+            data[3].texture0.X = u1; data[3].texture0.Y = v2;
 
 			vertices.Update(data,data.Length*vertices.Format.Size);
 		}
@@ -6031,12 +6032,12 @@ namespace Cheetah.Graphics
             {
                 Window w = (Window)Children[i];
                 if (
-                    x >= w.Position.x + CurrentScrollPosition.x && x <= w.Position.x + CurrentScrollPosition.x + w.Size.x &&
-                    y >= w.Position.y + CurrentScrollPosition.y && y <= w.Position.y + CurrentScrollPosition.y + w.Size.y &&
+                    x >= w.Position.X + CurrentScrollPosition.X && x <= w.Position.X + CurrentScrollPosition.X + w.Size.X &&
+                    y >= w.Position.Y + CurrentScrollPosition.Y && y <= w.Position.Y + CurrentScrollPosition.Y + w.Size.Y &&
                     w.Visible
 					)
 				{
-                    w.OnClick(button, x - w.Position.x - CurrentScrollPosition.x, y - w.Position.y - CurrentScrollPosition.y);
+                    w.OnClick(button, x - w.Position.X - CurrentScrollPosition.X, y - w.Position.Y - CurrentScrollPosition.Y);
 					break;
 				}
 			}
@@ -6068,7 +6069,7 @@ namespace Cheetah.Graphics
                 return;
 
 			Point p=Root.Instance.UserInterface.Renderer.Size;
-			Position=new Vector2(p.X/2-Size.x/2,p.Y/2-Size.y/2);
+			Position=new Vector2(p.X/2-Size.X/2,p.Y/2-Size.Y/2);
 		}
 
         public delegate void TooltipDelegate(string text);
@@ -6092,12 +6093,12 @@ namespace Cheetah.Graphics
             {
                 Window w = (Window)Children[i];
                 if (
-                    x >= w.Position.x + ScrollPosition.x && x <= w.Position.x + CurrentScrollPosition.x + w.Size.x &&
-                    y >= w.Position.y + ScrollPosition.y && y <= w.Position.y + CurrentScrollPosition.y + w.Size.y &&
+                    x >= w.Position.X + ScrollPosition.X && x <= w.Position.X + CurrentScrollPosition.X + w.Size.X &&
+                    y >= w.Position.Y + ScrollPosition.Y && y <= w.Position.Y + CurrentScrollPosition.Y + w.Size.Y &&
                     w.Visible
 					)
 				{
-                    w.OnMouseMove(x - w.Position.x - CurrentScrollPosition.x, y - w.Position.y - ScrollPosition.y);
+                    w.OnMouseMove(x - w.Position.X - CurrentScrollPosition.X, y - w.Position.Y - ScrollPosition.Y);
 					return;
 				}
 			}
@@ -6199,10 +6200,10 @@ namespace Cheetah.Graphics
 
             foreach (Window w in Children)
             {
-                min.x = Math.Min(min.x, w.Position.x);
-                min.y = Math.Min(min.y, w.Position.y);
-                max.x = Math.Max(max.x, w.Position.x + w.Size.x);
-                max.y = Math.Max(max.y, w.Position.y + w.Size.y);
+                min.X = Math.Min(min.X, w.Position.X);
+                min.Y = Math.Min(min.Y, w.Position.Y);
+                max.X = Math.Max(max.X, w.Position.X + w.Size.X);
+                max.Y = Math.Max(max.Y, w.Position.Y + w.Size.Y);
             }
             return true;
         }
@@ -6268,7 +6269,7 @@ namespace Cheetah.Graphics
 
             Vector2 delta = ScrollPosition - CurrentScrollPosition;
             float l1 = dtime * ScrollSpeed;
-            float l2=delta.Length();
+            float l2=delta.Length;
             if (l1 >= l2)
                 CurrentScrollPosition = ScrollPosition;
             else
@@ -6291,7 +6292,7 @@ namespace Cheetah.Graphics
                 if (w.Parent != null)
                     w.Parent.Children.Remove(w);
                 else
-                    Root.Instance.Gui.windows.Remove(w);
+                    Root.Instance.Gui.Windows.Remove(w);
             }
         }
 
@@ -6619,12 +6620,12 @@ namespace Cheetah.Graphics
             {
                 Window w = (Window)windows[i];
                     if (
-					x>=w.Position.x&&x<=w.Position.x+w.Size.x&&
-					y>=w.Position.y&&y<=w.Position.y+w.Size.y&&
+					x>=w.Position.X&&x<=w.Position.X+w.Size.X&&
+					y>=w.Position.Y&&y<=w.Position.Y+w.Size.Y&&
                     w.Visible
 					)
 				{
-					w.OnClick(button,x-w.Position.x,y-w.Position.y);
+					w.OnClick(button,x-w.Position.X,y-w.Position.Y);
                     //Focus = w;
 					break;
 				}
@@ -6639,12 +6640,12 @@ namespace Cheetah.Graphics
 			{
                 Window w = (Window)windows[i];
 				if(
-					x>=w.Position.x&&x<=w.Position.x+w.Size.x&&
-					y>=w.Position.y&&y<=w.Position.y+w.Size.y&&
+					x>=w.Position.X&&x<=w.Position.X+w.Size.X&&
+					y>=w.Position.Y&&y<=w.Position.Y+w.Size.Y&&
                     w.Visible
 					)
 				{
-					w.OnMouseMove(x-w.Position.x,y-w.Position.y);
+					w.OnMouseMove(x-w.Position.X,y-w.Position.Y);
 					return;
 				}
 
@@ -6705,7 +6706,7 @@ namespace Cheetah.Graphics
                 if (w.Parent != null)
                     w.Parent.Children.Remove(w);
                 else
-                    Root.Instance.Gui.windows.Remove(w);
+                    Root.Instance.Gui.Windows.Remove(w);
             }
 
             Console.Tick(dtime);
@@ -6868,8 +6869,8 @@ namespace Cheetah.Graphics
 
                 Vector3 v1 = target.AbsolutePosition - l1.AbsolutePosition;
                 Vector3 v2 = target.AbsolutePosition - l2.AbsolutePosition;
-                float d1=v1.GetMagnitude();
-				float d2=v2.GetMagnitude();
+                float d1=v1.Length;
+				float d2=v2.Length;
 
                 if (l1.Range > 0 && d1 - target.RenderRadius > l1.Range)
                 {
@@ -7172,7 +7173,7 @@ namespace Cheetah.Graphics
         }
 		protected void Draw(IRenderer r,Node n,Light[] lights)
 		{
-            Matrix3 m;
+            Matrix4 m;
             if (!Root.Instance.IsAuthoritive && 
                 (
                 (Root.Instance.Connection !=null&& n.OwnerNumber != ((UdpClient)Root.Instance.Connection).ClientNumber)
@@ -7679,7 +7680,7 @@ namespace Cheetah.Graphics
                 l = Array.FindAll(l, 
                     delegate(Light l1)
                     {
-                        return !(l1==null || (l1.Range > 0 && (n.AbsolutePosition - l1.AbsolutePosition).GetMagnitude() - n.RenderRadius > l1.Range));
+                        return !(l1==null || (l1.Range > 0 && (n.AbsolutePosition - l1.AbsolutePosition).Length - n.RenderRadius > l1.Range));
                     });
                 lights = l.Length;
                 Array.Sort(l, 0, lights, lc);
@@ -8056,9 +8057,9 @@ namespace Cheetah.Graphics
             }
         }
 
-        Matrix3 gluPerspective(float fovy, float aspect, float zNear, float zFar)
+        Matrix4 gluPerspective(float fovy, float aspect, float zNear, float zFar)
         {
-            Matrix3 m = Matrix3.Identity;
+            Matrix4 m = Matrix4.Identity;
             float sine, cotangent, deltaZ;
             float radians = fovy / 2 * (float)Math.PI / 180;
 
@@ -8081,13 +8082,13 @@ namespace Cheetah.Graphics
             return m;
         }
 
-        Matrix3 
+        Matrix4 
 gluLookAt(float eyex, float eyey, float eyez, float centerx,
 	  float centery, float centerz, float upx, float upy,
 	  float upz)
 {
     Vector3 forward = Vector3.Zero, side = Vector3.Zero, up = Vector3.Zero;
-    Matrix3 m=Matrix3.Identity;
+    Matrix4 m=Matrix4.Identity;
 
     forward[0] = centerx - eyex;
     forward[1] = centery - eyey;
@@ -8121,23 +8122,23 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
     m[9] = -forward[1];
     m[10] = -forward[2];
 
-    //m = Matrix3.FromBasis(side, up, -forward);
+    //m = Matrix4.FromBasis(side, up, -forward);
 
-    m = m * Matrix3.FromTranslation(-eyex, -eyey, -eyez);
-    //m = Matrix3.FromTranslation(-eyex, -eyey, -eyez)*m;
+    m = m * Matrix4.FromTranslation(-eyex, -eyey, -eyez);
+    //m = Matrix4.FromTranslation(-eyex, -eyey, -eyez)*m;
     //m.Translate(-eyex, -eyey, -eyez);
     //glMultMatrixf(&m[0][0]);
     //glTranslated(-eyex, -eyey, -eyez);
     return m;
 }
 
-        public Matrix3 GetProjectionMatrix()
+        public Matrix4 GetProjectionMatrix()
         {
             return gluPerspective(Fov, Aspect, nearplane, farplane);
         }
-        public Matrix3 GetViewMatrix()
+        public Matrix4 GetViewMatrix()
         {
-            Matrix3 m = Matrix;
+            Matrix4 m = Matrix;
             Vector3 t = new Vector3();
             Vector3 x, y;
             Vector3 pos = m.ExtractTranslation();
@@ -8156,18 +8157,18 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 	     int[] viewport)
 {
    /* matrice de transformation */
-   Matrix3 m;//, A;
-   Vector4f inv, outv;
+   Matrix4 m;//, A;
+   Vector4 inv, outv;
 
    /* transformation coordonnees normalisees entre -1 et 1 */
-   inv.x = (winx - (float)viewport[0]) * 2.0f / (float)viewport[2] - 1.0f;
-   inv.y = (winy - (float)viewport[1]) * 2.0f / (float)viewport[3] - 1.0f;
+   inv.X = (winx - (float)viewport[0]) * 2.0f / (float)viewport[2] - 1.0f;
+   inv.Y = (winy - (float)viewport[1]) * 2.0f / (float)viewport[3] - 1.0f;
    inv.z = 2.0f * winz - 1.0f;
-   inv.w = 1.0f;
+   inv.W = 1.0f;
 
    /* calcul transformation inverse */
    //matmul(A, proj, model);
-   m = (new Matrix3(proj)*new Matrix3(model)).GetInverse();
+   m = (new Matrix4(proj)*new Matrix4(model)).GetInverse();
    //m.Transpose();
    //A.Invert();
             //m = A;
@@ -8177,13 +8178,13 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 
    //transform_point(out, m, in);
             outv = m.Transform(inv);
-   //if (outv.w == 0.0)
+   //if (outv.W == 0.0)
    //   throw new Exception();
    //*objx = out[0] / out[3];
    //*objy = out[1] / out[3];
    //*objz = out[2] / out[3];
    //return 1;
-  return new Vector3(outv.x / outv.w, outv.y / outv.w, outv.z / outv.w);
+  return new Vector3(outv.X / outv.W, outv.Y / outv.W, outv.z / outv.W);
   //return new Vector3(outv.X, outv.Y , outv.Z );
 }
         protected float _Fov=60.0f;
@@ -8319,19 +8320,19 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             }
         }
 
-        public override Matrix3 Matrix
+        public override Matrix4 Matrix
         {
             get
             {
                 if (Mode!=CameraMode.FlyBy)
                 {
-                    /*Matrix3 m1 = Matrix3.FromQuaternion(SmoothOrientation.Smoothed);
+                    /*Matrix4 m1 = Matrix4.FromQuaternion(SmoothOrientation.Smoothed);
 
                     m1[12] = SmoothPosition.Smoothed.X;
                     m1[13] = SmoothPosition.Smoothed.Y;
                     m1[14] = SmoothPosition.Smoothed.Z;
 
-                    Matrix3 m2 = Matrix3.FromQuaternion(Orientation);
+                    Matrix4 m2 = Matrix4.FromQuaternion(Orientation);
 
                     m2[12] = Position.X;
                     m2[13] = Position.Y;
@@ -8343,7 +8344,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 if (Attach == null)
                 {
           
-                    Matrix3 m = Matrix3.FromQuaternion(Orientation);
+                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -8353,8 +8354,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 }
                 else
                 {
-                    Matrix3 m;
-                    m= Matrix3.FromQuaternion(Orientation);
+                    Matrix4 m;
+                    m= Matrix4.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -8378,7 +8379,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 return _Fov;
                 if (Attach == null)
                     return _Fov;
-                float d = (Attach.AbsolutePosition - AbsolutePosition).GetMagnitude();
+                float d = (Attach.AbsolutePosition - AbsolutePosition).Length;
                 if (d > Dist * 0.75f)
                 {
                     return _Fov / MaxZoom;
@@ -8409,7 +8410,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 switch (Mode)
                 {
                     case CameraMode.FlyBy:
-                        float d = (Attach.AbsolutePosition - Position).GetMagnitude();
+                        float d = (Attach.AbsolutePosition - Position).Length;
 
                         if (d > Dist * 1.1f)
                             Reset();
@@ -8711,8 +8712,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
         public void Draw(IRenderer r, string text, float x, float y, Color4f color, bool center, float width, float size)
         {
             r.PushMatrix();
-            r.MultMatrix(Matrix3.FromTranslation(x-width*((float)text.Length)/2.0f, y, 0));
-            r.MultMatrix(Matrix3.FromScale(size, -size, size));
+            r.MultMatrix(Matrix4.FromTranslation(x-width*((float)text.Length)/2.0f, y, 0));
+            r.MultMatrix(Matrix4.FromScale(size, -size, size));
             for (int i = 0; i < text.Length; ++i)
             {
                 char c=text[i];
@@ -8724,7 +8725,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                     if(m!=null)
                         m.Draw(r, null);
                 }
-                r.MultMatrix(Matrix3.FromTranslation(width / size, 0, 0));
+                r.MultMatrix(Matrix4.FromTranslation(width / size, 0, 0));
             }
             r.PopMatrix();
         }
@@ -9022,7 +9023,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 			r.GetMatrix(m,null);
 			r.PushMatrix();
 			m[12]=m[13]=m[14]=0;
-			r.LoadMatrix(new Matrix3(m));
+			r.LoadMatrix(new Matrix4(m));
 
             r.UseShader(Shader);
 
@@ -9594,12 +9595,12 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             color.g = g;
             color.b = b;
             color.a = a;
-            texture0.x = u;
-            texture0.y = v;
+            texture0.X = u;
+            texture0.Y = v;
         }
 		public Vector3 position;
 		public Color4f color;
-		public Vector2f texture0;
+		public Vector2 texture0;
 	}
 
     public struct VertexBone
@@ -9652,26 +9653,17 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 
     public struct VertexP2C4T2
     {
-		public Vector2f position;
+		public Vector2 position;
 		public Color4f color;
-		public Vector2f texture0;
+		public Vector2 texture0;
 	}
 
     public struct VertexP3T2
     {
         public Vector3 position;
-        public Vector2f texture0;
+        public Vector2 texture0;
     }
     
-    public struct Vector2f
-	{
-		public Vector2f(float _x,float _y)
-		{
-			x=_x;
-			y=_y;
-		}
-		public float x,y;
-	}
 
 	public interface IVertexBuffer
 	{
@@ -9795,22 +9787,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 	{
 		public byte r,g,b,a;
 	}
-/*
-	public struct Vector3f
-	{
-		public Vector3f(float _x,float _y,float _z)
-		{
-			x=_x;
-			y=_y;
-			z=_z;
-		}
-		public float x,y,z;
-	}
-	*/
-	public struct Vector4f
-	{
-		public float x,y,z,w;
-	}
+
 
 	public struct Color4f
 	{

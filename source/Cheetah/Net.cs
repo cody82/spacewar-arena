@@ -187,7 +187,7 @@ namespace Cheetah
 
         List<Server> GetInternetServerList()
         {
-            string url = @"http://spacewar-arena.com/spacewar-arena-servers.xml";
+            string url = @"http://spacewar-arena.com/spacewar-arena-servers.Xml";
             List<Server> servers = new List<Server>();
 
             WebClient wclient = new WebClient();

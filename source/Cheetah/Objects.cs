@@ -26,6 +26,7 @@ using OpenTK.Input;
 using Cheetah.Graphics;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using OpenTK;
 
 namespace Cheetah
 {
@@ -893,7 +894,7 @@ namespace Cheetah
                 Add(new Button(OnSpawnButtonPressed, "Spawn"), 0, 2);
                 Add(ModeButton = new Button(OnModeButtonPressed, "Create"), 0, 0);
                 Layout.Heights[0] = 48;
-                Layout.Heights[1] = Size.y - 4 * 48;
+                Layout.Heights[1] = Size.Y - 4 * 48;
                 Layout.Heights[2] = 48;
                 Layout.Update(Size);
             }
@@ -938,7 +939,7 @@ namespace Cheetah
                         if (Input != null)
                         {
                             pi.SetValue(Select, Input.Parse(), null);
-                            Root.Instance.Gui.windows.Remove(Input);
+                            Root.Instance.Gui.Windows.Remove(Input);
                             Input = null;
                             return;
                         }
@@ -980,7 +981,7 @@ namespace Cheetah
                         if (Input != null)
                         {
                             fi.SetValue(Select, Input.Parse());
-                            Root.Instance.Gui.windows.Remove(Input);
+                            Root.Instance.Gui.Windows.Remove(Input);
                             Input = null;
                             return;
                         }
@@ -1016,7 +1017,7 @@ namespace Cheetah
                         }
                         else throw new Exception("incompatible type.");
                     }
-                    Root.Instance.Gui.windows.Add(Input);
+                    Root.Instance.Gui.Windows.Add(Input);
                 }
             }
 
@@ -1126,7 +1127,7 @@ namespace Cheetah
             Root.Instance.Scene.camera = cam = new Camera();
             cam.Position = new Vector3(0f, 10000, -1000);
             cam.LookAt(0, 0, 0);
-            //Root.Instance.Gui.windows.Add(menu = new Menu());
+            //Root.Instance.Gui.Windows.Add(menu = new Menu());
         }
 
         public Editor()
@@ -1275,13 +1276,13 @@ using Cheetah;");
                     Node n = (Node)Select;
                     if (Mode == Action.Move)
                     {
-                        n.Position += new Vector3(delta.x * 10, 0, delta.y * 10);
+                        n.Position += new Vector3(delta.X * 10, 0, delta.Y * 10);
                     }
                 }
 
             if (Root.Instance.UserInterface.Mouse.GetButtonState(1))
             {
-                cam.Position += new Vector3(delta.x * 10, 0, delta.y * 10);
+                cam.Position += new Vector3(delta.X * 10, 0, delta.Y * 10);
             }
             LastMousePos = p;
         }
@@ -1371,7 +1372,7 @@ using Cheetah;");
 
         public override void Tick(float dtime)
         {
-            Matrix3 m = ((Quaternion)orientation).ToMatrix3();
+            Matrix4 m = ((Quaternion)orientation).ToMatrix4();
             position.Tick(dtime, SmoothTime);
             speed.Tick(dtime, SmoothTime);
             position.Original += speed.Original * dtime;
@@ -1404,7 +1405,7 @@ using Cheetah;");
         {
             get
             {
-                Matrix3 m = Orientation.ToMatrix3();
+                Matrix4 m = Orientation.ToMatrix4();
                 Vector3 forward = m.Transform(new Vector3(0, 0, 1));
                 return forward;
             }
@@ -1413,7 +1414,7 @@ using Cheetah;");
         {
             get
             {
-                Matrix3 m = Orientation.ToMatrix3();
+                Matrix4 m = Orientation.ToMatrix4();
                 Vector3 forward = m.Transform(new Vector3(1, 0, 0));
                 return forward;
             }
@@ -1439,13 +1440,13 @@ using Cheetah;");
             }
         }
 
-        public virtual Matrix3 SmoothMatrix
+        public virtual Matrix4 SmoothMatrix
         {
             get
             {
                 if (Attach == null)
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
 
                     m[12] = position.Smoothed.X;
                     m[13] = position.Smoothed.Y;
@@ -1455,7 +1456,7 @@ using Cheetah;");
                 }
                 else
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
 
                     m[12] = position.Smoothed.X;
                     m[13] = position.Smoothed.Y;
@@ -1466,13 +1467,13 @@ using Cheetah;");
             }
         }
 
-        public virtual Matrix3 Matrix
+        public virtual Matrix4 Matrix
         {
             get
             {
                 if (Attach == null)
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(Orientation);
+                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -1485,8 +1486,8 @@ using Cheetah;");
                     if (Attach.Kill)
                         Kill = true;
 
-                    Matrix3 m = Matrix3.FromQuaternion(Orientation);
-                    //Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
+                    //Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -1513,15 +1514,15 @@ using Cheetah;");
                 y = Vector3.Cross(z, x);
                 //y.Normalize();
 
-                //Matrix3 m1=Matrix3.FromQuaternion(orientation);
-                //Quaternion q1=Quaternion.FromMatrix3(m1);
+                //Matrix4 m1=Matrix4.FromQuaternion(orientation);
+                //Quaternion q1=Quaternion.FromMatrix4(m1);
 
                 //x.Z=-x.Z;
                 //y.Z=-y.Z;
                 //z.Z=-z.Z;
-                Matrix3 m = Matrix3.FromBasis(x, y, z);
+                Matrix4 m = Matrix4.FromBasis(x, y, z);
                 //m.Invert();
-                Orientation = Quaternion.FromMatrix3(m);
+                Orientation = Quaternion.FromMatrix4(m);
             }
             catch (DivideByZeroException)
             {
@@ -1714,7 +1715,7 @@ using Cheetah;");
 
         public float Distance(Node other)
         {
-            return (AbsolutePosition - other.AbsolutePosition).GetMagnitude();
+            return (AbsolutePosition - other.AbsolutePosition).Length;
         }
 
         [Editable]
@@ -1859,12 +1860,12 @@ using Cheetah;");
 
     public class BoxCollisionInfo : CollisionInfo
     {
-        public BoxCollisionInfo(Matrix3 matrix, BoundingBox bbox)
+        public BoxCollisionInfo(Matrix4 matrix, BoundingBox bbox)
         {
             //Center = center;
             BBox = bbox;
             //Orientation = orientation;
-            //Matrix = Matrix3.FromTranslation(center) * Matrix3.FromQuaternion(Quaternion);
+            //Matrix = Matrix4.FromTranslation(center) * Matrix4.FromQuaternion(Quaternion);
             Matrix = matrix;
             InvMatrix = matrix.GetInverse();
         }
@@ -1872,8 +1873,8 @@ using Cheetah;");
         //Vector3 Center;
         //Quaternion Orientation;
         BoundingBox BBox;
-        Matrix3 Matrix;
-        Matrix3 InvMatrix;
+        Matrix4 Matrix;
+        Matrix4 InvMatrix;
 
         public override bool Check(CollisionInfo other)
         {
@@ -1914,8 +1915,8 @@ using Cheetah;");
         public override bool Check(BoxCollisionInfo other)
         {
             Vector3 v1, v2;
-            Matrix3 m1 = other.InvMatrix * Matrix;
-            Matrix3 m2 = InvMatrix * other.Matrix;
+            Matrix4 m1 = other.InvMatrix * Matrix;
+            Matrix4 m2 = InvMatrix * other.Matrix;
 
             foreach (Vector3 p in GetPoints(other.BBox))
             {
@@ -2023,7 +2024,7 @@ using Cheetah;");
         }
         public override bool Check(SphereCollisionInfo other)
         {
-            float dist = (Sphere.Center - other.Sphere.Center).GetMagnitude();
+            float dist = (Sphere.Center - other.Sphere.Center).Length;
             return dist <= Sphere.Radius + other.Sphere.Radius;
         }
 
@@ -2475,7 +2476,7 @@ using Cheetah;");
         {
             if (n.info == null) return false;
 
-            return n.info.Extension.ToLower() == ".wav" || n.info.Extension.ToLower() == ".mp3" || n.info.Extension.ToLower() == ".ogg" || n.info.Extension.ToLower() == ".xm";
+            return n.info.Extension.ToLower() == ".Wav" || n.info.Extension.ToLower() == ".mp3" || n.info.Extension.ToLower() == ".ogg" || n.info.Extension.ToLower() == ".Xm";
         }
     }
 
@@ -5498,9 +5499,9 @@ using Cheetah;");
 
             if (log != null)
             {
-                log.Size = new Vector2(size.x, size.y - Root.Instance.Gui.DefaultFont.size);
-                cmdline.Size = new Vector2(size.x, Root.Instance.Gui.DefaultFont.size);
-                cmdline.Position = new Vector2(0, size.y - Root.Instance.Gui.DefaultFont.size);
+                log.Size = new Vector2(size.X, size.Y - Root.Instance.Gui.DefaultFont.size);
+                cmdline.Size = new Vector2(size.X, Root.Instance.Gui.DefaultFont.size);
+                cmdline.Position = new Vector2(0, size.Y - Root.Instance.Gui.DefaultFont.size);
             }
         }
         public override void OnChildKeyDown(Window w, global::OpenTK.Input.Key key)
@@ -6101,7 +6102,7 @@ using Cheetah;");
 
             if (userinterface != null)
             {
-                int width = c.GetInteger("video.width");
+                int width = c.GetInteger("video.Width");
                 int height = c.GetInteger("video.height");
                 bool fullscreen = c.GetBool("video.fullscreen");
                 bool audio = c.GetBool("audio.enable");
@@ -6743,7 +6744,7 @@ using Cheetah;");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "demos");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "system");
                     File.Copy("config" + Path.DirectorySeparatorChar + "global.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "global.config");
-                    //File.Copy("config" + Path.DirectorySeparatorChar + "controls.xml", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "controls.xml");
+                    //File.Copy("config" + Path.DirectorySeparatorChar + "controls.Xml", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "controls.Xml");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "servers.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "servers.config");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "classes.types", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "classes.types");
                 }

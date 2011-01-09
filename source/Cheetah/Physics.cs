@@ -2,6 +2,7 @@
 //using Ode.NET;
 using System;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace Cheetah.Physics
 {
