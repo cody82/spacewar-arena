@@ -25,6 +25,7 @@ using Cheetah;
 using Cheetah.Graphics;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Flows
 {
@@ -520,7 +521,7 @@ namespace SpaceWar2006.Flows
             Root.Instance.Scene.Clear();
             c = Root.Instance.Scene.camera = new Camera();
             //c.rotationspeed = new Vector3(0, 1, 0);
-            //c.Orientation = Quaternion.FromAxisAngle(Vector3.YAxis, (float)Math.PI);
+            //c.Orientation = QuaternionExtensions.FromAxisAngle(Vector3.YAxis, (float)Math.PI);
             Root.Instance.Scene.Spawn(c);
             n = new Node();
             //n.Position = new Vector3(0, 0, 0);
@@ -658,7 +659,7 @@ namespace SpaceWar2006.Flows
                     Vector3 delta = pos - lastpos;
                     lastpos = pos;
 
-                    Quaternion q = Quaternion.FromAxisAngle(0, 1, 0, delta.X * 0.01f) * Quaternion.FromAxisAngle(selected.Left, -delta.Y * 0.01f);
+                    Quaternion q = QuaternionExtensions.FromAxisAngle(0, 1, 0, delta.X * 0.01f) * QuaternionExtensions.FromAxisAngle(selected.Left, -delta.Y * 0.01f);
                     selected.Position = q.ToMatrix3().Transform(selected.Position);
                     if (bbox.HasValue)
                         selected.LookAt(bbox.Value.Center);
@@ -927,7 +928,7 @@ namespace SpaceWar2006.Flows
             if (Lines.Count > 0)
             {
                 Vector3 wantedpostion = new Vector3(sx * 0.5f, ((float)0+0.5f) * FontSize * 1.1f, 0);
-                if ((Lines[0].CurrentPosition - wantedpostion).GetMagnitude() < 3)
+                if ((Lines[0].CurrentPosition - wantedpostion).Length < 3)
                 {
                     Lines.RemoveAt(0);
                 }

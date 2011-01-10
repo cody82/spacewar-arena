@@ -24,6 +24,7 @@ using Cheetah;
 using Cheetah.Graphics;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Windows
 {
@@ -296,8 +297,8 @@ namespace SpaceWar2006.Windows
                 int i = 0;
 
                 lines[i++] = comp.Target.Name;
-                lines[i++] = string.Format("dist {0} m", (int)(comp.Target.AbsolutePosition - comp.Owner.AbsolutePosition).GetMagnitude());
-                lines[i++] = string.Format("speed {0} m/s", (int)comp.Target.Speed.GetMagnitude());
+                lines[i++] = string.Format("dist {0} m", (int)(comp.Target.AbsolutePosition - comp.Owner.AbsolutePosition).Length);
+                lines[i++] = string.Format("speed {0} m/s", (int)comp.Target.Speed.Length);
                 if (comp.Target.Hull != null)
                     lines[i++] = "hull " + (int)comp.Target.Hull.CurrentHitpoints + "/" + (int)comp.Target.Hull.MaxHitpoints + " HP";
                 else
@@ -410,8 +411,8 @@ namespace SpaceWar2006.Windows
         {
             Color = new Color4f(0, 0, 0, 0);
 
-            float resy = Size.y;
-            float resx = Size.y;
+            float resy = Size.Y;
+            float resx = Size.X;
             float want = 50;
             Layout.Heights[0] = want;
             Layout.Heights[3] = want;
@@ -1313,7 +1314,7 @@ namespace SpaceWar2006.Windows
             }
 
             Size = new Vector2(200,200);
-            Position = new Vector2(Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.X - Size.y - 8):1000, 8);
+            Position = new Vector2(Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.X - Size.Y - 8):1000, 8);
         }
 
         void UpdateBuffer()
@@ -1324,7 +1325,7 @@ namespace SpaceWar2006.Windows
             IList<Node> list = Root.Instance.Scene.FindEntitiesByType<Node>();
 
             Vector3 offset = new Vector3(5000, 0, 5000);
-            Vector3 scale = new Vector3(Size.x / 10000.0f, Size.y / 10000.0f, 0);
+            Vector3 scale = new Vector3(Size.X / 10000.0f, Size.Y / 10000.0f, 0);
 
             int i = 0;
             foreach (Node n in list)
@@ -1372,7 +1373,7 @@ namespace SpaceWar2006.Windows
                 //v.X += Position.x;
                 //v.Y += Position.y;
                 Vertices[i].position = v;
-                Vertices[i].texture0.x = pointsize;
+                Vertices[i].texture0.X = pointsize;
                 c.a = pointsize;
 
 
@@ -1484,7 +1485,7 @@ namespace SpaceWar2006.Windows
             Size = new Vector2(pixelsize, icons.Length * pixelsize);
             Position = new Vector2(
                 8,
-                Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.Y / 2 - Size.y / 2):1000
+                Root.Instance.UserInterface!=null?(Root.Instance.UserInterface.Renderer.Size.Y / 2 - Size.Y / 2):1000
                 );
             Transparent = true;
 
@@ -1522,12 +1523,12 @@ namespace SpaceWar2006.Windows
             for (int i = 0; i < SpaceShip.WeaponList.Length - 1; ++i)
             {
                 Vector2 pos=icons[i].Position+Position;
-                Root.Instance.Gui.DefaultFont.Draw(r, ship.Inventory.Count(SpaceShip.WeaponList[i]).ToString(), pos.x, pos.y,new Color4f(0,1,0,1));
+                Root.Instance.Gui.DefaultFont.Draw(r, ship.Inventory.Count(SpaceShip.WeaponList[i]).ToString(), pos.X, pos.Y,new Color4f(0,1,0,1));
             }
         }
         void UpdateDisplayPosition()
         {
-            display.Position = Position + icons[currentweapon].Position + new Vector2(icons[currentweapon].Size.x, 0) + new Vector2(8, 0);
+            display.Position = Position + icons[currentweapon].Position + new Vector2(icons[currentweapon].Size.X, 0) + new Vector2(8, 0);
         }
 
         WeaponDisplay display;

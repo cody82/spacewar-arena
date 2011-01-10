@@ -812,7 +812,7 @@ namespace Cheetah.Graphics
 			{
 				n+=f2[i].Normal;
 			}
-			if(n.GetMagnitudeSquared()>0)
+			if(n.LengthSquared>0)
 				n.Normalize();
 			return n;
 		}
@@ -827,7 +827,7 @@ namespace Cheetah.Graphics
 				Vector3 b=f.Vertex2.Position;
 				Vector3 c=f.Vertex3.Position;
 				Vector3 n=Vector3.Cross(b-a,c-a);
-				if(n.GetMagnitudeSquared()>0)n.Normalize();
+				if(n.LengthSquared>0)n.Normalize();
 				f.Normal=n;
 				Faces[i]=f;
 			}
@@ -962,7 +962,7 @@ namespace Cheetah.Graphics
                 else if (line.StartsWith("wire:"))
                 {
                     string val = line.Split(new char[] { ':' })[1].Trim();
-                    m.Wire = bool.Parse(val);
+                    m.wire = bool.Parse(val);
                     continue;
                 }
                 else if (line.StartsWith("depthtest:"))
@@ -1943,7 +1943,7 @@ namespace Cheetah.Graphics
                 {
                     string[] values = line.Split(new char[] { ':' })[1].Trim(new char[] { ' ', '[', ']' }).Split(',');
                     cam.Orientation = new Quaternion(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3]));
-                    //cam.Orientation = Quaternion.FromAxisAngle(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3])/180.0f*3.14f);
+                    //cam.Orientation = QuaternionExtensions.FromAxisAngle(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3])/180.0f*3.14f);
                     continue;
                 }
                 else if (line.StartsWith("target:"))
@@ -3647,7 +3647,7 @@ namespace Cheetah.Graphics
             mat.DepthTest = true;
             mat.DepthWrite = true;
             mat.twosided = false;
-            mat.Wire = false;
+            mat.wire = false;
             mat.Shader = Root.Instance.ResourceManager.LoadShader("bones.light.shader");
             mat.NoLighting = false;
             mat.diffusemap = albedotex;
@@ -3804,12 +3804,12 @@ namespace Cheetah.Graphics
 
         public Matrix4 GetMatrix()
         {
-            Matrix4 m = Matrix4.FromQuaternion(Orientation);
+            Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
             m[12] = Position.X;
             m[13] = Position.Y;
             m[14] = Position.Z;
 
-            //Matrix4 m = Matrix4.FromQuaternion(Orientation) * Matrix4.FromTranslation(Position);
+            //Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation) * Matrix4Extensions.FromTranslation(Position);
             return m;
         }
     }
@@ -3828,12 +3828,12 @@ namespace Cheetah.Graphics
             public Quaternion Orientation;
             public Matrix4 GetMatrix()
             {
-                Matrix4 m = Matrix4.FromQuaternion(Orientation);
+                Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
                 m[12] = Position.X;
                 m[13] = Position.Y;
                 m[14] = Position.Z;
 
-                //Matrix4 m = Matrix4.FromQuaternion(Orientation) * Matrix4.FromTranslation(Position);
+                //Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation) * Matrix4Extensions.FromTranslation(Position);
                 return m;
             }
         }
@@ -3986,8 +3986,7 @@ namespace Cheetah.Graphics
 
         public void Draw(IRenderer r, SkeletalAnimation a)
         {
-            Matrix4 m = new Matrix4();
-            m.SetToIdentity();
+            Matrix4 m = Matrix4.Identity;
             SetBones(r, Bones[0], m, a, Shader);
             r.Draw(Vertices, PrimitiveType.TRIANGLES, 0, Indices.buffer.Length, Indices);
 
@@ -4431,9 +4430,8 @@ namespace Cheetah.Graphics
             r.GetMatrix(modelview, projection);
             r.PushMatrix();
 
-            Matrix4 m = new Matrix4(modelview);
+            Matrix4 m = Matrix4.Identity;
             Vector3 pos = m.ExtractTranslation();
-            m.SetToIdentity();
             m.Translate(pos);
             r.LoadMatrix(m);
 
@@ -4955,7 +4953,7 @@ namespace Cheetah.Graphics
 
         public override void Draw(IRenderer r, RectangleF rect)
 		{
-			//Matrix4 pos=Matrix4.FromTranslation(position.X,position.Y,0);//*Matrix4.FromScale(size.X,size.Y,0);
+			//Matrix4 pos=Matrix4Extensions.FromTranslation(position.X,position.Y,0);//*Matrix4Extensions.FromScale(size.X,size.Y,0);
 			//r.BindTexture(texture);
 			//r.PushMatrix();
 			//r.MultMatrix(pos);
@@ -5794,10 +5792,10 @@ namespace Cheetah.Graphics
             base.DrawInternal(r, rect);
 
             r.PushMatrix();
-            r.MultMatrix(Matrix4.FromScale(Size.X, -Size.Y, 0));
-            r.MultMatrix(Matrix4.FromTranslation(0,-1,0));
-            r.MultMatrix(Matrix4.FromTranslation(0.5f, 0.5f, 0));
-            r.MultMatrix(Matrix4.FromScale(Scale.X, Scale.Y, 0));
+            r.MultMatrix(Matrix4Extensions.FromScale(Size.X, -Size.Y, 0));
+            r.MultMatrix(Matrix4Extensions.FromTranslation(0,-1,0));
+            r.MultMatrix(Matrix4Extensions.FromTranslation(0.5f, 0.5f, 0));
+            r.MultMatrix(Matrix4Extensions.FromScale(Scale.X, Scale.Y, 0));
             //r.MultMatrix(Matrix4.FromAngleAxis(Vector3.ZAxis, Root.Instance.Time));
             //r.UseShader(Mesh.Material.Shader);
             Mesh.Draw(r,null);
@@ -5829,7 +5827,7 @@ namespace Cheetah.Graphics
             base.DrawInternal(r, rect);
 
             //r.PushMatrix();
-            //r.MultMatrix(Matrix4.FromTranslation(0, -1, 0));
+            //r.MultMatrix(Matrix4Extensions.FromTranslation(0, -1, 0));
             //r.UseShader(Mesh.Material.Shader);
             Vector2 pos = (Size/2)+new Vector2(-Font.Width * (float)Caption.Length*0.5f, -Font.size/2);
             Font.Draw(r,Caption,pos.X,pos.Y,new Color4f(1,1,1),false,32,48);
@@ -5924,7 +5922,7 @@ namespace Cheetah.Graphics
             //rect.Intersect(new RectangleF(CurrentScrollPosition.X, CurrentScrollPosition.Y, size.X, size.Y));
    
            
-            Matrix4 pos=Matrix4.FromTranslation(position.X,position.Y,0);//*Matrix4.FromScale(size.X,size.Y,0);
+            Matrix4 pos=Matrix4Extensions.FromTranslation(position.X,position.Y,0);//*Matrix4Extensions.FromScale(size.X,size.Y,0);
 			if(texture!=null)
 				r.BindTexture(texture.Id);
 			else
@@ -5955,7 +5953,7 @@ namespace Cheetah.Graphics
             }
 
 
-            Matrix4 scroll = Matrix4.FromTranslation(CurrentScrollPosition.X, CurrentScrollPosition.Y, 0);
+            Matrix4 scroll = Matrix4Extensions.FromTranslation(CurrentScrollPosition.X, CurrentScrollPosition.Y, 0);
             r.MultMatrix(scroll);
             foreach (Window w in Children)
 			{
@@ -6292,7 +6290,7 @@ namespace Cheetah.Graphics
                 if (w.Parent != null)
                     w.Parent.Children.Remove(w);
                 else
-                    Root.Instance.Gui.Windows.Remove(w);
+                    Root.Instance.Gui.windows.Remove(w);
             }
         }
 
@@ -6706,7 +6704,7 @@ namespace Cheetah.Graphics
                 if (w.Parent != null)
                     w.Parent.Children.Remove(w);
                 else
-                    Root.Instance.Gui.Windows.Remove(w);
+                    Root.Instance.Gui.windows.Remove(w);
             }
 
             Console.Tick(dtime);
@@ -8122,10 +8120,10 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
     m[9] = -forward[1];
     m[10] = -forward[2];
 
-    //m = Matrix4.FromBasis(side, up, -forward);
+    //m = Matrix4Extensions.FromBasis(side, up, -forward);
 
-    m = m * Matrix4.FromTranslation(-eyex, -eyey, -eyez);
-    //m = Matrix4.FromTranslation(-eyex, -eyey, -eyez)*m;
+    m = m * Matrix4Extensions.FromTranslation(-eyex, -eyey, -eyez);
+    //m = Matrix4Extensions.FromTranslation(-eyex, -eyey, -eyez)*m;
     //m.Translate(-eyex, -eyey, -eyez);
     //glMultMatrixf(&m[0][0]);
     //glTranslated(-eyex, -eyey, -eyez);
@@ -8163,7 +8161,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
    /* transformation coordonnees normalisees entre -1 et 1 */
    inv.X = (winx - (float)viewport[0]) * 2.0f / (float)viewport[2] - 1.0f;
    inv.Y = (winy - (float)viewport[1]) * 2.0f / (float)viewport[3] - 1.0f;
-   inv.z = 2.0f * winz - 1.0f;
+   inv.Z = 2.0f * winz - 1.0f;
    inv.W = 1.0f;
 
    /* calcul transformation inverse */
@@ -8184,7 +8182,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
    //*objy = out[1] / out[3];
    //*objz = out[2] / out[3];
    //return 1;
-  return new Vector3(outv.X / outv.W, outv.Y / outv.W, outv.z / outv.W);
+  return new Vector3(outv.X / outv.W, outv.Y / outv.W, outv.Z / outv.W);
   //return new Vector3(outv.X, outv.Y , outv.Z );
 }
         protected float _Fov=60.0f;
@@ -8326,13 +8324,13 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             {
                 if (Mode!=CameraMode.FlyBy)
                 {
-                    /*Matrix4 m1 = Matrix4.FromQuaternion(SmoothOrientation.Smoothed);
+                    /*Matrix4 m1 = Matrix4Extensions.FromQuaternion(SmoothOrientation.Smoothed);
 
                     m1[12] = SmoothPosition.Smoothed.X;
                     m1[13] = SmoothPosition.Smoothed.Y;
                     m1[14] = SmoothPosition.Smoothed.Z;
 
-                    Matrix4 m2 = Matrix4.FromQuaternion(Orientation);
+                    Matrix4 m2 = Matrix4Extensions.FromQuaternion(Orientation);
 
                     m2[12] = Position.X;
                     m2[13] = Position.Y;
@@ -8344,7 +8342,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 if (Attach == null)
                 {
           
-                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -8355,7 +8353,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                 else
                 {
                     Matrix4 m;
-                    m= Matrix4.FromQuaternion(Orientation);
+                    m= Matrix4Extensions.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -8437,7 +8435,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                     if (Attach!=null)
                     {
                         Vector3 v = Attach.Speed;
-                        if (v.GetMagnitudeSquared()<0.00001f)
+                        if (v.LengthSquared<0.00001f)
                             v = Attach.Matrix.Transform(new Vector3(0, 0, 1));
                         v.Normalize();
                         v *= Dist;
@@ -8712,8 +8710,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
         public void Draw(IRenderer r, string text, float x, float y, Color4f color, bool center, float width, float size)
         {
             r.PushMatrix();
-            r.MultMatrix(Matrix4.FromTranslation(x-width*((float)text.Length)/2.0f, y, 0));
-            r.MultMatrix(Matrix4.FromScale(size, -size, size));
+            r.MultMatrix(Matrix4Extensions.FromTranslation(x-width*((float)text.Length)/2.0f, y, 0));
+            r.MultMatrix(Matrix4Extensions.FromScale(size, -size, size));
             for (int i = 0; i < text.Length; ++i)
             {
                 char c=text[i];
@@ -8725,7 +8723,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                     if(m!=null)
                         m.Draw(r, null);
                 }
-                r.MultMatrix(Matrix4.FromTranslation(width / size, 0, 0));
+                r.MultMatrix(Matrix4Extensions.FromTranslation(width / size, 0, 0));
             }
             r.PopMatrix();
         }

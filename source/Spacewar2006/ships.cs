@@ -413,7 +413,7 @@ namespace SpaceWar2006.Ships
 		{
 			base.Tick (dTime);
 			
-			float speed=Speed.GetMagnitude();
+			float speed=Speed.Length;
 			if(MaxSpeed>0 && speed>MaxSpeed && speed!=0)
 			{
 				Speed*=MaxSpeed/speed;

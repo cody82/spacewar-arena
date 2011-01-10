@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 using Cheetah.Graphics;
 using OpenTK;
+using Cheetah.OpenTK;
 
 namespace Cheetah.Doom3
 {
@@ -254,7 +255,7 @@ namespace Cheetah.Doom3
 
 		protected Matrix4 GetJointMatrix(Md5Joint j)
 		{
-			return Matrix4.FromTranslation(j.Position) * Matrix4.FromQuaternion(j.Orientation);
+			return Matrix4Extensions.FromTranslation(j.Position) * Matrix4Extensions.FromQuaternion(j.Orientation);
 		}
 
 		protected Vector3 Transform(Vector3 v, Md5Joint j)
@@ -286,7 +287,7 @@ namespace Cheetah.Doom3
 				Md5Weight w = Weights[i];
 				Md5JointValue j = a.Frames[frame].Values[w.JointIndex];
 				
-				Matrix4 m = Matrix4.FromTranslation(j.Position) * Matrix4.FromQuaternion(j.Orientation);
+				Matrix4 m = Matrix4Extensions.FromTranslation(j.Position) * Matrix4Extensions.FromQuaternion(j.Orientation);
 				pos += w.Value * m.Transform(w.Position);
 			}
 
@@ -331,7 +332,7 @@ namespace Cheetah.Doom3
 			CreateBuffers();
 			Material mq = Material.CreateSimpleMaterial(Root.Instance.ResourceManager.LoadTexture("revenant.tga"));
 			mq.twosided = true;
-			mq.Wire = true;
+			mq.wire = true;
 			r.SetMode(RenderMode.Draw3D);
 			r.SetMaterial(mq);
 			IEffect e = (IEffect)Root.Instance.ResourceManager.Load("shaders/simple.cgfx", typeof(IEffect));
@@ -597,7 +598,7 @@ namespace Cheetah.Doom3
 					throw new Exception("");
 
 				Md5JointValue parent = thisframe.Values[parentjoint];
-				Vector3 p = Matrix4.FromQuaternion(parent.Orientation) * baseframe.Values[joint].Position;
+				Vector3 p = Matrix4Extensions.FromQuaternion(parent.Orientation) * baseframe.Values[joint].Position;
 				p += parent.Position;
 				Quaternion q = baseframe.Values[joint].Orientation * parent.Orientation;
 				q.Normalize();
@@ -678,7 +679,7 @@ namespace Cheetah.Doom3
 					throw new Exception("");
 
 				Md5JointValue parent = thisframe.Values[parentjoint];
-				Vector3 p = Matrix4.FromQuaternion(parent.Orientation) * v.Position;
+				Vector3 p = Matrix4Extensions.FromQuaternion(parent.Orientation) * v.Position;
 				p += parent.Position;
 				Quaternion q = v.Orientation * parent.Orientation;
 				q.Normalize();

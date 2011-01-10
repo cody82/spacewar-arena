@@ -46,7 +46,7 @@ namespace SpaceWar2006.Maps
 
             Sync += dTime;
 
-            Mars.Orientation = Quaternion.FromAxisAngle(Vector3.YAxis, 15.0f / 180.0f * (float)Math.PI * Sync);
+            Mars.Orientation = QuaternionExtensions.FromAxisAngle(Vector3.YAxis, 15.0f / 180.0f * (float)Math.PI * Sync);
         }
 
     }

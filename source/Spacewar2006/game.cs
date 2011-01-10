@@ -307,9 +307,9 @@ namespace SpaceWar2006.GameObjects
                 Roll = 0;
             }
 
-            Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+            Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
             Orientation = q1;
-            Quaternion q2 = Quaternion.FromAxisAngle(Direction, Roll);
+            Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
             Orientation = q1 * q2;
 
             Vector3 tmp = Position;
@@ -814,7 +814,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (a != Owner && !a.Kill && pred(a))
                 {
-                    float dist = (((Node)a).AbsolutePosition - Owner.AbsolutePosition).GetMagnitude();
+                    float dist = (((Node)a).AbsolutePosition - Owner.AbsolutePosition).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)a;
@@ -859,7 +859,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (a != Owner && !a.Kill)
                 {
-                    float dist = (((Node)a).AbsolutePosition - c).GetMagnitude();
+                    float dist = (((Node)a).AbsolutePosition - c).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)a;
@@ -872,7 +872,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (de.Value is Actor && de.Value != Owner && !de.Value.Kill)
                 {
-                    float dist = (((Node)de.Value).AbsolutePosition - c).GetMagnitude();
+                    float dist = (((Node)de.Value).AbsolutePosition - c).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)de.Value;
@@ -904,7 +904,7 @@ namespace SpaceWar2006.GameObjects
                 return null;
 
             TargetInfo ti = new TargetInfo();
-            ti.Dist = (Owner.AbsolutePosition - Target.AbsolutePosition).GetMagnitude();
+            ti.Dist = (Owner.AbsolutePosition - Target.AbsolutePosition).Length;
             
         }*/
 
@@ -1007,7 +1007,7 @@ namespace SpaceWar2006.GameObjects
             {
                 rotationspeed.Y = RotationPower * MaxRotationSpeed;
 
-                Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+                Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
                 Orientation = q1;
 
                 float wantedroll = -RotationPower * MaxRoll;
@@ -1015,7 +1015,7 @@ namespace SpaceWar2006.GameObjects
                 float abs = Math.Abs(delta);
                 Roll += Math.Min(abs, 1.0f) * Math.Sign(delta) * Math.Min(abs, dtime * RollSpeed);
 
-                Quaternion q2 = Quaternion.FromAxisAngle(Direction, Roll);
+                Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
                 Orientation = q1 * q2;
             }
 
@@ -1026,7 +1026,7 @@ namespace SpaceWar2006.GameObjects
 
             Speed += Direction * ThrustPower * MainThrust * dtime;
             Speed += Left * StrafePower * StrafeThrust * dtime;
-            float factor = Math.Max(Speed.GetMagnitude() / 100, 1);
+            float factor = Math.Max(Speed.Length / 100, 1);
             Speed -= Speed * Resistance * dtime * factor;
 
             foreach (Slot s in Slots)
@@ -1771,7 +1771,7 @@ namespace SpaceWar2006.GameObjects
             }
             set
             {
-                Orientation = Quaternion.FromAxisAngle(0, 1, 0, value);
+                Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, value);
             }
         }
 

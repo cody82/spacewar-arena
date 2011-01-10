@@ -471,7 +471,7 @@ namespace Cheetah.Graphics
 					stream.Seek(0,SeekOrigin.Begin);
                		bytes = stream.Read(oy.data, index, BUFFERSIZE);
  				}
-				oy.Wrote(bytes);
+				oy.wrote(bytes);
             }
 
 		}

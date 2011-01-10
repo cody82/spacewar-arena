@@ -69,9 +69,9 @@ namespace SpaceWar2006.Controls
                 Roll = 0;
             }
 
-            Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+            Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
             TargetActor.Orientation = q1;
-            Quaternion q2 = Quaternion.FromAxisAngle(TargetActor.Direction, Roll);
+            Quaternion q2 = QuaternionExtensions.FromAxisAngle(TargetActor.Direction, Roll);
             TargetActor.Orientation = q1 * q2;
 
             Vector3 tmp = TargetActor.Position;

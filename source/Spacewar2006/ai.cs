@@ -514,7 +514,7 @@ namespace SpaceWar2006.Ai
 
             foreach (CollisionInfo ci in GetObstacles())
             {
-                if (ci.Check(new SphereCollisionInfo(new Vector3((float)x * CellSize + 0.5f * CellSize, 0, (float)y * CellSize + 0.5f * CellSize), new Vector3(CellSize * 0.5f, CellSize * 0.5f, 0).GetMagnitude())))
+                if (ci.Check(new SphereCollisionInfo(new Vector3((float)x * CellSize + 0.5f * CellSize, 0, (float)y * CellSize + 0.5f * CellSize), new Vector3(CellSize * 0.5f, CellSize * 0.5f, 0).Length)))
                 {
                     //throw new Exception();
                     return -1;
@@ -731,14 +731,14 @@ namespace SpaceWar2006.Ai
             input.LookAt = Target;
 
             Vector3 dir = Target - Owner.AbsolutePosition;
-            float dist = dir.GetMagnitude();
+            float dist = dir.Length;
             if (dist > lastdist)
             {
                 stop = true;
                 lastdist = float.PositiveInfinity;
             }
 
-            if (Owner.Speed.GetMagnitude() < 1)
+            if (Owner.Speed.Length < 1)
                 stop = false;
 
             input.Strafe = stop?0:Math.Sign(Owner.GetCosDirection(Target));

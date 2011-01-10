@@ -159,7 +159,7 @@ namespace Cheetah
 
 		void GetMatrix(float[] modelview,float[] projection);
         float[] GetRasterPosition(float[] pos3d);
-        float[] UnProject(float[] winxyz,float[] model,float[] proj,int[] viewport);
+        Vector3 UnProject(float[] winxyz,float[] model,float[] proj,int[] viewport);
 
         System.Drawing.Bitmap Screenshot();
         Cheetah.Graphics.Image Screenshot2();

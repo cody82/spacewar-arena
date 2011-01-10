@@ -188,9 +188,9 @@ namespace Cheetah
         {
             n.localspeed = new Vector3(0, 0, Throttle.GetAxisPosition() * 100);
             /*Quaternion q=
-                Quaternion.FromAxisAngle(1,0,0,Pitch.GetAxisPosition()*30)*
-                Quaternion.FromAxisAngle(0,1,0,Yaw.GetAxisPosition()*30)*
-                Quaternion.FromAxisAngle(0,0,1,Roll.GetAxisPosition()*30);*/
+                QuaternionExtensions.FromAxisAngle(1,0,0,Pitch.GetAxisPosition()*30)*
+                QuaternionExtensions.FromAxisAngle(0,1,0,Yaw.GetAxisPosition()*30)*
+                QuaternionExtensions.FromAxisAngle(0,0,1,Roll.GetAxisPosition()*30);*/
             n.rotationspeed = new Vector3(
                     Pitch.GetAxisPosition(),//+MousePitch.GetAxisPosition(),
                     Yaw.GetAxisPosition(),//+MouseYaw.GetAxisPosition(),
@@ -939,7 +939,7 @@ namespace Cheetah
                         if (Input != null)
                         {
                             pi.SetValue(Select, Input.Parse(), null);
-                            Root.Instance.Gui.Windows.Remove(Input);
+                            Root.Instance.Gui.windows.Remove(Input);
                             Input = null;
                             return;
                         }
@@ -981,7 +981,7 @@ namespace Cheetah
                         if (Input != null)
                         {
                             fi.SetValue(Select, Input.Parse());
-                            Root.Instance.Gui.Windows.Remove(Input);
+                            Root.Instance.Gui.windows.Remove(Input);
                             Input = null;
                             return;
                         }
@@ -1017,7 +1017,7 @@ namespace Cheetah
                         }
                         else throw new Exception("incompatible type.");
                     }
-                    Root.Instance.Gui.Windows.Add(Input);
+                    Root.Instance.Gui.windows.Add(Input);
                 }
             }
 
@@ -1379,9 +1379,9 @@ using Cheetah;");
             position.Original += m.Transform(localspeed) * dtime;
 
             orientation.Tick(dtime, SmoothTime);
-            Quaternion qx = Quaternion.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
-            Quaternion qy = Quaternion.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
-            Quaternion qz = Quaternion.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
+            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
+            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
+            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
             Quaternion q = qx * qy * qz;
             //q=Quaternion.Identity*Quaternion.Identity;
             orientation.Original = q * orientation.Original;
@@ -1446,7 +1446,7 @@ using Cheetah;");
             {
                 if (Attach == null)
                 {
-                    Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
                     m[12] = position.Smoothed.X;
                     m[13] = position.Smoothed.Y;
@@ -1456,7 +1456,7 @@ using Cheetah;");
                 }
                 else
                 {
-                    Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
                     m[12] = position.Smoothed.X;
                     m[13] = position.Smoothed.Y;
@@ -1473,7 +1473,7 @@ using Cheetah;");
             {
                 if (Attach == null)
                 {
-                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -1486,8 +1486,8 @@ using Cheetah;");
                     if (Attach.Kill)
                         Kill = true;
 
-                    Matrix4 m = Matrix4.FromQuaternion(Orientation);
-                    //Matrix4 m = Matrix4.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
+                    //Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
                     m[12] = Position.X;
                     m[13] = Position.Y;
@@ -1514,15 +1514,15 @@ using Cheetah;");
                 y = Vector3.Cross(z, x);
                 //y.Normalize();
 
-                //Matrix4 m1=Matrix4.FromQuaternion(orientation);
-                //Quaternion q1=Quaternion.FromMatrix4(m1);
+                //Matrix4 m1=Matrix4Extensions.FromQuaternion(orientation);
+                //Quaternion q1=QuaternionExtensions.FromMatrix4(m1);
 
                 //x.Z=-x.Z;
                 //y.Z=-y.Z;
                 //z.Z=-z.Z;
-                Matrix4 m = Matrix4.FromBasis(x, y, z);
+                Matrix4 m = Matrix4Extensions.FromBasis(x, y, z);
                 //m.Invert();
-                Orientation = Quaternion.FromMatrix4(m);
+                Orientation = QuaternionExtensions.FromMatrix4(m);
             }
             catch (DivideByZeroException)
             {
@@ -1744,7 +1744,7 @@ using Cheetah;");
         public int Transparent = 0;
         public bool SyncRefs = true;
         public bool Visible = true;
-        public static Vector3 Up = Vector3.YAxis;
+        public static Vector3 Up = Vector3.UnitY;
         public float RenderRadius = -1;
     }
 
@@ -1865,7 +1865,7 @@ using Cheetah;");
             //Center = center;
             BBox = bbox;
             //Orientation = orientation;
-            //Matrix = Matrix4.FromTranslation(center) * Matrix4.FromQuaternion(Quaternion);
+            //Matrix = Matrix4Extensions.FromTranslation(center) * Matrix4Extensions.FromQuaternion(Quaternion);
             Matrix = matrix;
             InvMatrix = matrix.GetInverse();
         }

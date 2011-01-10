@@ -16,9 +16,88 @@ using OpenTK.Input;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 
+namespace Cheetah
+{
+    public static class QuaternionExtensions
+    {
+        public static Quaternion GetInverse(this Quaternion q)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 ToMatrix4(this Quaternion q)
+        {
+            throw new Exception("TODO");
+        }
+        public static Quaternion FromAxisAngle(float ax,float ay,float yz,float a)
+        {
+            throw new Exception("TODO");
+        }
+        public static Quaternion FromMatrix4(Matrix4 m)
+        {
+            throw new Exception("TODO");
+        }  
+        
+    }
+
+    public static class Matrix4Extensions
+    {
+        public static Matrix4 FromTranslation(Vector3 position)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 FromTranslation(float px,float py,float pz)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 FromQuaternion(Quaternion q)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 FromBasis(Vector3 x,Vector3 y,Vector3 z)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 FromScale(float x, float y, float z)
+        {
+            throw new Exception("TODO");
+        }
+
+        
+        public static Vector3 Transform(this Matrix4 m, Vector3 v)
+        {
+            throw new Exception("TODO");
+        }
+        public static Vector4 Transform(this Matrix4 m, Vector4 v)
+        {
+            throw new Exception("TODO");
+        }
+
+        public static Vector3 ExtractTranslation(this Matrix4 m)
+        {
+            throw new Exception("TODO");
+        }
+        public static void ExtractBasis(this Matrix4 m, out Vector3 x,out Vector3 y,out Vector3 z)
+        {
+            throw new Exception("TODO");
+        }
+        public static void Translate(this Matrix4 m, Vector3 v)
+        {
+            throw new Exception("TODO");
+        }
+
+        public static Matrix4 GetInverse(this Matrix4 m)
+        {
+            throw new Exception("TODO");
+        }
+    }
+
+    public static class Vector3Extensions
+    {
+    }
+}
+
 namespace Cheetah.OpenTK
 {
-
     public class OpenTkSound : Sound
     {
         internal int id=-1;

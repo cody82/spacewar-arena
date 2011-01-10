@@ -659,7 +659,7 @@ namespace SpaceWar2006.Weapons
                     Vector3 d = Direction;
                     rotation = -(float)Math.Atan2(d.X, d.Z);
                     //System.Console.WriteLine(rotation.ToString());
-                    Orientation = Quaternion.FromAxisAngle(0, 1, 0, rotation);
+                    Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotation);
                     //rotation = -(float)Math.Atan2(Direction.X, Direction.Z);
                     //System.Console.WriteLine(rotation.ToString());
                 }
@@ -691,9 +691,9 @@ namespace SpaceWar2006.Weapons
                 rotation += rotationspeed * dTime;
                 roll = -rotationspeed / 2;
 
-                Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, rotation);
+                Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotation);
                 Orientation = q1;
-                Quaternion q2 = Quaternion.FromAxisAngle(Direction, roll);
+                Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, roll);
                 Orientation = q1 * q2;
 
                 Vector3 tmp = Position;
@@ -759,9 +759,9 @@ namespace SpaceWar2006.Weapons
                 Roll = 0;
             }
 
-            Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+            Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
             Orientation = q1;
-            Quaternion q2 = Quaternion.FromAxisAngle(Direction, Roll);
+            Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
             Orientation = q1 * q2;
 
             Vector3 tmp = Position;

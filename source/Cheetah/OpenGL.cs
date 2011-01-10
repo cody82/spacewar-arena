@@ -706,7 +706,7 @@ namespace Cheetah.Graphics
             CheckError();
             if (target != null)
             {
-                currentwidth=((TextureId)target.Texture).W;
+                currentwidth=((TextureId)target.Texture).w;
                 currentheight = ((TextureId)target.Texture).h;
                 GL.BindFramebuffer(FramebufferTarget.FramebufferExt, ((RenderTarget)target).id);
             }
@@ -1241,7 +1241,7 @@ namespace Cheetah.Graphics
 				GL.GetFloat(GetPName.ModelviewMatrix, modelview);
 		}
 
-        public float[] UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
+        public Vector3 UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
         {
             global::OpenTK.Matrix4d projection;
             global::OpenTK.Matrix4d modelview;
@@ -1261,8 +1261,7 @@ namespace Cheetah.Graphics
 
             Imgui.Glu.UnProject(new global::OpenTK.Vector3d((double)winxyz[0], (double)winxyz[1], (double)winxyz[2]), modelview, projection, _viewport, ref obj);
 
-            return new float[3]{(float)obj.X,(float)obj.Y,(float)obj.Z};
-            //return (float[])(new Camera().gluUnProject(winxyz[0], winxyz[1], winxyz[2], model, proj, _viewport));
+            return new Vector3((float)obj.X,(float)obj.Y,(float)obj.Z);
         }
 
         public float[] GetRasterPosition(float[] pos3d)
@@ -1464,7 +1463,7 @@ namespace Cheetah.Graphics
             GL.LoadMatrix((float[])c.GetProjectionMatrix());
             GL.MatrixMode(MatrixMode.Modelview);
 
-			Matrix4 m = c.Matrix;//Matrix4.FromQuaternion(c.Orientation);
+			Matrix4 m = c.Matrix;//Matrix4Extensions.FromQuaternion(c.Orientation);
 
 			Vector3 t = new Vector3();
 			Vector3 x, y;
@@ -1527,7 +1526,7 @@ namespace Cheetah.Graphics
 			GL.BindTexture(TextureTarget.Texture2D, t1.id);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.W, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
+            GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Three, t1.w, t1.h, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Bgr, PixelType.UnsignedByte, rgba);
             CheckError();
         }
 

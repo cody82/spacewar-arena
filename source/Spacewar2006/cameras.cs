@@ -131,7 +131,7 @@ namespace SpaceWar2006.Cameras
             //}
             else
             {
-                float camheight = 1500 + 2 * Target.SmoothSpeed.GetMagnitude();
+                float camheight = 1500 + 2 * Target.SmoothSpeed.Length;
                 campos = new Vector3(0, 0, 800);
 
                 if (Root.Instance.UserInterface != null)
