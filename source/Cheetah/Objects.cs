@@ -2488,7 +2488,7 @@ using Cheetah;");
         {
             if (n.info == null) return false;
 
-            return n.info.Extension.ToLower() == ".Wav" || n.info.Extension.ToLower() == ".mp3" || n.info.Extension.ToLower() == ".ogg" || n.info.Extension.ToLower() == ".Xm";
+            return n.info.Extension.ToLower() == ".wav" || n.info.Extension.ToLower() == ".mp3" || n.info.Extension.ToLower() == ".ogg" || n.info.Extension.ToLower() == ".xm";
         }
     }
 

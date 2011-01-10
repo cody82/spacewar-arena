@@ -1396,9 +1396,13 @@ namespace SpaceWar2006.Flows
             Vector3 v1 = new Vector3(r.UnProject(new float[] { x, y, 1 }, null, null, null));
             Vector3 v2 = new Vector3(r.UnProject(new float[] { x, y, 100000 }, null, null, null));
 
+            if (float.IsNaN(v1.X) || float.IsNaN(v2.X))
+                throw new Exception("NaN");
+
             UpdateInfo(PlayerInfo, playership);
             if (playership != null)
                 UpdateInfo(TargetInfo, playership.Computer.Target);
+
 
             return new Ray(v1, v2);
         }
@@ -1409,6 +1413,8 @@ namespace SpaceWar2006.Flows
             try
             {
                 cursor.Position = p.GetIntersection(ray.Start, ray.End);
+                if (float.IsNaN(cursor.Position.X))
+                    throw new Exception("NaN");
             }
             catch (DivideByZeroException)
             {

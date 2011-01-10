@@ -1225,12 +1225,18 @@ namespace Cheetah.Graphics
 
 		public void LoadMatrix(Matrix4 m)
 		{
+            foreach (float f in m.ToFloats())
+                if (float.IsNaN(f))
+                    throw new Exception("NaN");
 			GL.LoadMatrix(ref m);
 		}
 
 		public void MultMatrix(Matrix4 m)
 		{
-			GL.MultMatrix(ref m);
+            foreach(float f in m.ToFloats())
+                if (float.IsNaN(f))
+                    throw new Exception("NaN");
+            GL.MultMatrix(ref m);
 		}
 
 		public void GetMatrix(float[] modelview, float[] projection)
@@ -1260,6 +1266,9 @@ namespace Cheetah.Graphics
             global::OpenTK.Vector3d obj=new global::OpenTK.Vector3d();
 
             Imgui.Glu.UnProject(new global::OpenTK.Vector3d((double)winxyz[0], (double)winxyz[1], (double)winxyz[2]), modelview, projection, _viewport, ref obj);
+
+            if (double.IsNaN(obj.X))
+                throw new Exception("NaN");
 
             return new Vector3((float)obj.X,(float)obj.Y,(float)obj.Z);
         }

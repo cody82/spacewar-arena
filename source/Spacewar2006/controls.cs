@@ -325,7 +325,10 @@ namespace SpaceWar2006.Controls
         public virtual float GetRotation(SpaceShipControlInput input)
         {
             float cos = Target.GetCosDirection(input.LookAt);
-            return -Math.Max(Math.Min(cos * 3, 1.0f), -1.0f);
+            float f = -Math.Max(Math.Min(cos * 3, 1.0f), -1.0f);
+            if (float.IsNaN(f))
+                throw new Exception("NaN");
+            return f;
         }
 
         protected abstract SpaceShipControlInput GetControls();
