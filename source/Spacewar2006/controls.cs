@@ -16,6 +16,7 @@ using SpaceWar2006.GameObjects;
 using Cheetah;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Controls
 {
@@ -50,7 +51,7 @@ namespace SpaceWar2006.Controls
             catch (DivideByZeroException)
             {
                 System.Console.WriteLine("divide bug./%&$");
-                want = Vector3.XAxis;
+                want = Vector3.UnitX;
             }
 
             float cos = Vector3.Dot(left, want);

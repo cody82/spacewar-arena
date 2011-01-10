@@ -14,6 +14,8 @@ using System.Drawing;
 using Cheetah;
 using Cheetah.Graphics;
 
+using OpenTK;
+
 namespace SpaceWar2006.Effects
 {
 
@@ -727,7 +729,7 @@ namespace SpaceWar2006.Effects
             Mat.DepthWrite = false;
             Shader = Root.Instance.ResourceManager.LoadShader("shock.shader");
             CreateVertexBuffer();
-            BaseMatrix = random?Matrix3.FromAngleAxis(VecRandom.Instance.NextUnitVector3(), 30.0f / 180.0f * (float)Math.PI):Matrix3.Identity;
+            BaseMatrix = random?Matrix4Extensions.FromAngleAxis(VecRandom.Instance.NextUnitVector3(), 30.0f / 180.0f * (float)Math.PI):Matrix4.Identity;
 
         }
         void CreateVertexBuffer()
@@ -759,7 +761,7 @@ namespace SpaceWar2006.Effects
             r.SetUniform(Shader.GetUniformLocation("Alpha"), new float[] { CurrentAlpha });
 
             float s = CurrentSize / 2;
-            Matrix3 m = BaseMatrix * Matrix3.FromScale(s, s, s);
+            Matrix4 m = BaseMatrix * Matrix4Extensions.FromScale(s, s, s);
             r.PushMatrix();
             r.MultMatrix(m);
             r.Draw(Vertices, PrimitiveType.QUADS, 0, 4, null);
@@ -776,7 +778,7 @@ namespace SpaceWar2006.Effects
         VertexBuffer Vertices;
         float f;//f*sqrt(lifetime)=s!
         Shader Shader;
-        Matrix3 BaseMatrix;
+        Matrix4 BaseMatrix;
 
         public float CurrentSize
         {
@@ -843,13 +845,13 @@ namespace SpaceWar2006.Effects
             Count = count;
             Part = part;
             Distance = dist;
-            Offset = Matrix3.FromTranslation(Distance);
+            Offset = Matrix4Extensions.FromTranslation(Distance);
         }
 
         int Count;
         IDrawable Part;
         Vector3 Distance;
-        Matrix3 Offset;
+        Matrix4 Offset;
 
         #region IDrawable Members
 

@@ -14,6 +14,7 @@ using System.Drawing;
 using SpaceWar2006.Controls;
 using SpaceWar2006.GameObjects;
 using Cheetah;
+using OpenTK;
 
 namespace SpaceWar2006.Ai
 {
@@ -128,7 +129,7 @@ namespace SpaceWar2006.Ai
             float dist = Owner.Distance(Target);
 
             Vector3 dir = Target.AbsolutePosition - Owner.AbsolutePosition;
-            if (dir.GetMagnitudeSquared() > 0)
+            if (dir.LengthSquared > 0)
             {
                 dir.Normalize();
                 if ((float)Math.Acos(Vector3.Dot(dir, Owner.Direction)) < (float)Math.PI / 18 && dist < 2000)

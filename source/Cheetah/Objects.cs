@@ -1448,9 +1448,13 @@ using Cheetah;");
                 {
                     Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
-                    m[12] = position.Smoothed.X;
-                    m[13] = position.Smoothed.Y;
-                    m[14] = position.Smoothed.Z;
+                    //m[12] = position.Smoothed.X;
+                    //m[13] = position.Smoothed.Y;
+                    //m[14] = position.Smoothed.Z;
+
+                    m.Row3.X = position.Smoothed.X;
+                    m.Row3.Y = position.Smoothed.Y;
+                    m.Row3.Z = position.Smoothed.Z;
 
                     return m;
                 }
@@ -1458,9 +1462,12 @@ using Cheetah;");
                 {
                     Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
-                    m[12] = position.Smoothed.X;
-                    m[13] = position.Smoothed.Y;
-                    m[14] = position.Smoothed.Z;
+                    //m[12] = position.Smoothed.X;
+                    //m[13] = position.Smoothed.Y;
+                    //m[14] = position.Smoothed.Z;
+                    m.Row3.X = position.Smoothed.X;
+                    m.Row3.Y = position.Smoothed.Y;
+                    m.Row3.Z = position.Smoothed.Z;
 
                     return Attach.SmoothMatrix * m;
                 }
@@ -1475,10 +1482,12 @@ using Cheetah;");
                 {
                     Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
-
+                    //m[12] = Position.X;
+                    //m[13] = Position.Y;
+                    //m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
                     return m;
                 }
                 else
@@ -1487,14 +1496,13 @@ using Cheetah;");
                         Kill = true;
 
                     Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
-                    //Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
-                    //m[12] = position.Smoothed.X;
-                    //m[13] = position.Smoothed.Y;
-                    //m[14] = position.Smoothed.Z;
+                    //m[12] = Position.X;
+                    //m[13] = Position.Y;
+                    //m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
 
                     return Attach.Matrix * m;
                 }
@@ -1882,16 +1890,18 @@ using Cheetah;");
         }
         public override bool Check(RayCollisionInfo other)
         {
-            //return false;
+            //Vector3 v1 = InvMatrix * other.Ray.Start;
+            //Vector3 v2 = InvMatrix * other.Ray.End;
 
-            Vector3 v1 = InvMatrix * other.Ray.Start;
-            Vector3 v2 = InvMatrix * other.Ray.End;
+            Vector3 v1 = Vector3.Transform(other.Ray.Start, InvMatrix);
+            Vector3 v2 = Vector3.Transform(other.Ray.End, InvMatrix);
+
 
             return intersect(new Ray(v1, v2), BBox);
         }
         public override bool Check(SphereCollisionInfo other)
         {
-            Vector3 spherecenter = InvMatrix * other.Sphere.Center;
+            Vector3 spherecenter = Vector3.Transform(other.Sphere.Center,InvMatrix);
             float r = other.Sphere.Radius;
 
             if (spherecenter.X + r < BBox.Min.X ||
@@ -1920,13 +1930,15 @@ using Cheetah;");
 
             foreach (Vector3 p in GetPoints(other.BBox))
             {
-                v1 = m2 * p;
+                //v1 = m2 * p;
+                v1 = Vector3.Transform(p,m2);
                 if (PointInBox(v1, BBox))
                     return true;
             }
             foreach (Vector3 p in GetPoints(BBox))
             {
-                v1 = m1 * p;
+                //v1 = m1 * p;
+                v1 = Vector3.Transform(p, m1);
                 if (PointInBox(v1, other.BBox))
                     return true;
             }
@@ -6102,7 +6114,7 @@ using Cheetah;");
 
             if (userinterface != null)
             {
-                int width = c.GetInteger("video.Width");
+                int width = c.GetInteger("video.width");
                 int height = c.GetInteger("video.height");
                 bool fullscreen = c.GetBool("video.fullscreen");
                 bool audio = c.GetBool("audio.enable");

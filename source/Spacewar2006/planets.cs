@@ -14,6 +14,7 @@ using System.Drawing;
 using SpaceWar2006.GameObjects;
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.Planets
 {

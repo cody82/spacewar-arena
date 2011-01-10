@@ -32,6 +32,10 @@ namespace Cheetah
         {
             throw new Exception("TODO");
         }
+        public static Quaternion FromAxisAngle(Vector3 axis, float a)
+        {
+            throw new Exception("TODO");
+        }
         public static Quaternion FromMatrix4(Matrix4 m)
         {
             throw new Exception("TODO");
@@ -61,13 +65,33 @@ namespace Cheetah
         {
             throw new Exception("TODO");
         }
+        public static Matrix4 FromAngleAxis(Vector3 axis,float a)
+        {
+            throw new Exception("TODO");
+        }
+        public static Matrix4 FromFloats(float[] f)
+        {
+            throw new Exception("TODO");
+        }
 
-        
+        public static float[] ToFloats(this Matrix4 m)
+        {
+            throw new Exception("TODO");
+        }
+
         public static Vector3 Transform(this Matrix4 m, Vector3 v)
         {
             throw new Exception("TODO");
         }
+        public static Quaternion ExtractRotation(this Matrix4 m)
+        {
+            throw new Exception("TODO");
+        }
         public static Vector4 Transform(this Matrix4 m, Vector4 v)
+        {
+            throw new Exception("TODO");
+        }
+        public static void Set(this Matrix4 m, int x,int y,float f)
         {
             throw new Exception("TODO");
         }
@@ -93,6 +117,14 @@ namespace Cheetah
 
     public static class Vector3Extensions
     {
+        public static float[] ToFloats(this Vector3 m)
+        {
+            throw new Exception("TODO");
+        }
+        public static Vector3 GetUnit(this Vector3 m)
+        {
+            throw new Exception("TODO");
+        }
     }
 }
 

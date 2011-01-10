@@ -20,6 +20,7 @@ using SpaceWar2006.Pickups;
 
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.GameObjects
 {
@@ -288,7 +289,7 @@ namespace SpaceWar2006.GameObjects
             catch (DivideByZeroException)
             {
                 System.Console.WriteLine("divide bug./%&$");
-                want = Vector3.XAxis;
+                want = Vector3.UnitX;
             }
 
             float cos = Vector3.Dot(left, want);
@@ -490,7 +491,7 @@ namespace SpaceWar2006.GameObjects
             }
         }
 
-        public override Matrix3 SmoothMatrix
+        public override Matrix4 SmoothMatrix
         {
             get
             {
@@ -1151,8 +1152,8 @@ namespace SpaceWar2006.GameObjects
                 {
                     int loc = shade.GetUniformLocation("hitpos");
                     Vector3 v = CollisionDirection.GetUnit() * Radius;
-                    Matrix3 m = Matrix;
-                    m[12] = m[13] = m[14] = 0;
+                    Matrix4 m = Matrix;
+                    m.Row3.X = m.Row3.Y = m.Row3.Z = 0;
                     m.Invert();
                     v = m.Transform(v);
                     //r.SetUniform(loc, new float[] {100,0,0,1});

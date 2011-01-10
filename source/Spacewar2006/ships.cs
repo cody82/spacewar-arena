@@ -17,6 +17,7 @@ using SpaceWar2006.Effects;
 
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.Ships
 {

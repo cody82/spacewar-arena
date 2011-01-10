@@ -3561,7 +3561,7 @@ namespace Cheetah.Graphics
                 {
                     for (int y = 0; y < 4; ++y)
                     {
-                        bones[i].RestPoseInverse[x, y] = scm.BoneData[i].mRestPoseInverse[y, x];
+                        bones[i].RestPoseInverse.Set(x, y, scm.BoneData[i].mRestPoseInverse[y, x]);
                     }
                 }
             }
@@ -3805,11 +3805,13 @@ namespace Cheetah.Graphics
         public Matrix4 GetMatrix()
         {
             Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
-            m[12] = Position.X;
-            m[13] = Position.Y;
-            m[14] = Position.Z;
+            //m[12] = Position.X;
+            //m[13] = Position.Y;
+            //m[14] = Position.Z;
+            m.Row3.X = Position.X;
+            m.Row3.Y = Position.Y;
+            m.Row3.Z = Position.Z;
 
-            //Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation) * Matrix4Extensions.FromTranslation(Position);
             return m;
         }
     }
@@ -3829,11 +3831,13 @@ namespace Cheetah.Graphics
             public Matrix4 GetMatrix()
             {
                 Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
-                m[12] = Position.X;
-                m[13] = Position.Y;
-                m[14] = Position.Z;
+                //m[12] = Position.X;
+                //m[13] = Position.Y;
+                //m[14] = Position.Z;
+                m.Row3.X = Position.X;
+                m.Row3.Y = Position.Y;
+                m.Row3.Z = Position.Z;
 
-                //Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation) * Matrix4Extensions.FromTranslation(Position);
                 return m;
             }
         }
@@ -4035,7 +4039,7 @@ namespace Cheetah.Graphics
 
             //m2[12] = m2[13] = m2[14] = 0;
             //m2.SetToIdentity();
-            r.SetUniform(index, (float[])m2);
+            r.SetUniform(index, m2.ToFloats());
             foreach (Bone b2 in b.Children)
                 SetBones(r, b2, m1, a, s);
         }
@@ -6272,7 +6276,9 @@ namespace Cheetah.Graphics
                 CurrentScrollPosition = ScrollPosition;
             else
             {
-                CurrentScrollPosition += delta.Normalize()*l1;
+                Vector2 v = delta;
+                v.Normalize();
+                CurrentScrollPosition += v*l1;
             }
 
             Window[] kill = new Window[Children.Count];
@@ -8069,14 +8075,22 @@ namespace Cheetah.Graphics
             }
             cotangent = (float)Math.Cos(radians) / sine;
 
-            //__gluMakeIdentityd(&m[0][0]);
-            m[0] = cotangent / aspect;
-            m[5] = cotangent;
-            m[10] = -(zFar + zNear) / deltaZ;
-            m[11] = -1;//HACK?!
-            m[14] = -2 * zNear * zFar / deltaZ;
-            m[15] = 0;
-            //glMultMatrixd(&m[0][0]);
+            //m[0] = cotangent / aspect;
+            //m[5] = cotangent;
+            //m[10] = -(zFar + zNear) / deltaZ;
+            //m[11] = -1;//HACK?!
+            //m[14] = -2 * zNear * zFar / deltaZ;
+            //m[15] = 0;
+
+            m.Row0.X = cotangent / aspect;
+            m.Row1.Y = cotangent;
+            m.Row2.Z = -(zFar + zNear) / deltaZ;
+            m.Row2.W = -1;//HACK?!
+            m.Row3.Z = -2 * zNear * zFar / deltaZ;
+            m.Row3.W = 0;
+
+
+
             return m;
         }
 
@@ -8088,13 +8102,13 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
     Vector3 forward = Vector3.Zero, side = Vector3.Zero, up = Vector3.Zero;
     Matrix4 m=Matrix4.Identity;
 
-    forward[0] = centerx - eyex;
-    forward[1] = centery - eyey;
-    forward[2] = centerz - eyez;
+    forward.X = centerx - eyex;
+    forward.Y = centery - eyey;
+    forward.Z = centerz - eyez;
 
-    up[0] = upx;
-    up[1] = upy;
-    up[2] = upz;
+    up.X = upx;
+    up.Y = upy;
+    up.Z = upz;
 
     forward.Normalize();
 
@@ -8108,17 +8122,17 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
     up = Vector3.Cross(side, forward);
 
     //__gluMakeIdentityf(&m[0][0]);
-    m[0] = side[0];
-    m[1] = side[1];
-    m[2] = side[2];
+    m.Row0.X = side.X;
+    m.Row0.Y = side.Y;
+    m.Row0.Z = side.Z;
 
-    m[4] = up[0];
-    m[5] = up[1];
-    m[6] = up[2];
+    m.Row1.X = up.X;
+    m.Row1.Y = up.Y;
+    m.Row1.Z = up.Z;
 
-    m[8] = -forward[0];
-    m[9] = -forward[1];
-    m[10] = -forward[2];
+    m.Row2.X = -forward.X;
+    m.Row2.Y = -forward.Y;
+    m.Row2.Z = -forward.Z;
 
     //m = Matrix4Extensions.FromBasis(side, up, -forward);
 
@@ -8166,7 +8180,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 
    /* calcul transformation inverse */
    //matmul(A, proj, model);
-   m = (new Matrix4(proj)*new Matrix4(model)).GetInverse();
+   m = (Matrix4Extensions.FromFloats(proj) * Matrix4Extensions.FromFloats(model)).GetInverse();
    //m.Transpose();
    //A.Invert();
             //m = A;
@@ -8344,9 +8358,9 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
           
                     Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
 
                     return m;
                 }
@@ -8355,9 +8369,9 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                     Matrix4 m;
                     m= Matrix4Extensions.FromQuaternion(Orientation);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
 
                     switch(_Mode)
                     {
@@ -9021,7 +9035,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 			r.GetMatrix(m,null);
 			r.PushMatrix();
 			m[12]=m[13]=m[14]=0;
-			r.LoadMatrix(new Matrix4(m));
+			r.LoadMatrix(Matrix4Extensions.FromFloats(m));
 
             r.UseShader(Shader);
 

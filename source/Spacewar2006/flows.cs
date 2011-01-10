@@ -660,7 +660,8 @@ namespace SpaceWar2006.Flows
                     lastpos = pos;
 
                     Quaternion q = QuaternionExtensions.FromAxisAngle(0, 1, 0, delta.X * 0.01f) * QuaternionExtensions.FromAxisAngle(selected.Left, -delta.Y * 0.01f);
-                    selected.Position = q.ToMatrix3().Transform(selected.Position);
+                    //selected.Position = q.ToMatrix3().Transform(selected.Position);
+                    selected.Position = Vector3.Transform(selected.Position, q);
                     if (bbox.HasValue)
                         selected.LookAt(bbox.Value.Center);
                     else
@@ -1330,9 +1331,10 @@ namespace SpaceWar2006.Flows
                 info.Visible = true;
                 Actor t = actor;
 
-                Vector2 v = new Vector2(Root.Instance.UserInterface.Renderer.GetRasterPosition((float[])t.SmoothPosition));
-                v.y = Root.Instance.UserInterface.Renderer.Size.Y - v.y;
-                info.Position = new Vector2((int)(v.x + 0.5f), (int)(v.y + 0.5f));
+                float[] f = Root.Instance.UserInterface.Renderer.GetRasterPosition(t.SmoothPosition.ToFloats());
+                Vector2 v = new Vector2(f[0],f[1]);
+                v.Y = Root.Instance.UserInterface.Renderer.Size.Y - v.Y;
+                info.Position = new Vector2((int)(v.X + 0.5f), (int)(v.Y + 0.5f));
 
                 if (t.Shield != null)
                     info.ShieldBar.Value = t.Shield.CurrentCharge / t.Shield.MaxEnergy;

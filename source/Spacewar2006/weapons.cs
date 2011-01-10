@@ -16,6 +16,7 @@ using SpaceWar2006.Effects;
 
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.Weapons
 {
@@ -42,9 +43,9 @@ namespace SpaceWar2006.Weapons
             {
                 p.Target = ss.Computer.Target;
 
-                Matrix3 ship = Matrix3.FromTranslation(ss.Position) * Matrix3.FromQuaternion(ss.Orientation);
-                Matrix3 slot = Matrix3.FromTranslation(s.Position) * Matrix3.FromQuaternion(s.Orientation);
-                Matrix3 combined = ship * slot;
+                Matrix4 ship = Matrix4Extensions.FromTranslation(ss.Position) * Matrix4Extensions.FromQuaternion(ss.Orientation);
+                Matrix4 slot = Matrix4Extensions.FromTranslation(s.Position) * Matrix4Extensions.FromQuaternion(s.Orientation);
+                Matrix4 combined = ship * slot;
                 Vector3 x, y, z;
                 combined.ExtractBasis(out x, out y, out z);
 
@@ -742,7 +743,7 @@ namespace SpaceWar2006.Weapons
             catch (DivideByZeroException)
             {
                 System.Console.WriteLine("divide bug./%&$");
-                want = Vector3.XAxis;
+                want = Vector3.UnitX;
             }
 
             float cos = Vector3.Dot(left, want);

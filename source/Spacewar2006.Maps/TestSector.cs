@@ -8,6 +8,7 @@ using SpaceWar2006.Pickups;
 using SpaceWar2006.Effects;
 
 using Cheetah;
+using OpenTK;
 
 namespace SpaceWar2006.Maps
 {
@@ -46,7 +47,7 @@ namespace SpaceWar2006.Maps
 
             Sync += dTime;
 
-            Mars.Orientation = QuaternionExtensions.FromAxisAngle(Vector3.YAxis, 15.0f / 180.0f * (float)Math.PI * Sync);
+            Mars.Orientation = QuaternionExtensions.FromAxisAngle(Vector3.UnitY, 15.0f / 180.0f * (float)Math.PI * Sync);
         }
 
     }
