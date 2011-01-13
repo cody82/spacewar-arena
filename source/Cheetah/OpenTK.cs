@@ -18,6 +18,33 @@ using OpenTK.Audio.OpenAL;
 
 namespace Cheetah
 {
+    public class MathUtil
+    {
+
+        public static void Check(float[] f)
+        {
+            foreach (float f2 in f)
+            {
+                if (float.IsNaN(f2))
+                {
+                    throw new Exception("NaN");
+                }
+            }
+        }
+        public static void Check(Vector3 v)
+        {
+            Check(v.ToFloats());
+        }
+        public static void Check(Matrix4 m)
+        {
+            Check(m.ToFloats());
+        }
+        public static void Check(Quaternion q)
+        {
+            Check(new float[] { q.X, q.Y, q.Z, q.W });
+        }
+    }
+
     public static class QuaternionExtensions
     {
         public static Quaternion GetInverse(this Quaternion q)
@@ -40,7 +67,17 @@ namespace Cheetah
 
         public static Matrix4 ToMatrix4(this Quaternion q)
         {
-            return Matrix4.Rotate(q);
+            Vector3 axis;
+            float angle;
+            q.ToAxisAngle(out axis, out angle);
+            MathUtil.Check(axis);
+            if (float.IsNaN(angle))
+                angle = 0;
+            Matrix4 m = Matrix4.CreateFromAxisAngle(axis, angle);
+
+            //Matrix4 m = Matrix4.Rotate(q);
+            MathUtil.Check(m);
+            return m;
         }
         public static Quaternion FromAxisAngle(float ax,float ay,float az,float a)
         {

@@ -1808,7 +1808,10 @@ namespace SpaceWar2006.GameObjects
                 if (cos2 == -1)
                     cos = 1;
             }
-
+            
+            TODO
+            System.Console.WriteLine(cos);
+            MathUtil.Check(new float[] { cos });
             return cos;
         }
 

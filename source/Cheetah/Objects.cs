@@ -1372,11 +1372,16 @@ using Cheetah;");
 
         public override void Tick(float dtime)
         {
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
             Matrix4 m = ((Quaternion)orientation).ToMatrix4();
             position.Tick(dtime, SmoothTime);
             speed.Tick(dtime, SmoothTime);
             position.Original += speed.Original * dtime;
             position.Original += m.Transform(localspeed) * dtime;
+
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
 
             orientation.Tick(dtime, SmoothTime);
             Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
@@ -1385,6 +1390,9 @@ using Cheetah;");
             Quaternion q = qx * qy * qz;
             //q=Quaternion.Identity*Quaternion.Identity;
             orientation.Original = q * orientation.Original;
+
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
 
             age += dtime;
 
@@ -1399,6 +1407,8 @@ using Cheetah;");
                         ((ITickable)o).Tick(dtime);
                     }
                 }
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
         }
 
         public Vector3 Direction
@@ -1423,6 +1433,7 @@ using Cheetah;");
         public void LookAt(float x, float y, float z)
         {
             LookAt(new Vector3(x, y, z));
+            MathUtil.Check(orientation);
         }
 
         public Vector3 AbsolutePosition
@@ -1511,6 +1522,10 @@ using Cheetah;");
 
         public void LookAt(Vector3 pos)
         {
+            if (pos == position)
+                return;
+
+            MathUtil.Check(orientation);
             try
             {
                 Vector3 z = pos - position;
@@ -1535,6 +1550,7 @@ using Cheetah;");
             catch (DivideByZeroException)
             {
             }
+            MathUtil.Check(orientation);
         }
 
         public virtual void DeSerializeRefs(DeSerializationContext context)
