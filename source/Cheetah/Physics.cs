@@ -48,7 +48,6 @@ namespace Cheetah.Physics
 
         public override void Tick(float dtime)
         {
-            System.Console.WriteLine(Position);
             position.Original = Position;
             orientation.Original = Orientation;
             orientation.Tick(dtime);
