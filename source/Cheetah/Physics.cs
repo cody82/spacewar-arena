@@ -18,9 +18,6 @@ namespace Cheetah.Physics
     {
         public PhysicsNode()
         {
-            Draw = new System.Collections.ArrayList();
-            Draw.Add(Root.Instance.ResourceManager.LoadMesh("cube/cube.mesh"));
-            Draw.Add(new Marker());
         }
 
         public PhysicsNode(DeSerializationContext context) :this()
@@ -28,11 +25,16 @@ namespace Cheetah.Physics
             DeSerialize(context);
         }
 
+        protected virtual IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            return s.Physics.CreateObjectBox(1, 2,2,2);
+        }
+
         public override void OnAdd(Scene s)
         {
             base.OnAdd (s);
 
-            Physics = s.Physics.CreateObjectBox(1, 2,2,2);
+            Physics=CreatePhysicsObject(s);
         }
 
         public override void OnRemove(Scene s)
@@ -121,6 +123,7 @@ namespace Cheetah.Physics
                 orientation.Original = value;
             }
         }
+
 
         public IPhysicsObject Physics;
         //public Mesh PhysicsMesh;
@@ -358,7 +361,11 @@ namespace Cheetah.Physics
             set;
         }
 
-
+        bool Movable
+        {
+            get;
+            set;
+        }
         //event Physics.OneCollisionDelegate Collision;
     }
 
@@ -403,6 +410,18 @@ namespace Cheetah.Physics
             set
             {
                 body.SetOrientation(Matrix4.Rotate(value));
+            }
+        }
+
+        public bool Movable
+        {
+            get
+            {
+                return !body.Immovable;
+            }
+            set
+            {
+                body.Immovable = !value;
             }
         }
     }
@@ -459,7 +478,7 @@ namespace Cheetah.Physics
 
         public IPhysicsObject CreateObjectBox(float density, float lx, float ly, float lz)
         {
-            return new JigLibObject(CreateCube(Vector3.Zero,new Vector3(2,2,2)));
+            return new JigLibObject(CreateCube(Vector3.Zero,new Vector3(lx,ly,lz)));
         }
 
         public void DeleteObject(IPhysicsObject po)
