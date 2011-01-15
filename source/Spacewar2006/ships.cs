@@ -267,7 +267,7 @@ namespace SpaceWar2006.Ships
             Draw = new ArrayList();
             Draw.Add(Root.Instance.ResourceManager.LoadMesh("cnv301-low/cnv301-low.mesh"));
             //Draw.Add(Root.Instance.ResourceManager.LoadMesh("mk9hawk/mk9hawk.mesh"));
-            Draw.Add(new Marker());
+            //Draw.Add(new Marker());
             //Transparent = true;
 
             ShieldModel = Root.Instance.ResourceManager.LoadMesh("cnv-shield/cnv-shield.mesh");

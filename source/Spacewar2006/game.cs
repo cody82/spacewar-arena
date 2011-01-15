@@ -760,7 +760,7 @@ namespace SpaceWar2006.GameObjects
             RenderRadius = 200;
 
             Draw.Add(Root.Instance.ResourceManager.LoadMesh("spawnpoint/spawnpoint.mesh"));
-            Draw.Add(new Marker());
+            //Draw.Add(new Marker());
         }
 
         public PlayerStart(DeSerializationContext context)
