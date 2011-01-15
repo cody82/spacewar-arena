@@ -874,47 +874,4 @@ namespace SpaceWar2006.Effects
         #endregion
     }
 
-    public class Cursor : IDrawable
-    {
-        public bool IsWorldSpace
-        {
-            get { return false; }
-        }
-        public Cursor(Color3f color, float size)
-        {
-            VertexP3C3[] data = new VertexP3C3[4];
-            int i = 0;
-            size /= 2;
-            material = Material.CreateSimpleMaterial(null);
-
-            data[i].Color = color;
-            data[i++].Position = new Vector3(size, 0, size);
-            data[i].Color = color;
-            data[i++].Position = new Vector3(-size, 0, -size);
-
-            data[i].Color = color;
-            data[i++].Position = new Vector3(size, 0, -size);
-            data[i].Color = color;
-            data[i++].Position = new Vector3(-size, 0, size);
-
-            vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(data, 4 * 2 * 3 * 4);
-            vertices.Format = VertexFormat.VF_P3C3;
-
-            shader = Root.Instance.ResourceManager.LoadShader("simple3d.color.shader");
-        }
-
-        public void Draw(IRenderer r, Node n)
-        {
-
-            //Root.Instance.UserInterface.Renderer.SetMaterial(material);
-            r.UseShader(shader);
-            Root.Instance.UserInterface.Renderer.Draw(vertices, PrimitiveType.LINES, 0, vertices.Count, null);
-        }
-
-        VertexBuffer vertices;
-        Material material;
-        Shader shader;
-    }
-
-
 }
