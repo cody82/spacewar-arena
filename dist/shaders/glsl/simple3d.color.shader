@@ -4,7 +4,8 @@ vertexshader:
 void main()
 {	
 	gl_Position = ftransform();
-	gl_FrontColor=vec4(gl_Color.xyz,0.6);
+	gl_FrontColor=gl_Color;
+	gl_BackColor=gl_Color;
 }
 fragmentshader:
 
