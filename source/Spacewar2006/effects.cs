@@ -898,7 +898,7 @@ namespace SpaceWar2006.Effects
             vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(data, 4 * 2 * 3 * 4);
             vertices.Format = VertexFormat.VF_P3C3;
 
-            shader = Root.Instance.ResourceManager.LoadShader("simple3d.shader");
+            shader = Root.Instance.ResourceManager.LoadShader("simple3d.color.shader");
         }
 
         public void Draw(IRenderer r, Node n)
