@@ -588,12 +588,12 @@ namespace SpaceWar2006.Flows
             //a bit more distance for the far plane
             //m_far = m_camDist + 2 * r
 
-            c.Position = new Vector3(1, 1, 1).GetUnit() * dist;
+            c.Position = Vector3Extensions.GetUnit(new Vector3(1, 1, 1)) * dist;
             if (bbox.HasValue)
                 c.LookAt(bbox.Value.Center);
             else
                 c.LookAt(0, 0, 0);
-            l.Position = new Vector3(0, 1, 1).GetUnit() * dist;
+            l.Position = Vector3Extensions.GetUnit(new Vector3(0, 1, 1)) * dist;
             if (bbox.HasValue)
                 l.LookAt(bbox.Value.Center);
             else
@@ -1331,7 +1331,7 @@ namespace SpaceWar2006.Flows
                 info.Visible = true;
                 Actor t = actor;
 
-                float[] f = Root.Instance.UserInterface.Renderer.GetRasterPosition(t.SmoothPosition.ToFloats());
+                float[] f = Root.Instance.UserInterface.Renderer.GetRasterPosition(Vector3Extensions.ToFloats(t.SmoothPosition));
                 Vector2 v = new Vector2(f[0],f[1]);
                 v.Y = Root.Instance.UserInterface.Renderer.Size.Y - v.Y;
                 info.Position = new Vector2((int)(v.X + 0.5f), (int)(v.Y + 0.5f));

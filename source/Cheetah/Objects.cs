@@ -1374,11 +1374,11 @@ using Cheetah;");
         {
             MathUtil.Check(position.Original);
             MathUtil.Check(orientation);
-            Matrix4 m = ((Quaternion)orientation).ToMatrix4();
+            Matrix4 m = Matrix4.Rotate(orientation);
             position.Tick(dtime, SmoothTime);
             speed.Tick(dtime, SmoothTime);
             position.Original += speed.Original * dtime;
-            position.Original += m.Transform(localspeed) * dtime;
+            position.Original += Vector3.Transform(localspeed,m) * dtime;
 
             MathUtil.Check(position.Original);
             MathUtil.Check(orientation);
@@ -1443,14 +1443,14 @@ using Cheetah;");
         {
             get
             {
-                return Matrix.ExtractTranslation();
+                return Matrix4Extensions.ExtractTranslation(Matrix);
             }
         }
         public Vector3 SmoothAbsolutePosition
         {
             get
             {
-                return SmoothMatrix.ExtractTranslation();
+                return Matrix4Extensions.ExtractTranslation(SmoothMatrix);
             }
         }
 
@@ -1894,7 +1894,8 @@ using Cheetah;");
             //Orientation = orientation;
             //Matrix = Matrix4Extensions.FromTranslation(center) * Matrix4Extensions.FromQuaternion(Quaternion);
             Matrix = matrix;
-            InvMatrix = matrix.GetInverse();
+            InvMatrix = matrix;
+            InvMatrix.Invert();
         }
 
         //Vector3 Center;

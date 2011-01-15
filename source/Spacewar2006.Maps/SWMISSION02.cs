@@ -58,7 +58,7 @@ namespace SpaceWar2006.Maps
 
             Light l = new Light();
             l.directional = true;
-            l.Position = new Vector3(-1, 3, 4).GetUnit();
+            l.Position = Vector3Extensions.GetUnit(new Vector3(-1, 3, 4));
             Spawn(l, true);
 
         }

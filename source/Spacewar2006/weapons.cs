@@ -47,10 +47,10 @@ namespace SpaceWar2006.Weapons
                 Matrix4 slot = s.Matrix;
                 Matrix4 combined = slot * ship;
                 Vector3 x, y, z;
-                combined.ExtractBasis(out x, out y, out z);
+                Matrix4Extensions.ExtractBasis(combined, out x, out y, out z);
 
-                p.Position = combined.ExtractTranslation();
-                p.Orientation = combined.ExtractRotation();
+                p.Position = Matrix4Extensions.ExtractTranslation(combined);
+                p.Orientation = Matrix4Extensions.ExtractRotation(combined);
                 //p.localspeed=new Vector3(0,0,ExitingSpeed);
                 p.Speed = z * ExitingSpeed;
                 p.Source = ss;

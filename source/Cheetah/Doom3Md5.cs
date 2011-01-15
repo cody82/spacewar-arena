@@ -260,7 +260,7 @@ namespace Cheetah.Doom3
 
 		protected Vector3 Transform(Vector3 v, Md5Joint j)
 		{
-			return GetJointMatrix(j).Transform(v);
+			return Vector3.Transform(v, GetJointMatrix(j));
 		}
 
 		public Vector3 CalcVertexPosition(Md5Vertex v, Md5Joint[] joints)
@@ -288,7 +288,7 @@ namespace Cheetah.Doom3
 				Md5JointValue j = a.Frames[frame].Values[w.JointIndex];
 				
 				Matrix4 m = Matrix4Extensions.FromTranslation(j.Position) * Matrix4Extensions.FromQuaternion(j.Orientation);
-				pos += w.Value * m.Transform(w.Position);
+				pos += w.Value * Vector3.Transform(w.Position,m);
 			}
 
 			return pos;
@@ -342,7 +342,7 @@ namespace Cheetah.Doom3
 			Matrix4 m1 = Matrix4Extensions.FromFloats(modelview);
             Matrix4 m2 = Matrix4Extensions.FromFloats(projection);
 			Matrix4 m3 = m2*m1;
-			e.SetParameter(e.GetParameter("mvp"), m3.ToFloats());
+            e.SetParameter(e.GetParameter("mvp"), Matrix4Extensions.ToFloats(m3));
 			e.SetParameter(e.GetParameter("mv"), modelview);
 			e.SetParameter(e.GetParameter("Color"), new float[] {1,0,0,1 });
 			e.BeginPass(0);

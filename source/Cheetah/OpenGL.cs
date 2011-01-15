@@ -1225,7 +1225,7 @@ namespace Cheetah.Graphics
 
 		public void LoadMatrix(Matrix4 m)
 		{
-            foreach (float f in m.ToFloats())
+            foreach (float f in Matrix4Extensions.ToFloats(m))
                 if (float.IsNaN(f))
                     throw new Exception("NaN");
 			GL.LoadMatrix(ref m);
@@ -1233,7 +1233,7 @@ namespace Cheetah.Graphics
 
 		public void MultMatrix(Matrix4 m)
 		{
-            foreach(float f in m.ToFloats())
+            foreach (float f in Matrix4Extensions.ToFloats(m))
                 if (float.IsNaN(f))
                     throw new Exception("NaN");
             GL.MultMatrix(ref m);
@@ -1477,8 +1477,8 @@ namespace Cheetah.Graphics
 
 			Vector3 t = new Vector3();
 			Vector3 x, y;
-			Vector3 pos = m.ExtractTranslation();
-			m.ExtractBasis(out x, out y, out t);
+            Vector3 pos = Matrix4Extensions.ExtractTranslation(m);
+            Matrix4Extensions.ExtractBasis(m, out x, out y, out t);
 			t += pos;
 
 

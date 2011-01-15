@@ -35,12 +35,12 @@ namespace Cheetah
         [Conditional("DEBUG")]
         public static void Check(Vector3 v)
         {
-            Check(v.ToFloats());
+            Check(Vector3Extensions.ToFloats(v));
         }
         [Conditional("DEBUG")]
         public static void Check(Matrix4 m)
         {
-            Check(m.ToFloats());
+            Check(Matrix4Extensions.ToFloats(m));
         }
         [Conditional("DEBUG")]
         public static void Check(Quaternion q)
@@ -51,25 +51,25 @@ namespace Cheetah
 
     public static class QuaternionExtensions
     {
-        public static Quaternion GetInverse(this Quaternion q)
+        public static Quaternion GetInverse(Quaternion q)
         {
-            return Divide(q.GetConjugate(), q.LengthSquared);
+            return Divide(GetConjugate(q), q.LengthSquared);
         }
-        public static Quaternion GetConjugate(this Quaternion q)
+        public static Quaternion GetConjugate(Quaternion q)
         {
             return new Quaternion(-q.X, -q.Y, -q.Z, q.W);
         }
-        public static Quaternion Multiply(this Quaternion a, float scale)
+        public static Quaternion Multiply(Quaternion a, float scale)
         {
             return new Quaternion(a.X * scale, a.Y * scale, a.Z * scale, a.W * scale);
         }
-        public static Quaternion Divide(this Quaternion a, float scale)
+        public static Quaternion Divide(Quaternion a, float scale)
         {
             return Multiply(a, 1 / scale);
         }
         
 
-        public static Matrix4 ToMatrix4(this Quaternion q)
+        /*public static Matrix4 ToMatrix4(this Quaternion q)
         {
             Vector3 axis;
             float angle;
@@ -82,7 +82,7 @@ namespace Cheetah
             //Matrix4 m = Matrix4.Rotate(q);
             MathUtil.Check(m);
             return m;
-        }
+        }*/
         public static Quaternion FromAxisAngle(float ax,float ay,float az,float a)
         {
             return Quaternion.FromAxisAngle(new Vector3(ax, ay, az), a);
@@ -242,58 +242,54 @@ namespace Cheetah
             return new Matrix4(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10], f[11], f[12], f[13], f[14], f[15]);
         }
 
-        public static float[] ToFloats(this Matrix4 m)
+        public static float[] ToFloats(Matrix4 m)
         {
             return new float[] { m.M11, m.M12, m.M13, m.M14, m.M21, m.M22, m.M23, m.M24, m.M31, m.M32, m.M33, m.M34, m.M41, m.M42, m.M43, m.M44 };
         }
 
-        public static Vector3 Transform(this Matrix4 m, Vector3 v)
+        /*public static Vector3 Transform(this Matrix4 m, Vector3 v)
         {
             return Vector3.Transform(v, m);
-        }
-        public static Quaternion ExtractRotation(this Matrix4 m)
+        }*/
+        public static Quaternion ExtractRotation(Matrix4 m)
         {
             return QuaternionExtensions.FromMatrix4(m);
         }
-        public static Vector4 Transform(this Matrix4 m, Vector4 v)
+        /*public static Vector4 Transform(this Matrix4 m, Vector4 v)
         {
             return Vector4.Transform(v, m);
-        }
-        public static void Set(this Matrix4 m, int x,int y,float f)
+        }*/
+        public static void Set(Matrix4 m, int x,int y,float f)
         {
             throw new Exception("TODO");
         }
 
-        public static Vector3 ExtractTranslation(this Matrix4 m)
+        public static Vector3 ExtractTranslation(Matrix4 m)
         {
             return new Vector3(m.Row3.X, m.Row3.Y, m.Row3.Z);
         }
-        public static void ExtractBasis(this Matrix4 m, out Vector3 x,out Vector3 y,out Vector3 z)
+        public static void ExtractBasis(Matrix4 m, out Vector3 x,out Vector3 y,out Vector3 z)
         {
             x = new Vector3(m.Row0.X, m.Row0.Y, m.Row0.Z);
             y = new Vector3(m.Row1.X, m.Row1.Y, m.Row1.Z);
             z = new Vector3(m.Row2.X, m.Row2.Y, m.Row2.Z);
         }
-        public static void Translate(this Matrix4 m, Vector3 v)
+        public static void Translate(Matrix4 m, Vector3 v)
         {
             m.Row3.X = m.Row0.X * v.X + m.Row1.X * v.Y + m.Row2.X * v.Z + m.Row3.X;
             m.Row3.Y = m.Row0.Y * v.X + m.Row1.Y * v.Y + m.Row2.Y * v.Z + m.Row3.Y;
             m.Row3.Z = m.Row0.Z * v.X + m.Row1.Z * v.Y + m.Row2.Z * v.Z + m.Row3.Z;
         }
 
-        public static Matrix4 GetInverse(this Matrix4 m)
-        {
-            return Matrix4.Invert(m);
-        }
     }
 
     public static class Vector3Extensions
     {
-        public static float[] ToFloats(this Vector3 m)
+        public static float[] ToFloats(Vector3 m)
         {
             return new float[] { m.X,m.Y,m.Z};
         }
-        public static Vector3 GetUnit(this Vector3 m)
+        public static Vector3 GetUnit(Vector3 m)
         {
             Vector3 v = m;
             v.Normalize();

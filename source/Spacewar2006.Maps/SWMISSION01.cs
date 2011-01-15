@@ -24,7 +24,7 @@ namespace SpaceWar2006.Maps
         {
             Light l = new Light();
             l.directional = true;
-            l.Position = new Vector3(1, 3, 4).GetUnit();
+            l.Position = Vector3Extensions.GetUnit(new Vector3(1, 3, 4));
 
             l.diffuse = new Color4f(0.0f, 1.0f, 0.0f, 1);
             Spawn(l, true);

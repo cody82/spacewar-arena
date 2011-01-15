@@ -64,7 +64,7 @@ namespace SpaceWar2006.GameObjects
             {
                 Node n = (Node)Activator.CreateInstance(SpawnType);
                 n.Position = VecRandom.Instance.NextScaledVector3(10000, 0, 10000) - new Vector3(5000,0,5000);
-                n.Speed = -n.Position.GetUnit() * VecRandom.Instance.NextFloat() * 300;
+                n.Speed = -Vector3Extensions.GetUnit(n.Position) * VecRandom.Instance.NextFloat() * 300;
                 n.rotationspeed = VecRandom.Instance.NextScaledVector3(1, 1, 1);
                 Root.Instance.Scene.Spawn(n);
                 System.Console.WriteLine("asteroid spawned.");
@@ -1152,11 +1152,11 @@ namespace SpaceWar2006.GameObjects
                 try
                 {
                     int loc = shade.GetUniformLocation("hitpos");
-                    Vector3 v = CollisionDirection.GetUnit() * Radius;
+                    Vector3 v = Vector3Extensions.GetUnit(CollisionDirection) * Radius;
                     Matrix4 m = Matrix;
                     m.Row3.X = m.Row3.Y = m.Row3.Z = 0;
                     m.Invert();
-                    v = m.Transform(v);
+                    v = Vector3.Transform(v,m);
                     //r.SetUniform(loc, new float[] {100,0,0,1});
                     r.SetUniform(loc, new float[] { v.X, v.Y, v.Z, 1 });
                 }

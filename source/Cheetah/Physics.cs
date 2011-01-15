@@ -105,11 +105,11 @@ namespace Cheetah.Physics
         {
             get
             {
-                return Physics.Orientation.GetInverse();
+                return QuaternionExtensions.GetInverse(Physics.Orientation);
             }
             set
             {
-                Physics.Orientation=value.GetInverse();
+                Physics.Orientation=QuaternionExtensions.GetInverse(value);
                 orientation.Original = value;
             }
         }

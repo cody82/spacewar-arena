@@ -3561,7 +3561,7 @@ namespace Cheetah.Graphics
                 {
                     for (int y = 0; y < 4; ++y)
                     {
-                        bones[i].RestPoseInverse.Set(x, y, scm.BoneData[i].mRestPoseInverse[y, x]);
+                        Matrix4Extensions.Set(bones[i].RestPoseInverse, x, y, scm.BoneData[i].mRestPoseInverse[y, x]);
                     }
                 }
             }
@@ -4039,7 +4039,7 @@ namespace Cheetah.Graphics
 
             //m2[12] = m2[13] = m2[14] = 0;
             //m2.SetToIdentity();
-            r.SetUniform(index, m2.ToFloats());
+            r.SetUniform(index, Matrix4Extensions.ToFloats(m2));
             foreach (Bone b2 in b.Children)
                 SetBones(r, b2, m1, a, s);
         }
@@ -4435,8 +4435,8 @@ namespace Cheetah.Graphics
             r.PushMatrix();
 
             Matrix4 m = Matrix4.Identity;
-            Vector3 pos = m.ExtractTranslation();
-            m.Translate(pos);
+            Vector3 pos = Matrix4Extensions.ExtractTranslation(m);
+            Matrix4Extensions.Translate(m,pos);
             r.LoadMatrix(m);
 
             r.Draw(Buffer, PrimitiveType.QUADS, 0, 4, null);
@@ -8153,8 +8153,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             Matrix4 m = Matrix;
             Vector3 t = new Vector3();
             Vector3 x, y;
-            Vector3 pos = m.ExtractTranslation();
-            m.ExtractBasis(out x, out y, out t);
+            Vector3 pos = Matrix4Extensions.ExtractTranslation(m);
+            Matrix4Extensions.ExtractBasis(m, out x, out y, out t);
             t = -t;
             t += pos;
 
@@ -8180,7 +8180,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 
    /* calcul transformation inverse */
    //matmul(A, proj, model);
-   m = (Matrix4Extensions.FromFloats(proj) * Matrix4Extensions.FromFloats(model)).GetInverse();
+   m = (Matrix4Extensions.FromFloats(proj) * Matrix4Extensions.FromFloats(model));
+   m.Invert();
    //m.Transpose();
    //A.Invert();
             //m = A;
@@ -8189,7 +8190,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
    /* d'ou les coordonnees objets */
 
    //transform_point(out, m, in);
-            outv = m.Transform(inv);
+            outv = Vector4.Transform(inv,m);
    //if (outv.W == 0.0)
    //   throw new Exception();
    //*objx = out[0] / out[3];
@@ -8432,7 +8433,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                         }
                         break;
                     case CameraMode.Chase:
-                            LookAt(Attach.SmoothMatrix.ExtractTranslation());
+                        LookAt(Matrix4Extensions.ExtractTranslation(Attach.SmoothMatrix));
                         break;
                     default:
                         break;
@@ -8450,7 +8451,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
                     {
                         Vector3 v = Attach.Speed;
                         if (v.LengthSquared<0.00001f)
-                            v = Attach.Matrix.Transform(new Vector3(0, 0, 1));
+                            v = Vector3.Transform(Vector3.UnitZ,Attach.Matrix);
                         v.Normalize();
                         v *= Dist;
                         Position = Attach.AbsolutePosition + v;
