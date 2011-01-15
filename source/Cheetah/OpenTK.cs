@@ -15,12 +15,13 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
+using System.Diagnostics;
 
 namespace Cheetah
 {
     public class MathUtil
     {
-
+        [Conditional("DEBUG")]
         public static void Check(float[] f)
         {
             foreach (float f2 in f)
@@ -31,14 +32,17 @@ namespace Cheetah
                 }
             }
         }
+        [Conditional("DEBUG")]
         public static void Check(Vector3 v)
         {
             Check(v.ToFloats());
         }
+        [Conditional("DEBUG")]
         public static void Check(Matrix4 m)
         {
             Check(m.ToFloats());
         }
+        [Conditional("DEBUG")]
         public static void Check(Quaternion q)
         {
             Check(new float[] { q.X, q.Y, q.Z, q.W });
