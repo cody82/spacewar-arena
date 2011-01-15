@@ -1518,7 +1518,7 @@ using Cheetah;");
                     m.Row3.Y = Position.Y;
                     m.Row3.Z = Position.Z;
 
-                    return Attach.Matrix * m;
+                    return m * Attach.Matrix;
                 }
             }
         }
