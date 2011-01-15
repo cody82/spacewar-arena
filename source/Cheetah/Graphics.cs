@@ -4517,8 +4517,8 @@ namespace Cheetah.Graphics
             if (Root.Instance.UserInterface == null)
                 return;
 
-			vb=CreateVB(1000);
-            shader = Root.Instance.ResourceManager.LoadShader("geometrytest.shader");
+			vb=CreateVB(500);
+            shader = Root.Instance.ResourceManager.LoadShader("simple3d.color.shader");
 		}
 
         Shader shader;
