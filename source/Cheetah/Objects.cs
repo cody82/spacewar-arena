@@ -1483,7 +1483,7 @@ using Cheetah;");
                     m.Row3.Y = position.Smoothed.Y;
                     m.Row3.Z = position.Smoothed.Z;
 
-                    return Attach.SmoothMatrix * m;
+                    return m * Attach.SmoothMatrix;
                 }
             }
         }
