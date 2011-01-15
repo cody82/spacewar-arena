@@ -63,10 +63,10 @@ namespace PhysicsTest
             Root.Instance.Scene = new Scene();
 
             camera = new Camera();
-            camera.Position = new Vector3(20, 20, 20);
+            camera.Position = new Vector3(40, 40, 40);
             camera.LookAt(0, 5, 0);
 
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 50; ++i)
             {
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
@@ -79,13 +79,30 @@ namespace PhysicsTest
             Root.Instance.Scene.Spawn(light = new Light());
             light.Position = new Vector3(1, 1, 1);
             light.directional = true;
+            light.diffuse = new Color4f(0.5f, 0.5f, 0.5f);
+            Root.Instance.Scene.Spawn(light = new Light());
+            light.Position = new Vector3(-20, 20, 20);
+            light.diffuse = new Color4f(0.6f, 0, 0);
+            Root.Instance.Scene.Spawn(light = new Light());
+            light.Position = new Vector3(20, 20, -20);
+            light.diffuse = new Color4f(0, 0.6f, 0);
+            Root.Instance.Scene.Spawn(light = new Light());
+            light.Position = new Vector3(-20, 20, -20);
+            light.diffuse = new Color4f(0, 0, 0.6f);
         }
 
         public override void Tick(float dtime)
         {
             base.Tick(dtime);
 
-            camera.LookAt(cubes[cubes.Count - 1].Position);
+            camera.Position = new Vector3((float)Math.Cos(Root.Instance.Time)*40, camera.Position.Y, (float)Math.Sin(Root.Instance.Time)*40);
+            camera.LookAt(cubes[cubes.Count -20].Position);
+
+            if (Time > 10)
+            {
+                Start();
+                Time = 0;
+            }
         }
 
         List<Cube> cubes = new List<Cube>();
