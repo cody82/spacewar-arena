@@ -1005,11 +1005,11 @@ namespace SpaceWar2006.GameObjects
             base.Tick(dtime);
             
             //HACK
-            /*if (IsLocal)
+            if (IsLocal)
             {
                 rotationspeed.Y = RotationPower * MaxRotationSpeed;
 
-                Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
+                Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, -Rotation);
                 Orientation = q1;
 
                 float wantedroll = -RotationPower * MaxRoll;
@@ -1018,8 +1018,8 @@ namespace SpaceWar2006.GameObjects
                 Roll += Math.Min(abs, 1.0f) * Math.Sign(delta) * Math.Min(abs, dtime * RollSpeed);
 
                 Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
-                Orientation = q1 * q2;
-            }*/
+                Orientation = q2 * q1;
+            }
 
             position.Original.Y = 0;
 
@@ -1800,9 +1800,9 @@ namespace SpaceWar2006.GameObjects
             Vector2 left = new Vector2(Left.X, Left.Z);
 
             float cos = Vector2.Dot(left, want);
-            System.Console.WriteLine(want.ToString() + left.ToString() + cos.ToString());
+            //System.Console.WriteLine(want.ToString() + left.ToString() + cos.ToString());
             MathUtil.Check(new float[] { cos });
-            return cos;
+            return -cos;
                 /*
             //left vector projected on plane
             Vector3 left = Left;
