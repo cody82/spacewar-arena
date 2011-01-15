@@ -1388,9 +1388,14 @@ using Cheetah;");
             Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
             Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
             Quaternion q = qx * qy * qz;
+
             //q=Quaternion.Identity*Quaternion.Identity;
             orientation.Original = q * orientation.Original;
-
+            //HACK
+            if (orientation.Original.W < -1.0f)
+            {
+                orientation.Original.W = -1.0f;
+            }
             MathUtil.Check(position.Original);
             MathUtil.Check(orientation);
 
@@ -1415,8 +1420,7 @@ using Cheetah;");
         {
             get
             {
-                Matrix4 m = Orientation.ToMatrix4();
-                Vector3 forward = m.Transform(new Vector3(0, 0, 1));
+                Vector3 forward = Vector3.Transform(Vector3.UnitZ, Orientation);
                 return forward;
             }
         }
@@ -1424,9 +1428,8 @@ using Cheetah;");
         {
             get
             {
-                Matrix4 m = Orientation.ToMatrix4();
-                Vector3 forward = m.Transform(new Vector3(1, 0, 0));
-                return forward;
+                Vector3 left = Vector3.Transform(Vector3.UnitX, Orientation);
+                return left;
             }
         }
 

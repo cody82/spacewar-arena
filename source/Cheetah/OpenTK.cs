@@ -212,6 +212,8 @@ namespace Cheetah
         }
         public static Matrix4 FromQuaternion(Quaternion q)
         {
+            if (q.W < -1.0f)
+                throw new Exception("q.W<-1.0");
             return Matrix4.Rotate(q);
         }
         public static Matrix4 FromBasis(Vector3 x,Vector3 y,Vector3 z)
