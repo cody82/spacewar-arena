@@ -760,6 +760,7 @@ namespace SpaceWar2006.GameObjects
             RenderRadius = 200;
 
             Draw.Add(Root.Instance.ResourceManager.LoadMesh("spawnpoint/spawnpoint.mesh"));
+            Draw.Add(new Marker());
         }
 
         public PlayerStart(DeSerializationContext context)
@@ -1004,7 +1005,7 @@ namespace SpaceWar2006.GameObjects
             base.Tick(dtime);
             
             //HACK
-            if (IsLocal)
+            /*if (IsLocal)
             {
                 rotationspeed.Y = RotationPower * MaxRotationSpeed;
 
@@ -1018,7 +1019,7 @@ namespace SpaceWar2006.GameObjects
 
                 Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
                 Orientation = q1 * q2;
-            }
+            }*/
 
             position.Original.Y = 0;
 
@@ -1664,6 +1665,20 @@ namespace SpaceWar2006.GameObjects
             MountTime -= dtime;
         }
 
+        
+        public virtual Matrix4 Matrix
+        {
+            get
+            {
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
+
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
+                    return m;
+            }
+        }
+
         public bool Ready
         {
             get
@@ -1778,6 +1793,17 @@ namespace SpaceWar2006.GameObjects
 
         public float GetCosDirection(Vector3 target)
         {
+            Vector2 v1 = new Vector2(Position.X, Position.Z);
+            Vector2 v2 = new Vector2(target.X, target.Z);
+            Vector2 want = (v2 - v1);
+            want.Normalize();
+            Vector2 left = new Vector2(Left.X, Left.Z);
+
+            float cos = Vector2.Dot(left, want);
+            System.Console.WriteLine(want.ToString() + left.ToString() + cos.ToString());
+            MathUtil.Check(new float[] { cos });
+            return cos;
+                /*
             //left vector projected on plane
             Vector3 left = Left;
             left.Y = 0;
@@ -1809,10 +1835,9 @@ namespace SpaceWar2006.GameObjects
                     cos = 1;
             }
             
-            TODO
             System.Console.WriteLine(cos);
             MathUtil.Check(new float[] { cos });
-            return cos;
+            return cos;*/
         }
 
         public Hull Hull;

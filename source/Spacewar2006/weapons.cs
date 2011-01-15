@@ -43,9 +43,9 @@ namespace SpaceWar2006.Weapons
             {
                 p.Target = ss.Computer.Target;
 
-                Matrix4 ship = Matrix4Extensions.FromTranslation(ss.Position) * Matrix4Extensions.FromQuaternion(ss.Orientation);
-                Matrix4 slot = Matrix4Extensions.FromTranslation(s.Position) * Matrix4Extensions.FromQuaternion(s.Orientation);
-                Matrix4 combined = ship * slot;
+                Matrix4 ship = ss.Matrix;
+                Matrix4 slot = s.Matrix;
+                Matrix4 combined = slot * ship;
                 Vector3 x, y, z;
                 combined.ExtractBasis(out x, out y, out z);
 
