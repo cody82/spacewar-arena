@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 using Cheetah.Graphics;
+using OpenTK;
 
 
 namespace Cheetah.Quake
@@ -425,11 +426,6 @@ namespace Cheetah.Quake
 
 		public BSPFile(String FileName)
 		{
-			/*
-			//Load extensions
-			glClientActiveTextureARBPtr = Wgl.wglGetProcAddress("glClientActiveTextureARB");
-			glActiveTextureARBPtr = Wgl.wglGetProcAddress("glActiveTextureARB");
-			*/
 				
 			LoadBSP(FileName);
             BuildBuffers();
@@ -1237,7 +1233,7 @@ namespace Cheetah.Quake
             for (int i = 0; i < c; ++i)
             {
                 data[i].position = new Vector3(Vertices[i*3],Vertices[i*3+1],Vertices[i*3+2]);
-                data[i].texture0 = new Vector2f(TextureCoords[i*2],TextureCoords[i*2+1]);
+                data[i].texture0 = new Vector2(TextureCoords[i*2],TextureCoords[i*2+1]);
             }
             VertexBuffer = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(data, Vertices.Length * VertexFormat.VF_P3T2.Size);
             VertexBuffer.Format = VertexFormat.VF_P3T2;

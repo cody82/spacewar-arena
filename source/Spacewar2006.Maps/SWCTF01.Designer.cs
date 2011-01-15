@@ -11,6 +11,9 @@ using System.Threading;
 
 using Cheetah;
 using SpaceWar2006.GameObjects;
+using OpenTK;
+
+
 namespace SpaceWar2006.Maps{
 public partial class SWCTF01 : Map{
 public override void Create(){

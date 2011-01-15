@@ -1,4 +1,5 @@
 using System;
+using OpenTK;
 
 namespace Cheetah
 {
@@ -55,12 +56,12 @@ namespace Cheetah
         public float Intersect(Vector3 p0, Vector3 p1)
         {
             Vector3 Direction = p1 - p0;
-            float denominator = Vector3.DotProduct(Normal, Direction);
+            float denominator = Vector3.Dot(Normal, Direction);
             if (denominator == 0)
             {
                 throw new DivideByZeroException("Can not get the intersection of a plane with a line when they are parallel to each other.");
             }
-            float t = (Dist - Vector3.DotProduct(Normal, p0)) / denominator;
+            float t = (Dist - Vector3.Dot(Normal, p0)) / denominator;
             return t;
         }
 
@@ -68,12 +69,12 @@ namespace Cheetah
         {
 
             Vector3 Direction = p1 - p0;
-            float denominator = Vector3.DotProduct(Normal, Direction);
+            float denominator = Vector3.Dot(Normal, Direction);
             if (denominator == 0)
             {
                 throw new DivideByZeroException("Can not get the intersection of a plane with a line when they are parallel to each other.");
             }
-            float t = (Dist - Vector3.DotProduct(Normal, p0)) / denominator;
+            float t = (Dist - Vector3.Dot(Normal, p0)) / denominator;
             return p0 + Direction * t;
         }
     }
@@ -110,7 +111,7 @@ namespace Cheetah
         {
             get
             {
-                return (Start-End).GetMagnitude();
+                return (Start-End).Length;
             }
             set
             {
@@ -125,7 +126,7 @@ namespace Cheetah
             if (f < 0) f = 0;
             else if (f > 1) f = 1;
             Vector3 nearest = Start + f * (End - Start);
-            float dist = (s.Center - nearest).GetMagnitude();
+            float dist = (s.Center - nearest).Length;
             return dist<=s.Radius;
         }
 
@@ -135,53 +136,6 @@ namespace Cheetah
             End = end;
         }
     }
-
-	//[Serializable]
-	public struct Vector2
-	{
-		public float x,y;
-		
-		public Vector2(float _x,float _y)
-		{
-			x=_x;
-			y=_y;
-		}
-		public Vector2(float[] v)
-		{
-			x = v[0];
-			y = v[1];
-		}
-
-		public static Vector2 operator*(Vector2 v1,float f)
-		{
-			return new Vector2(v1.x*f,v1.y*f);
-		}
-
-		public static Vector2 operator/(Vector2 v1,float f)
-		{
-			return new Vector2(v1.x/f,v1.y/f);
-		}
-
-		public static Vector2 operator+(Vector2 v1,Vector2 v2)
-		{
-			return new Vector2(v1.x+v2.x,v1.y+v2.y);
-		}
-
-		public static Vector2 operator-(Vector2 v1,Vector2 v2)
-		{
-			return new Vector2(v1.x-v2.x,v1.y-v2.y);
-		}
-
-		public float Length()
-		{
-			return (float)Math.Sqrt((double)(x*x+y*y));
-		}
-
-		public Vector2 Normalize()
-		{
-			return this/Length();
-		}
-	}
 
 	public class Frustum
 	{

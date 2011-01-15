@@ -25,6 +25,7 @@ using Cheetah;
 using Cheetah.Graphics;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Flows
 {
@@ -520,7 +521,7 @@ namespace SpaceWar2006.Flows
             Root.Instance.Scene.Clear();
             c = Root.Instance.Scene.camera = new Camera();
             //c.rotationspeed = new Vector3(0, 1, 0);
-            //c.Orientation = Quaternion.FromAxisAngle(Vector3.YAxis, (float)Math.PI);
+            //c.Orientation = QuaternionExtensions.FromAxisAngle(Vector3.YAxis, (float)Math.PI);
             Root.Instance.Scene.Spawn(c);
             n = new Node();
             //n.Position = new Vector3(0, 0, 0);
@@ -658,8 +659,9 @@ namespace SpaceWar2006.Flows
                     Vector3 delta = pos - lastpos;
                     lastpos = pos;
 
-                    Quaternion q = Quaternion.FromAxisAngle(0, 1, 0, delta.X * 0.01f) * Quaternion.FromAxisAngle(selected.Left, -delta.Y * 0.01f);
-                    selected.Position = q.ToMatrix3().Transform(selected.Position);
+                    Quaternion q = QuaternionExtensions.FromAxisAngle(0, 1, 0, delta.X * 0.01f) * QuaternionExtensions.FromAxisAngle(selected.Left, -delta.Y * 0.01f);
+                    //selected.Position = q.ToMatrix3().Transform(selected.Position);
+                    selected.Position = Vector3.Transform(selected.Position, q);
                     if (bbox.HasValue)
                         selected.LookAt(bbox.Value.Center);
                     else
@@ -927,7 +929,7 @@ namespace SpaceWar2006.Flows
             if (Lines.Count > 0)
             {
                 Vector3 wantedpostion = new Vector3(sx * 0.5f, ((float)0+0.5f) * FontSize * 1.1f, 0);
-                if ((Lines[0].CurrentPosition - wantedpostion).GetMagnitude() < 3)
+                if ((Lines[0].CurrentPosition - wantedpostion).Length < 3)
                 {
                     Lines.RemoveAt(0);
                 }
@@ -1329,9 +1331,10 @@ namespace SpaceWar2006.Flows
                 info.Visible = true;
                 Actor t = actor;
 
-                Vector2 v = new Vector2(Root.Instance.UserInterface.Renderer.GetRasterPosition((float[])t.SmoothPosition));
-                v.y = Root.Instance.UserInterface.Renderer.Size.Y - v.y;
-                info.Position = new Vector2((int)(v.x + 0.5f), (int)(v.y + 0.5f));
+                float[] f = Root.Instance.UserInterface.Renderer.GetRasterPosition(t.SmoothPosition.ToFloats());
+                Vector2 v = new Vector2(f[0],f[1]);
+                v.Y = Root.Instance.UserInterface.Renderer.Size.Y - v.Y;
+                info.Position = new Vector2((int)(v.X + 0.5f), (int)(v.Y + 0.5f));
 
                 if (t.Shield != null)
                     info.ShieldBar.Value = t.Shield.CurrentCharge / t.Shield.MaxEnergy;
@@ -1393,9 +1396,13 @@ namespace SpaceWar2006.Flows
             Vector3 v1 = new Vector3(r.UnProject(new float[] { x, y, 1 }, null, null, null));
             Vector3 v2 = new Vector3(r.UnProject(new float[] { x, y, 100000 }, null, null, null));
 
+            if (float.IsNaN(v1.X) || float.IsNaN(v2.X))
+                throw new Exception("NaN");
+
             UpdateInfo(PlayerInfo, playership);
             if (playership != null)
                 UpdateInfo(TargetInfo, playership.Computer.Target);
+
 
             return new Ray(v1, v2);
         }
@@ -1406,6 +1413,8 @@ namespace SpaceWar2006.Flows
             try
             {
                 cursor.Position = p.GetIntersection(ray.Start, ray.End);
+                if (float.IsNaN(cursor.Position.X))
+                    throw new Exception("NaN");
             }
             catch (DivideByZeroException)
             {

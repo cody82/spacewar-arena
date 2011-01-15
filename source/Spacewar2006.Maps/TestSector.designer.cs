@@ -9,6 +9,7 @@ using SpaceWar2006.Effects;
 
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.Maps
 {
@@ -34,7 +35,7 @@ namespace SpaceWar2006.Maps
 
             n = new Saturn();
             n.rotationspeed.Y = 10.0f / 180.0f * (float)Math.PI;
-            n.Orientation = Quaternion.FromAxisAngle(0, 1, 0, (float)Math.PI);
+            n.Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, (float)Math.PI);
             n.Position = new Vector3(-2000, 0, 3000);
             Spawn(n, true);
 
@@ -135,7 +136,7 @@ namespace SpaceWar2006.Maps
             //Text3D tx = new Cheetah.Text3D("abcabcabc", (MeshFont)Root.Instance.ResourceManager.Load("models/font-arial-black", typeof(MeshFont)));
             //n.Draw.Add(tx);
             n.Position = new Vector3(300, 0, 1200);
-            n.Orientation = Quaternion.FromAxisAngle(0, 1, 0, (float)Math.PI);
+            n.Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, (float)Math.PI);
             Spawn(n, true);
 
             //n = new TestShip();

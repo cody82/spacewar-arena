@@ -283,26 +283,11 @@ namespace Cheetah.Graphics
 				i=Theora.th_decode_ycbcr_out(decode,ref picture);
 				if(i!=0)
 					throw new Exception("picture");
-				//Console.WriteLine(picture.plane0.width.ToString());
-				//Console.WriteLine(picture.plane0.height.ToString());
-				//Console.WriteLine(picture.plane0.stride.ToString());
-				
-				/*if(picture.plane0.width!=picture.plane1.width|| picture.plane0.width!=picture.plane2.width)
-					throw new Exception("width: "+picture.plane1.width.ToString() + " " + picture.plane2.width.ToString());
-				if(picture.plane0.height!=picture.plane1.height|| picture.plane0.height!=picture.plane2.height)
-					throw new Exception("height");
-				if(picture.plane0.stride!=picture.plane1.stride|| picture.plane0.stride!=picture.plane2.stride)
-					throw new Exception("height");*/
 				float xfactor1=(float)picture.plane1.width/(float)picture.plane0.width;
 				float yfactor1=(float)picture.plane1.height/(float)picture.plane0.height;
 				float xfactor2=(float)picture.plane2.width/(float)picture.plane0.width;
 				float yfactor2=(float)picture.plane2.height/(float)picture.plane0.height;
 			
-				//FileStream f=new FileStream("/home/cody/pic"+frame+".ppm",FileMode.Create,FileAccess.Write);
-				//StreamWriter w=new StreamWriter(f);
-				//w.WriteLine("P3");
-				//w.WriteLine(picture.plane0.width.ToString()+" "+picture.plane0.height.ToString());
-				//w.WriteLine("255");
 				if(ConvertToRGB)
 				for(int y=0;y<picture.plane0.height;++y)
 				{

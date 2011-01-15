@@ -192,7 +192,7 @@ namespace FMOD
 
         UNKNOWN,       /* All         - 3rd party plugin, unknown.  This is for use with System::getOutput only. */
         NOSOUND,       /* All         - All calls in this mode succeed but make no sound. */
-        WAVWRITER,     /* All         - All         - Writes output to fmodout.wav by default.  Use System::setSoftwareFormat to set the filename. */
+        WAVWRITER,     /* All         - All         - Writes output to fmodout.Wav by default.  Use System::setSoftwareFormat to set the filename. */
         NOSOUND_NRT,   /* All         - Non-realtime version of FMOD_OUTPUTTYPE_NOSOUND.  User can drive mixer with System::update at whatever rate they want. */
         WAVWRITER_NRT, /* All         - Non-realtime version of FMOD_OUTPUTTYPE_WAVWRITER.  User can drive mixer with System::update at whatever rate they want. */
 

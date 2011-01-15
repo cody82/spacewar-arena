@@ -10,6 +10,8 @@ using System.Drawing;
 using System.Collections.Generic;
 
 using Cheetah.Graphics;
+using OpenTK;
+using Cheetah.OpenTK;
 
 namespace Cheetah.Doom3
 {
@@ -208,8 +210,8 @@ namespace Cheetah.Doom3
 				v[i].color.g=1;
 				v[i].color.b=1;
 				v[i].color.a=1;
-				v[i].texture0.x=Vertices[i].TextureU;
-				v[i].texture0.y = Vertices[i].TextureV;
+				v[i].texture0.X=Vertices[i].TextureU;
+				v[i].texture0.Y = Vertices[i].TextureV;
 			}
 			if(vb==null)
 			{
@@ -251,9 +253,9 @@ namespace Cheetah.Doom3
 			return CalcInterpolatedVertexPosition(v, anim, frame);
 		}
 
-		protected Matrix3 GetJointMatrix(Md5Joint j)
+		protected Matrix4 GetJointMatrix(Md5Joint j)
 		{
-			return Matrix3.FromTranslation(j.Position) * Matrix3.FromQuaternion(j.Orientation);
+			return Matrix4Extensions.FromTranslation(j.Position) * Matrix4Extensions.FromQuaternion(j.Orientation);
 		}
 
 		protected Vector3 Transform(Vector3 v, Md5Joint j)
@@ -285,7 +287,7 @@ namespace Cheetah.Doom3
 				Md5Weight w = Weights[i];
 				Md5JointValue j = a.Frames[frame].Values[w.JointIndex];
 				
-				Matrix3 m = Matrix3.FromTranslation(j.Position) * Matrix3.FromQuaternion(j.Orientation);
+				Matrix4 m = Matrix4Extensions.FromTranslation(j.Position) * Matrix4Extensions.FromQuaternion(j.Orientation);
 				pos += w.Value * m.Transform(w.Position);
 			}
 
@@ -337,10 +339,10 @@ namespace Cheetah.Doom3
 			float[] modelview = new float[16];
 			float[] projection = new float[16];
 			r.GetMatrix(modelview, projection);
-			Matrix3 m1=new Matrix3(modelview);
-			Matrix3 m2=new Matrix3(projection);
-			Matrix3 m3 = m2*m1;
-			e.SetParameter(e.GetParameter("mvp"), (float[])m3);
+			Matrix4 m1 = Matrix4Extensions.FromFloats(modelview);
+            Matrix4 m2 = Matrix4Extensions.FromFloats(projection);
+			Matrix4 m3 = m2*m1;
+			e.SetParameter(e.GetParameter("mvp"), m3.ToFloats());
 			e.SetParameter(e.GetParameter("mv"), modelview);
 			e.SetParameter(e.GetParameter("Color"), new float[] {1,0,0,1 });
 			e.BeginPass(0);
@@ -596,7 +598,8 @@ namespace Cheetah.Doom3
 					throw new Exception("");
 
 				Md5JointValue parent = thisframe.Values[parentjoint];
-				Vector3 p = Matrix3.FromQuaternion(parent.Orientation) * baseframe.Values[joint].Position;
+				//Vector3 p = Matrix4Extensions.FromQuaternion(parent.Orientation) * baseframe.Values[joint].Position;
+                Vector3 p = Vector3.Transform(baseframe.Values[joint].Position, parent.Orientation);
 				p += parent.Position;
 				Quaternion q = baseframe.Values[joint].Orientation * parent.Orientation;
 				q.Normalize();
@@ -677,7 +680,8 @@ namespace Cheetah.Doom3
 					throw new Exception("");
 
 				Md5JointValue parent = thisframe.Values[parentjoint];
-				Vector3 p = Matrix3.FromQuaternion(parent.Orientation) * v.Position;
+				//Vector3 p = Matrix4Extensions.FromQuaternion(parent.Orientation) * v.Position;
+                Vector3 p = Vector3.Transform(v.Position, parent.Orientation);
 				p += parent.Position;
 				Quaternion q = v.Orientation * parent.Orientation;
 				q.Normalize();

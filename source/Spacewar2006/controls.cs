@@ -16,6 +16,7 @@ using SpaceWar2006.GameObjects;
 using Cheetah;
 
 using OpenTK.Input;
+using OpenTK;
 
 namespace SpaceWar2006.Controls
 {
@@ -50,7 +51,7 @@ namespace SpaceWar2006.Controls
             catch (DivideByZeroException)
             {
                 System.Console.WriteLine("divide bug./%&$");
-                want = Vector3.XAxis;
+                want = Vector3.UnitX;
             }
 
             float cos = Vector3.Dot(left, want);
@@ -69,9 +70,9 @@ namespace SpaceWar2006.Controls
                 Roll = 0;
             }
 
-            Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+            Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
             TargetActor.Orientation = q1;
-            Quaternion q2 = Quaternion.FromAxisAngle(TargetActor.Direction, Roll);
+            Quaternion q2 = QuaternionExtensions.FromAxisAngle(TargetActor.Direction, Roll);
             TargetActor.Orientation = q1 * q2;
 
             Vector3 tmp = TargetActor.Position;
@@ -324,7 +325,10 @@ namespace SpaceWar2006.Controls
         public virtual float GetRotation(SpaceShipControlInput input)
         {
             float cos = Target.GetCosDirection(input.LookAt);
-            return -Math.Max(Math.Min(cos * 3, 1.0f), -1.0f);
+            float f = -Math.Max(Math.Min(cos * 3, 1.0f), -1.0f);
+            if (float.IsNaN(f))
+                throw new Exception("NaN");
+            return f;
         }
 
         protected abstract SpaceShipControlInput GetControls();

@@ -20,6 +20,7 @@ using SpaceWar2006.Pickups;
 
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.GameObjects
 {
@@ -288,7 +289,7 @@ namespace SpaceWar2006.GameObjects
             catch (DivideByZeroException)
             {
                 System.Console.WriteLine("divide bug./%&$");
-                want = Vector3.XAxis;
+                want = Vector3.UnitX;
             }
 
             float cos = Vector3.Dot(left, want);
@@ -307,9 +308,9 @@ namespace SpaceWar2006.GameObjects
                 Roll = 0;
             }
 
-            Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+            Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, Rotation);
             Orientation = q1;
-            Quaternion q2 = Quaternion.FromAxisAngle(Direction, Roll);
+            Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
             Orientation = q1 * q2;
 
             Vector3 tmp = Position;
@@ -490,7 +491,7 @@ namespace SpaceWar2006.GameObjects
             }
         }
 
-        public override Matrix3 SmoothMatrix
+        public override Matrix4 SmoothMatrix
         {
             get
             {
@@ -759,6 +760,7 @@ namespace SpaceWar2006.GameObjects
             RenderRadius = 200;
 
             Draw.Add(Root.Instance.ResourceManager.LoadMesh("spawnpoint/spawnpoint.mesh"));
+            //Draw.Add(new Marker());
         }
 
         public PlayerStart(DeSerializationContext context)
@@ -814,7 +816,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (a != Owner && !a.Kill && pred(a))
                 {
-                    float dist = (((Node)a).AbsolutePosition - Owner.AbsolutePosition).GetMagnitude();
+                    float dist = (((Node)a).AbsolutePosition - Owner.AbsolutePosition).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)a;
@@ -859,7 +861,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (a != Owner && !a.Kill)
                 {
-                    float dist = (((Node)a).AbsolutePosition - c).GetMagnitude();
+                    float dist = (((Node)a).AbsolutePosition - c).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)a;
@@ -872,7 +874,7 @@ namespace SpaceWar2006.GameObjects
             {
                 if (de.Value is Actor && de.Value != Owner && !de.Value.Kill)
                 {
-                    float dist = (((Node)de.Value).AbsolutePosition - c).GetMagnitude();
+                    float dist = (((Node)de.Value).AbsolutePosition - c).Length;
                     if (dist < distnow)
                     {
                         Target = (Actor)de.Value;
@@ -904,7 +906,7 @@ namespace SpaceWar2006.GameObjects
                 return null;
 
             TargetInfo ti = new TargetInfo();
-            ti.Dist = (Owner.AbsolutePosition - Target.AbsolutePosition).GetMagnitude();
+            ti.Dist = (Owner.AbsolutePosition - Target.AbsolutePosition).Length;
             
         }*/
 
@@ -1007,7 +1009,7 @@ namespace SpaceWar2006.GameObjects
             {
                 rotationspeed.Y = RotationPower * MaxRotationSpeed;
 
-                Quaternion q1 = Quaternion.FromAxisAngle(0, 1, 0, Rotation);
+                Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, -Rotation);
                 Orientation = q1;
 
                 float wantedroll = -RotationPower * MaxRoll;
@@ -1015,8 +1017,8 @@ namespace SpaceWar2006.GameObjects
                 float abs = Math.Abs(delta);
                 Roll += Math.Min(abs, 1.0f) * Math.Sign(delta) * Math.Min(abs, dtime * RollSpeed);
 
-                Quaternion q2 = Quaternion.FromAxisAngle(Direction, Roll);
-                Orientation = q1 * q2;
+                Quaternion q2 = QuaternionExtensions.FromAxisAngle(Direction, Roll);
+                Orientation = q2 * q1;
             }
 
             position.Original.Y = 0;
@@ -1026,7 +1028,7 @@ namespace SpaceWar2006.GameObjects
 
             Speed += Direction * ThrustPower * MainThrust * dtime;
             Speed += Left * StrafePower * StrafeThrust * dtime;
-            float factor = Math.Max(Speed.GetMagnitude() / 100, 1);
+            float factor = Math.Max(Speed.Length / 100, 1);
             Speed -= Speed * Resistance * dtime * factor;
 
             foreach (Slot s in Slots)
@@ -1151,8 +1153,8 @@ namespace SpaceWar2006.GameObjects
                 {
                     int loc = shade.GetUniformLocation("hitpos");
                     Vector3 v = CollisionDirection.GetUnit() * Radius;
-                    Matrix3 m = Matrix;
-                    m[12] = m[13] = m[14] = 0;
+                    Matrix4 m = Matrix;
+                    m.Row3.X = m.Row3.Y = m.Row3.Z = 0;
                     m.Invert();
                     v = m.Transform(v);
                     //r.SetUniform(loc, new float[] {100,0,0,1});
@@ -1663,6 +1665,20 @@ namespace SpaceWar2006.GameObjects
             MountTime -= dtime;
         }
 
+        
+        public virtual Matrix4 Matrix
+        {
+            get
+            {
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
+
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
+                    return m;
+            }
+        }
+
         public bool Ready
         {
             get
@@ -1771,12 +1787,23 @@ namespace SpaceWar2006.GameObjects
             }
             set
             {
-                Orientation = Quaternion.FromAxisAngle(0, 1, 0, value);
+                Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, value);
             }
         }
 
         public float GetCosDirection(Vector3 target)
         {
+            Vector2 v1 = new Vector2(Position.X, Position.Z);
+            Vector2 v2 = new Vector2(target.X, target.Z);
+            Vector2 want = (v2 - v1);
+            want.Normalize();
+            Vector2 left = new Vector2(Left.X, Left.Z);
+
+            float cos = Vector2.Dot(left, want);
+            //System.Console.WriteLine(want.ToString() + left.ToString() + cos.ToString());
+            MathUtil.Check(new float[] { cos });
+            return -cos;
+                /*
             //left vector projected on plane
             Vector3 left = Left;
             left.Y = 0;
@@ -1807,8 +1834,10 @@ namespace SpaceWar2006.GameObjects
                 if (cos2 == -1)
                     cos = 1;
             }
-
-            return cos;
+            
+            System.Console.WriteLine(cos);
+            MathUtil.Check(new float[] { cos });
+            return cos;*/
         }
 
         public Hull Hull;

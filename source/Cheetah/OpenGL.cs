@@ -12,6 +12,7 @@ using System.Text;
 using Cheetah.Graphics;
 
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace Cheetah.Graphics
 {
@@ -1222,14 +1223,20 @@ namespace Cheetah.Graphics
 			get { return new Point(width, height); }
 		}
 
-		public void LoadMatrix(Matrix3 m)
+		public void LoadMatrix(Matrix4 m)
 		{
-			GL.LoadMatrix((float[])m);
+            foreach (float f in m.ToFloats())
+                if (float.IsNaN(f))
+                    throw new Exception("NaN");
+			GL.LoadMatrix(ref m);
 		}
 
-		public void MultMatrix(Matrix3 m)
+		public void MultMatrix(Matrix4 m)
 		{
-			GL.MultMatrix((float[])m);
+            foreach(float f in m.ToFloats())
+                if (float.IsNaN(f))
+                    throw new Exception("NaN");
+            GL.MultMatrix(ref m);
 		}
 
 		public void GetMatrix(float[] modelview, float[] projection)
@@ -1240,7 +1247,7 @@ namespace Cheetah.Graphics
 				GL.GetFloat(GetPName.ModelviewMatrix, modelview);
 		}
 
-        public float[] UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
+        public Vector3 UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport)
         {
             global::OpenTK.Matrix4d projection;
             global::OpenTK.Matrix4d modelview;
@@ -1260,8 +1267,10 @@ namespace Cheetah.Graphics
 
             Imgui.Glu.UnProject(new global::OpenTK.Vector3d((double)winxyz[0], (double)winxyz[1], (double)winxyz[2]), modelview, projection, _viewport, ref obj);
 
-            return new float[3]{(float)obj.X,(float)obj.Y,(float)obj.Z};
-            //return (float[])(new Camera().gluUnProject(winxyz[0], winxyz[1], winxyz[2], model, proj, _viewport));
+            if (double.IsNaN(obj.X))
+                throw new Exception("NaN");
+
+            return new Vector3((float)obj.X,(float)obj.Y,(float)obj.Z);
         }
 
         public float[] GetRasterPosition(float[] pos3d)
@@ -1460,10 +1469,11 @@ namespace Cheetah.Graphics
             CheckError();
 
 			GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix((float[])c.GetProjectionMatrix());
+            Matrix4 m3 = c.GetProjectionMatrix();
+            GL.LoadMatrix(ref m3);
             GL.MatrixMode(MatrixMode.Modelview);
 
-			Matrix3 m = c.Matrix;//Matrix3.FromQuaternion(c.Orientation);
+			Matrix4 m = c.Matrix;//Matrix4Extensions.FromQuaternion(c.Orientation);
 
 			Vector3 t = new Vector3();
 			Vector3 x, y;
@@ -1794,7 +1804,7 @@ namespace Cheetah.Graphics
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                 CheckError();
             }
-			//t.width=w;
+			//t.Width=w;
 			//t.height=h;
 			Textures[t.id] = t;
 
@@ -1836,7 +1846,7 @@ namespace Cheetah.Graphics
                 //GL.TexImage2D(TextureTarget.Texture2D, 0, GL._COLOR, w, h, 0, GL._DEPTH_COMPONENT, GL._UNSIGNED_SHORT, IntPtr.Zero);
                 throw new Exception();
 
-            //t.width=w;
+            //t.Width=w;
             //t.height=h;
             Textures[t.id] = t;
             CheckError();

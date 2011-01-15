@@ -4,6 +4,7 @@ using System.Collections;
 using System.IO;
 //using OpenDe;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace Cheetah.Graphics
 {
@@ -14,7 +15,7 @@ namespace Cheetah.Graphics
 			Level=levels-1;
 			Center=pos;
 			Size=size;
-			Radius=(size/2).GetMagnitude();
+			Radius=(size/2).Length;
 			Children=new QuadTree[4];
 			Units=units;
 			for(int i=0;i<4;++i)
@@ -55,7 +56,7 @@ namespace Cheetah.Graphics
 			Center.Y=parent.Center.Y;
 			Size=parent.Size/2;
 			Size.Y=parent.Size.Y;
-            Radius = (Size / 2).GetMagnitude();
+            Radius = (Size / 2).Length;
 
             if(level>0)
 			{
@@ -489,8 +490,8 @@ namespace Cheetah.Graphics
 						vertices[i].position.Y = h;
 						vertices[i].position.Z = py;
 						vertices[i].color.r = vertices[i].color.g = vertices[i].color.b = vertices[i].color.a = 1.0f;
-						vertices[i].texture0.x = (float)(PatchGridPosition.X * (Master.PatchSize - 1) + x) / (float)(Master.PatchCount * (Master.PatchSize - 1));
-						vertices[i].texture0.y = (float)(PatchGridPosition.Y * (Master.PatchSize - 1) + y) / (float)(Master.PatchCount * (Master.PatchSize - 1));
+						vertices[i].texture0.X = (float)(PatchGridPosition.X * (Master.PatchSize - 1) + x) / (float)(Master.PatchCount * (Master.PatchSize - 1));
+						vertices[i].texture0.Y = (float)(PatchGridPosition.Y * (Master.PatchSize - 1) + y) / (float)(Master.PatchCount * (Master.PatchSize - 1));
 						i++;
 					}
 				}
@@ -693,7 +694,7 @@ namespace Cheetah.Graphics
 			Vector3 pos=new Vector3((float)y*PatchScale+0.5f*PatchScale,0,(float)x*PatchScale+0.5f*PatchScale);
 			pos-=new Vector3((float)(PatchCount/2)*PatchScale,0,(float)(PatchCount/2)*PatchScale);
 			Vector3 dist=pos-c.AbsolutePosition;
-			float d=dist.GetMagnitude();
+			float d=dist.Length;
             if (d < HighDetail)
                 return 0;
 			else if(d>LowDetail)
@@ -1120,7 +1121,7 @@ namespace Cheetah.Graphics
 
                         //add the vertex
                         vtx[i].position=new Vector3(px, h, py);
-                        vtx[i++].texture0=new Vector2f(
+                        vtx[i++].texture0=new Vector2(
                             (float)(gridx * (c - 1) + x) / (float)(patchcount * (c - 1)),
                             (float)(gridy * (c - 1) + y) / (float)(patchcount * (c - 1))
                             );
@@ -1224,7 +1225,7 @@ namespace Cheetah.Graphics
         {
             Vector3 patch = new Vector3(x * OnePatchSize, 0, y * OnePatchSize) + new Vector3(OnePatchSize * 0.5f - Size * 0.5f, 0, OnePatchSize * 0.5f - Size * 0.5f);
 
-            float distance = (c.AbsolutePosition - patch).GetMagnitude();
+            float distance = (c.AbsolutePosition - patch).Length;
 
             float maxdetail = OnePatchSize * 3;
             float mindetail = maxdetail + Levels.Length * OnePatchSize * 2;

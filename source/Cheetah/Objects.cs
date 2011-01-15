@@ -26,6 +26,7 @@ using OpenTK.Input;
 using Cheetah.Graphics;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using OpenTK;
 
 namespace Cheetah
 {
@@ -187,9 +188,9 @@ namespace Cheetah
         {
             n.localspeed = new Vector3(0, 0, Throttle.GetAxisPosition() * 100);
             /*Quaternion q=
-                Quaternion.FromAxisAngle(1,0,0,Pitch.GetAxisPosition()*30)*
-                Quaternion.FromAxisAngle(0,1,0,Yaw.GetAxisPosition()*30)*
-                Quaternion.FromAxisAngle(0,0,1,Roll.GetAxisPosition()*30);*/
+                QuaternionExtensions.FromAxisAngle(1,0,0,Pitch.GetAxisPosition()*30)*
+                QuaternionExtensions.FromAxisAngle(0,1,0,Yaw.GetAxisPosition()*30)*
+                QuaternionExtensions.FromAxisAngle(0,0,1,Roll.GetAxisPosition()*30);*/
             n.rotationspeed = new Vector3(
                     Pitch.GetAxisPosition(),//+MousePitch.GetAxisPosition(),
                     Yaw.GetAxisPosition(),//+MouseYaw.GetAxisPosition(),
@@ -893,7 +894,7 @@ namespace Cheetah
                 Add(new Button(OnSpawnButtonPressed, "Spawn"), 0, 2);
                 Add(ModeButton = new Button(OnModeButtonPressed, "Create"), 0, 0);
                 Layout.Heights[0] = 48;
-                Layout.Heights[1] = Size.y - 4 * 48;
+                Layout.Heights[1] = Size.Y - 4 * 48;
                 Layout.Heights[2] = 48;
                 Layout.Update(Size);
             }
@@ -1126,7 +1127,7 @@ namespace Cheetah
             Root.Instance.Scene.camera = cam = new Camera();
             cam.Position = new Vector3(0f, 10000, -1000);
             cam.LookAt(0, 0, 0);
-            //Root.Instance.Gui.windows.Add(menu = new Menu());
+            //Root.Instance.Gui.Windows.Add(menu = new Menu());
         }
 
         public Editor()
@@ -1275,13 +1276,13 @@ using Cheetah;");
                     Node n = (Node)Select;
                     if (Mode == Action.Move)
                     {
-                        n.Position += new Vector3(delta.x * 10, 0, delta.y * 10);
+                        n.Position += new Vector3(delta.X * 10, 0, delta.Y * 10);
                     }
                 }
 
             if (Root.Instance.UserInterface.Mouse.GetButtonState(1))
             {
-                cam.Position += new Vector3(delta.x * 10, 0, delta.y * 10);
+                cam.Position += new Vector3(delta.X * 10, 0, delta.Y * 10);
             }
             LastMousePos = p;
         }
@@ -1371,19 +1372,32 @@ using Cheetah;");
 
         public override void Tick(float dtime)
         {
-            Matrix3 m = ((Quaternion)orientation).ToMatrix3();
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+            Matrix4 m = ((Quaternion)orientation).ToMatrix4();
             position.Tick(dtime, SmoothTime);
             speed.Tick(dtime, SmoothTime);
             position.Original += speed.Original * dtime;
             position.Original += m.Transform(localspeed) * dtime;
 
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+
             orientation.Tick(dtime, SmoothTime);
-            Quaternion qx = Quaternion.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
-            Quaternion qy = Quaternion.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
-            Quaternion qz = Quaternion.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
+            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
+            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
+            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
             Quaternion q = qx * qy * qz;
+
             //q=Quaternion.Identity*Quaternion.Identity;
             orientation.Original = q * orientation.Original;
+            //HACK
+            if (orientation.Original.W < -1.0f)
+            {
+                orientation.Original.W = -1.0f;
+            }
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
 
             age += dtime;
 
@@ -1398,14 +1412,15 @@ using Cheetah;");
                         ((ITickable)o).Tick(dtime);
                     }
                 }
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
         }
 
         public Vector3 Direction
         {
             get
             {
-                Matrix3 m = Orientation.ToMatrix3();
-                Vector3 forward = m.Transform(new Vector3(0, 0, 1));
+                Vector3 forward = Vector3.Transform(Vector3.UnitZ, Orientation);
                 return forward;
             }
         }
@@ -1413,15 +1428,15 @@ using Cheetah;");
         {
             get
             {
-                Matrix3 m = Orientation.ToMatrix3();
-                Vector3 forward = m.Transform(new Vector3(1, 0, 0));
-                return forward;
+                Vector3 left = Vector3.Transform(Vector3.UnitX, Orientation);
+                return left;
             }
         }
 
         public void LookAt(float x, float y, float z)
         {
             LookAt(new Vector3(x, y, z));
+            MathUtil.Check(orientation);
         }
 
         public Vector3 AbsolutePosition
@@ -1439,45 +1454,54 @@ using Cheetah;");
             }
         }
 
-        public virtual Matrix3 SmoothMatrix
+        public virtual Matrix4 SmoothMatrix
         {
             get
             {
                 if (Attach == null)
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
-                    m[12] = position.Smoothed.X;
-                    m[13] = position.Smoothed.Y;
-                    m[14] = position.Smoothed.Z;
+                    //m[12] = position.Smoothed.X;
+                    //m[13] = position.Smoothed.Y;
+                    //m[14] = position.Smoothed.Z;
+
+                    m.Row3.X = position.Smoothed.X;
+                    m.Row3.Y = position.Smoothed.Y;
+                    m.Row3.Z = position.Smoothed.Z;
 
                     return m;
                 }
                 else
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(orientation.Smoothed);
 
-                    m[12] = position.Smoothed.X;
-                    m[13] = position.Smoothed.Y;
-                    m[14] = position.Smoothed.Z;
+                    //m[12] = position.Smoothed.X;
+                    //m[13] = position.Smoothed.Y;
+                    //m[14] = position.Smoothed.Z;
+                    m.Row3.X = position.Smoothed.X;
+                    m.Row3.Y = position.Smoothed.Y;
+                    m.Row3.Z = position.Smoothed.Z;
 
-                    return Attach.SmoothMatrix * m;
+                    return m * Attach.SmoothMatrix;
                 }
             }
         }
 
-        public virtual Matrix3 Matrix
+        public virtual Matrix4 Matrix
         {
             get
             {
                 if (Attach == null)
                 {
-                    Matrix3 m = Matrix3.FromQuaternion(Orientation);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
-
+                    //m[12] = Position.X;
+                    //m[13] = Position.Y;
+                    //m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
                     return m;
                 }
                 else
@@ -1485,23 +1509,26 @@ using Cheetah;");
                     if (Attach.Kill)
                         Kill = true;
 
-                    Matrix3 m = Matrix3.FromQuaternion(Orientation);
-                    //Matrix3 m = Matrix3.FromQuaternion(orientation.Smoothed);
+                    Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    m[12] = Position.X;
-                    m[13] = Position.Y;
-                    m[14] = Position.Z;
-                    //m[12] = position.Smoothed.X;
-                    //m[13] = position.Smoothed.Y;
-                    //m[14] = position.Smoothed.Z;
+                    //m[12] = Position.X;
+                    //m[13] = Position.Y;
+                    //m[14] = Position.Z;
+                    m.Row3.X = Position.X;
+                    m.Row3.Y = Position.Y;
+                    m.Row3.Z = Position.Z;
 
-                    return Attach.Matrix * m;
+                    return m * Attach.Matrix;
                 }
             }
         }
 
         public void LookAt(Vector3 pos)
         {
+            if (pos == position)
+                return;
+
+            MathUtil.Check(orientation);
             try
             {
                 Vector3 z = pos - position;
@@ -1513,19 +1540,20 @@ using Cheetah;");
                 y = Vector3.Cross(z, x);
                 //y.Normalize();
 
-                //Matrix3 m1=Matrix3.FromQuaternion(orientation);
-                //Quaternion q1=Quaternion.FromMatrix3(m1);
+                //Matrix4 m1=Matrix4Extensions.FromQuaternion(orientation);
+                //Quaternion q1=QuaternionExtensions.FromMatrix4(m1);
 
                 //x.Z=-x.Z;
                 //y.Z=-y.Z;
                 //z.Z=-z.Z;
-                Matrix3 m = Matrix3.FromBasis(x, y, z);
+                Matrix4 m = Matrix4Extensions.FromBasis(x, y, z);
                 //m.Invert();
-                Orientation = Quaternion.FromMatrix3(m);
+                Orientation = QuaternionExtensions.FromMatrix4(m);
             }
             catch (DivideByZeroException)
             {
             }
+            MathUtil.Check(orientation);
         }
 
         public virtual void DeSerializeRefs(DeSerializationContext context)
@@ -1714,7 +1742,7 @@ using Cheetah;");
 
         public float Distance(Node other)
         {
-            return (AbsolutePosition - other.AbsolutePosition).GetMagnitude();
+            return (AbsolutePosition - other.AbsolutePosition).Length;
         }
 
         [Editable]
@@ -1743,7 +1771,7 @@ using Cheetah;");
         public int Transparent = 0;
         public bool SyncRefs = true;
         public bool Visible = true;
-        public static Vector3 Up = Vector3.YAxis;
+        public static Vector3 Up = Vector3.UnitY;
         public float RenderRadius = -1;
     }
 
@@ -1859,12 +1887,12 @@ using Cheetah;");
 
     public class BoxCollisionInfo : CollisionInfo
     {
-        public BoxCollisionInfo(Matrix3 matrix, BoundingBox bbox)
+        public BoxCollisionInfo(Matrix4 matrix, BoundingBox bbox)
         {
             //Center = center;
             BBox = bbox;
             //Orientation = orientation;
-            //Matrix = Matrix3.FromTranslation(center) * Matrix3.FromQuaternion(Quaternion);
+            //Matrix = Matrix4Extensions.FromTranslation(center) * Matrix4Extensions.FromQuaternion(Quaternion);
             Matrix = matrix;
             InvMatrix = matrix.GetInverse();
         }
@@ -1872,8 +1900,8 @@ using Cheetah;");
         //Vector3 Center;
         //Quaternion Orientation;
         BoundingBox BBox;
-        Matrix3 Matrix;
-        Matrix3 InvMatrix;
+        Matrix4 Matrix;
+        Matrix4 InvMatrix;
 
         public override bool Check(CollisionInfo other)
         {
@@ -1881,16 +1909,18 @@ using Cheetah;");
         }
         public override bool Check(RayCollisionInfo other)
         {
-            //return false;
+            //Vector3 v1 = InvMatrix * other.Ray.Start;
+            //Vector3 v2 = InvMatrix * other.Ray.End;
 
-            Vector3 v1 = InvMatrix * other.Ray.Start;
-            Vector3 v2 = InvMatrix * other.Ray.End;
+            Vector3 v1 = Vector3.Transform(other.Ray.Start, InvMatrix);
+            Vector3 v2 = Vector3.Transform(other.Ray.End, InvMatrix);
+
 
             return intersect(new Ray(v1, v2), BBox);
         }
         public override bool Check(SphereCollisionInfo other)
         {
-            Vector3 spherecenter = InvMatrix * other.Sphere.Center;
+            Vector3 spherecenter = Vector3.Transform(other.Sphere.Center,InvMatrix);
             float r = other.Sphere.Radius;
 
             if (spherecenter.X + r < BBox.Min.X ||
@@ -1914,18 +1944,20 @@ using Cheetah;");
         public override bool Check(BoxCollisionInfo other)
         {
             Vector3 v1, v2;
-            Matrix3 m1 = other.InvMatrix * Matrix;
-            Matrix3 m2 = InvMatrix * other.Matrix;
+            Matrix4 m1 = other.InvMatrix * Matrix;
+            Matrix4 m2 = InvMatrix * other.Matrix;
 
             foreach (Vector3 p in GetPoints(other.BBox))
             {
-                v1 = m2 * p;
+                //v1 = m2 * p;
+                v1 = Vector3.Transform(p,m2);
                 if (PointInBox(v1, BBox))
                     return true;
             }
             foreach (Vector3 p in GetPoints(BBox))
             {
-                v1 = m1 * p;
+                //v1 = m1 * p;
+                v1 = Vector3.Transform(p, m1);
                 if (PointInBox(v1, other.BBox))
                     return true;
             }
@@ -2023,7 +2055,7 @@ using Cheetah;");
         }
         public override bool Check(SphereCollisionInfo other)
         {
-            float dist = (Sphere.Center - other.Sphere.Center).GetMagnitude();
+            float dist = (Sphere.Center - other.Sphere.Center).Length;
             return dist <= Sphere.Radius + other.Sphere.Radius;
         }
 
@@ -5498,9 +5530,9 @@ using Cheetah;");
 
             if (log != null)
             {
-                log.Size = new Vector2(size.x, size.y - Root.Instance.Gui.DefaultFont.size);
-                cmdline.Size = new Vector2(size.x, Root.Instance.Gui.DefaultFont.size);
-                cmdline.Position = new Vector2(0, size.y - Root.Instance.Gui.DefaultFont.size);
+                log.Size = new Vector2(size.X, size.Y - Root.Instance.Gui.DefaultFont.size);
+                cmdline.Size = new Vector2(size.X, Root.Instance.Gui.DefaultFont.size);
+                cmdline.Position = new Vector2(0, size.Y - Root.Instance.Gui.DefaultFont.size);
             }
         }
         public override void OnChildKeyDown(Window w, global::OpenTK.Input.Key key)
@@ -6743,7 +6775,7 @@ using Cheetah;");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "demos");
                     Directory.CreateDirectory(home + Path.DirectorySeparatorChar + "system");
                     File.Copy("config" + Path.DirectorySeparatorChar + "global.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "global.config");
-                    //File.Copy("config" + Path.DirectorySeparatorChar + "controls.xml", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "controls.xml");
+                    //File.Copy("config" + Path.DirectorySeparatorChar + "controls.Xml", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "controls.Xml");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "servers.config", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "servers.config");
                     //File.Copy("config" + Path.DirectorySeparatorChar + "classes.types", home + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "classes.types");
                 }
