@@ -6941,7 +6941,7 @@ namespace Cheetah.Graphics
                 ClientList = new EntityCollection();
             }
 
-            //Physics = Cheetah.Physics.Physics.Create();
+            Physics = Cheetah.Physics.Physics.Create();
 		}
 
         public bool ServerListCheck(int id)

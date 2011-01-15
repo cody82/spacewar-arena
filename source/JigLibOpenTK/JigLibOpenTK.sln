@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JigLibOpenTK", "JigLibOpenTK.csproj", "{E6B7216F-92D8-4FAC-882A-351C4AF09B74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK", "..\OpenTK\1.0\Source\OpenTK\OpenTK.csproj", "{A37A7E14-0000-0000-0000-000000000000}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Documentation|Any CPU = Documentation|Any CPU
+		Nsis|Any CPU = Nsis|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Documentation|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Documentation|Any CPU.Build.0 = Debug|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Nsis|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Nsis|Any CPU.Build.0 = Release|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B7216F-92D8-4FAC-882A-351C4AF09B74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Documentation|Any CPU.ActiveCfg = Documentation|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Documentation|Any CPU.Build.0 = Documentation|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Nsis|Any CPU.ActiveCfg = Nsis|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Nsis|Any CPU.Build.0 = Nsis|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A37A7E14-0000-0000-0000-000000000000}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

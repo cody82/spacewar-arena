@@ -178,6 +178,10 @@
       <Project>{FA4ACE8B-CDEE-41A3-92D7-C73069B84B83}</Project>
       <Name>csogg</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JigLibOpenTK\JigLibOpenTK.csproj">
+      <Project>{E6B7216F-92D8-4FAC-882A-351C4AF09B74}</Project>
+      <Name>JigLibOpenTK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}</Project>
       <Name>Lidgren.Network</Name>

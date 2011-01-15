@@ -5,6 +5,13 @@ using Cheetah.Graphics;
 using OpenTK;
 using Cheetah.OpenTK;
 
+using JigLibX.Physics;
+using JigLibX.Collision;
+using JigLibX.Geometry;
+using JigLibX.Math;
+using JigLibX.Utils;
+using Box = JigLibX.Geometry.Box;
+
 namespace Cheetah.Physics
 {
     public class PhysicsNode : Node
@@ -12,7 +19,7 @@ namespace Cheetah.Physics
         public PhysicsNode()
         {
             Draw = new System.Collections.ArrayList();
-            Draw.Add(Root.Instance.ResourceManager.LoadMesh("mars/mars.mesh"));
+            Draw.Add(Root.Instance.ResourceManager.LoadMesh("cube/cube.mesh"));
             Draw.Add(new Marker());
         }
 
@@ -25,7 +32,7 @@ namespace Cheetah.Physics
         {
             base.OnAdd (s);
 
-            Physics = s.Physics.CreateObjectSphere(500, 0.1f);
+            Physics = s.Physics.CreateObjectBox(1, 2,2,2);
         }
 
         public override void OnRemove(Scene s)
@@ -41,6 +48,7 @@ namespace Cheetah.Physics
 
         public override void Tick(float dtime)
         {
+            System.Console.WriteLine(Position);
             position.Original = Position;
             orientation.Original = Orientation;
             orientation.Tick(dtime);
@@ -105,11 +113,12 @@ namespace Cheetah.Physics
         {
             get
             {
-                return QuaternionExtensions.GetInverse(Physics.Orientation);
+                //return QuaternionExtensions.GetInverse(Physics.Orientation);
+                return Physics.Orientation;
             }
             set
             {
-                Physics.Orientation=QuaternionExtensions.GetInverse(value);
+                Physics.Orientation = value;// QuaternionExtensions.GetInverse(value);
                 orientation.Original = value;
             }
         }
@@ -322,7 +331,7 @@ namespace Cheetah.Physics
     {
         public static IPhysicsWorld Create()
         {
-            return null;
+            return new JigLibWorld();
             //return new OdeWorld();
         }
 
@@ -350,13 +359,118 @@ namespace Cheetah.Physics
             set;
         }
 
-        ICollisionMesh CMesh
-        {
-            get;
-            set;
-        }
 
         //event Physics.OneCollisionDelegate Collision;
     }
 
+    public class JigLibObject : IPhysicsObject
+    {
+        public JigLibObject(Body b)
+        {
+            body = b;
+        }
+        Body body;
+
+        public Vector3 Position
+        {
+            get
+            {
+                return body.Position;
+            }
+            set
+            {
+                body.Position = value;
+            }
+        }
+
+        public Vector3 Speed
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Quaternion Orientation
+        {
+            get
+            {
+                return QuaternionExtensions.FromMatrix4(body.Orientation);
+            }
+            set
+            {
+                body.SetOrientation(Matrix4.Rotate(value));
+            }
+        }
+    }
+
+    public class JigLibWorld : IPhysicsWorld
+    {
+        PhysicsSystem world;
+
+        public JigLibWorld()
+        {
+            world = new PhysicsSystem();
+            world.CollisionSystem = new CollisionSystemSAP();
+        }
+
+        public IPhysicsObject CreateObjectSphere(float radius, float density)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static Vector3 SetMass(float mass, CollisionSkin skin, Body body)
+        {
+            PrimitiveProperties primitiveProperties = new PrimitiveProperties(
+                PrimitiveProperties.MassDistributionEnum.Solid,
+                PrimitiveProperties.MassTypeEnum.Mass, mass);
+
+            float junk;
+            Vector3 com;
+            Matrix4 it;
+            Matrix4 itCoM;
+
+            skin.GetMassProperties(primitiveProperties, out junk, out com, out it, out itCoM);
+
+            body.BodyInertia = itCoM;
+            body.Mass = junk;
+
+            return com;
+        }
+
+        static Body CreateCube(Vector3 pos, Vector3 size)
+        {
+            Body _body = new Body();
+            CollisionSkin _skin = new CollisionSkin(_body);
+            _body.CollisionSkin = _skin;
+            Box box = new Box(pos, Matrix4.Identity, size);
+            _skin.AddPrimitive(box, new MaterialProperties(0.8f, 0.8f, 0.7f));
+
+            Vector3 com = SetMass(1.0f, _skin, _body);
+
+            _body.MoveTo(pos, Matrix4.Identity);
+            _skin.ApplyLocalTransform(new Transform(-com, Matrix4.Identity));
+            _body.EnableBody();
+            return _body;
+        }
+
+        public IPhysicsObject CreateObjectBox(float density, float lx, float ly, float lz)
+        {
+            return new JigLibObject(CreateCube(Vector3.Zero,new Vector3(2,2,2)));
+        }
+
+        public void DeleteObject(IPhysicsObject po)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Tick(float dtime)
+        {
+            world.Integrate(dtime);
+        }
+    }
 }
