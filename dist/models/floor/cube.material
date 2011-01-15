@@ -13,14 +13,14 @@ diffusemap: buildbac.dds
 #bumpmap: buildbac_normal.bmp
 #specularmap: buildbac_specular.bmp
 #specularmap: black.png
-emissivemap: buildbac.dds
+#emissivemap: buildbac.dds
 #reflectionmap: buildbac_reflection.bmp
 #reflectionmap: black.png
 #shader: bump.specular.spheremap.reflectionmap.shader
 #shader: spheremap.shader
 #shader: bump.spheremap.shader
 #environmentmap: wasser2.dds
-shader: emissivemap.shader
+#shader: emissivemap.shader
 #wire: true
 twosided: false
 
