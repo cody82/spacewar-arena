@@ -65,6 +65,7 @@ namespace PhysicsTest
             camera = new Camera();
             camera.Position = new Vector3(40, 40, 40);
             camera.LookAt(0, 5, 0);
+            Root.Instance.LocalObjects.Add(camera);
 
             for (int i = 0; i < 50; ++i)
             {
@@ -89,22 +90,79 @@ namespace PhysicsTest
             Root.Instance.Scene.Spawn(light = new Light());
             light.Position = new Vector3(-20, 20, -20);
             light.diffuse = new Color4f(0, 0, 0.6f);
+
+            x = Root.Instance.UserInterface.Mouse.GetPosition(0);
+            y = Root.Instance.UserInterface.Mouse.GetPosition(1);
         }
+
+        float x;
+        float y;
+        float ax;
+        float ay;
 
         public override void Tick(float dtime)
         {
             base.Tick(dtime);
 
-            camera.Position = new Vector3((float)Math.Cos(Root.Instance.Time)*40, camera.Position.Y, (float)Math.Sin(Root.Instance.Time)*40);
-            camera.LookAt(cubes[cubes.Count -20].Position);
+            //camera.Position = new Vector3((float)Math.Cos(Root.Instance.Time)*40, camera.Position.Y, (float)Math.Sin(Root.Instance.Time)*40);
+            //camera.LookAt(cubes[cubes.Count -20].Position);
 
-            if (Time > 10)
+            /*if (Time > 10)
             {
                 Start();
                 Time = 0;
+            }*/
+
+            float tx=Root.Instance.UserInterface.Mouse.GetPosition(0);
+            float ty=Root.Instance.UserInterface.Mouse.GetPosition(1);
+
+            float dx = tx - x;
+            float dy = ty - y;
+
+            System.Console.WriteLine(dx);
+            System.Console.WriteLine(dy);
+
+            if (Root.Instance.UserInterface.Mouse.GetButtonState(1))
+            {
+                ax += dx;
+                ay += dy;
             }
+
+            if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)global::OpenTK.Input.Key.W))
+            {
+                camera.Speed = camera.Direction * 50;
+            }
+            else if (Root.Instance.UserInterface.Keyboard.GetButtonState((int)global::OpenTK.Input.Key.S))
+            {
+                camera.Speed = camera.Direction * -50;
+            }
+            else
+            {
+                camera.Speed = Vector3.Zero;
+            }
+
+            camera.Orientation = Quaternion.FromAxisAngle(Vector3.UnitY, ax * -0.005f) * Quaternion.FromAxisAngle(Vector3.UnitX, ay * 0.005f);
+            //camera.rotationspeed.Y = dy;
+
+            x = tx;
+            y = ty;
         }
 
+        public override void OnKeyPress(OpenTK.Input.Key k)
+        {
+            base.OnKeyPress(k);
+
+            if (k == OpenTK.Input.Key.Space)
+            {
+                Cube c = new Cube();
+                Root.Instance.Scene.Spawn(c);
+                c.Position = camera.Position;
+                c.Orientation = camera.Orientation;
+                c.Physics.Speed = camera.Direction*100;
+                cubes.Add(c);
+
+            }
+        }
         List<Cube> cubes = new List<Cube>();
         Camera camera;
         Light light;

@@ -393,11 +393,11 @@ namespace Cheetah.Physics
         {
             get
             {
-                throw new NotImplementedException();
+                return body.Velocity;
             }
             set
             {
-                throw new NotImplementedException();
+                body.Velocity = value;
             }
         }
 
@@ -488,6 +488,14 @@ namespace Cheetah.Physics
 
         public void Tick(float dtime)
         {
+            float timestep = 0.01f;
+
+            while (dtime > timestep)
+            {
+                world.Integrate(timestep);
+                dtime -= timestep;
+            }
+
             world.Integrate(dtime);
         }
     }
