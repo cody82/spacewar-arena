@@ -20,6 +20,21 @@ using Cheetah.Physics;
 
 namespace PhysicsTest
 {
+
+    class Car : PhysicsNode
+    {
+        public Car()
+        {
+            Draw = new System.Collections.ArrayList();
+            Draw.Add(new Marker());
+        }
+
+        protected override IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            return s.Physics.CreateObjectCar();
+        }
+    }
+
     class Cube : PhysicsNode
     {
         public Cube()
@@ -50,24 +65,13 @@ namespace PhysicsTest
         }
     }
 
-    class PhysicsFlow : Flow
+    class PhysicsServer : Flow
     {
-        public PhysicsFlow()
-        {
-        }
-
         public override void Start()
         {
             base.Start();
 
-            Root.Instance.Scene = new Scene();
-
-            camera = new Camera();
-            camera.Position = new Vector3(40, 40, 40);
-            camera.LookAt(0, 5, 0);
-            Root.Instance.LocalObjects.Add(camera);
-
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 20; ++i)
             {
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
@@ -76,7 +80,6 @@ namespace PhysicsTest
             }
             Root.Instance.Scene.Spawn(new Floor());
 
-            Root.Instance.Scene.camera = camera;
             Root.Instance.Scene.Spawn(light = new Light());
             light.Position = new Vector3(1, 1, 1);
             light.directional = true;
@@ -90,6 +93,36 @@ namespace PhysicsTest
             Root.Instance.Scene.Spawn(light = new Light());
             light.Position = new Vector3(-20, 20, -20);
             light.diffuse = new Color4f(0, 0, 0.6f);
+        }
+        List<Cube> cubes = new List<Cube>();
+        Light light;
+    }
+
+    class PhysicsClient : Flow
+    {
+        PhysicsServer server;
+
+        public PhysicsClient(bool local)
+        {
+            if (local)
+            {
+                server = new PhysicsServer();
+            }
+        }
+
+        public override void Start()
+        {
+            base.Start();
+
+            if (server != null)
+                server.Start();
+
+            camera = new Camera();
+            camera.Position = new Vector3(40, 40, 40);
+            camera.LookAt(0, 5, 0);
+            Root.Instance.LocalObjects.Add(camera);
+
+            Root.Instance.Scene.camera = camera;
 
             x = Root.Instance.UserInterface.Mouse.GetPosition(0);
             y = Root.Instance.UserInterface.Mouse.GetPosition(1);
@@ -103,6 +136,9 @@ namespace PhysicsTest
         public override void Tick(float dtime)
         {
             base.Tick(dtime);
+
+            if (server != null)
+                server.Tick(dtime);
 
             //camera.Position = new Vector3((float)Math.Cos(Root.Instance.Time)*40, camera.Position.Y, (float)Math.Sin(Root.Instance.Time)*40);
             //camera.LookAt(cubes[cubes.Count -20].Position);
@@ -160,17 +196,61 @@ namespace PhysicsTest
                 c.Position = camera.Position;
                 c.Orientation = camera.Orientation;
                 c.Physics.Speed = camera.Direction*100;
-                cubes.Add(c);
+                //cubes.Add(c);
+
+            }
+            else if (k == OpenTK.Input.Key.C)
+            {
+                Car c = new Car();
+                Root.Instance.Scene.Spawn(c);
+                c.Position = camera.Position;
+                c.Orientation = camera.Orientation;
+                c.Physics.Speed = camera.Direction * 10;
 
             }
         }
-        List<Cube> cubes = new List<Cube>();
         Camera camera;
-        Light light;
     }
 
     class Program
     {
+        static void ServerMain(string[] args)
+        {
+            Root r = new Root(args, true);
+            r.ServerServer(args);
+
+            r.NextIndex += 10;
+
+            while (!Root.Instance.Quit)
+            {
+                Flow f = new PhysicsServer();
+                r.CurrentFlow = f;
+                f.Start();
+                r.ServerRun(true);
+                f.Stop();
+            }
+
+            r.ServerStop();
+            r.Dispose();
+        }
+
+        public static void ClientMain(string[] args)
+        {
+            Root r = new Root(args, false);
+            r.ClientClient(args);
+            IUserInterface ui = r.UserInterface;
+
+            Flow f = new PhysicsClient(true);
+
+            r.CurrentFlow = f;
+
+            f.Start();
+
+            r.ClientLoop();
+
+            r.Dispose();
+        }
+
         static void Main(string[] args)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
@@ -200,19 +280,28 @@ namespace PhysicsTest
                 System.Console.WriteLine("root directory: " + current.FullName);
             }
 
-            Root r = new Root(args, false);
-            r.ClientClient(args);
-            IUserInterface ui = r.UserInterface;
 
-            Flow f = new PhysicsFlow();
+            if (Array.IndexOf<string>(args, "server") != -1)
+            {
+                ServerMain(args);
+            }
+            else if (Array.IndexOf<string>(args, "client") != -1)
+            {
+                ClientMain(args);
+            }
+            /*else if (Array.IndexOf<string>(args, "clientserver") != -1)
+            {
+                System.Console.WriteLine("client started. launching server...");
+                Process server = Process.Start("Game.exe", "server");
+                Thread.Sleep(1000);
+                System.Console.WriteLine("done.");
 
-            r.CurrentFlow = f;
+                ClientMain(args);
 
-            f.Start();
-
-            r.ClientLoop();
-
-            r.Dispose();
+                server.Kill();
+            }*/
+            //ServerMain(args);
+            //ClientMain(args);
         }
     }
 }
