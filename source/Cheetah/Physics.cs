@@ -35,7 +35,8 @@ namespace Cheetah.Physics
         {
             base.OnAdd (s);
 
-            Physics=CreatePhysicsObject(s);
+            if(Physics==null)
+                Physics=CreatePhysicsObject(s);
         }
 
         public override void OnRemove(Scene s)
@@ -68,7 +69,14 @@ namespace Cheetah.Physics
 
         public override void DeSerialize(DeSerializationContext context)
         {
+            if (Physics == null)
+            {
+                //HACK
+                Physics = CreatePhysicsObject(Root.Instance.Scene);
+            }
+
             base.DeSerialize(context);
+
 
             Position = position.Original;
             Orientation = orientation.Original;

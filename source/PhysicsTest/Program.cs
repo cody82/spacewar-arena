@@ -21,8 +21,13 @@ using Cheetah.Physics;
 namespace PhysicsTest
 {
 
-    class Car : PhysicsNode
+    public class Car : PhysicsNode
     {
+        public Car(DeSerializationContext context)
+            : base(context)
+        {
+        }
+        
         public Car()
         {
             Draw = new System.Collections.ArrayList();
@@ -35,8 +40,13 @@ namespace PhysicsTest
         }
     }
 
-    class Cube : PhysicsNode
+    public class Cube : PhysicsNode
     {
+        public Cube(DeSerializationContext context)
+            : base(context)
+        {
+        }
+
         public Cube()
         {
             Draw = new System.Collections.ArrayList();
@@ -49,8 +59,13 @@ namespace PhysicsTest
         }
     }
 
-    class Floor : PhysicsNode
+    public class Floor : PhysicsNode
     {
+        public Floor(DeSerializationContext context)
+            : base(context)
+        {
+        }
+
         public Floor()
         {
             Draw = new System.Collections.ArrayList();
@@ -65,7 +80,7 @@ namespace PhysicsTest
         }
     }
 
-    class PhysicsServer : Flow
+    public class PhysicsServer : Flow
     {
         public override void Start()
         {
@@ -98,7 +113,7 @@ namespace PhysicsTest
         Light light;
     }
 
-    class PhysicsClient : Flow
+    public class PhysicsClient : Flow
     {
         PhysicsServer server;
 
@@ -190,7 +205,7 @@ namespace PhysicsTest
 
             if (k == OpenTK.Input.Key.Space)
             {
-                Root.Instance.UserInterface.CaptureMouse = true;
+                //Root.Instance.UserInterface.CaptureMouse = true;
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
                 c.Position = camera.Position;
@@ -212,12 +227,14 @@ namespace PhysicsTest
         Camera camera;
     }
 
-    class Program
+    public class Program
     {
         static void ServerMain(string[] args)
         {
             Root r = new Root(args, true);
             r.ServerServer(args);
+
+            Mod.Instance.Init();
 
             r.NextIndex += 10;
 
@@ -240,7 +257,23 @@ namespace PhysicsTest
             r.ClientClient(args);
             IUserInterface ui = r.UserInterface;
 
-            Flow f = new PhysicsClient(true);
+            Mod.Instance.Init();
+
+            int i;
+            Flow f;
+            if ((i = Array.FindIndex<string>(Root.Instance.Args, new Predicate<string>(delegate(string s) { return s == "-connect"; }))) != -1)
+            {
+                string host = Root.Instance.Args[i + 1];
+
+                f = new PhysicsClient(false);
+
+                r.Scene.Clear();
+                r.ClientConnect(host);
+            }
+            else
+            {
+                f = new PhysicsClient(true);
+            }
 
             r.CurrentFlow = f;
 
@@ -303,5 +336,59 @@ namespace PhysicsTest
             //ServerMain(args);
             //ClientMain(args);
         }
+    }
+
+
+
+    public class Mod : Cheetah.Mod
+    {
+        public void Init()
+        {
+            if (initialized)
+            {
+                Cheetah.Console.WriteLine("mod already initialized. HACK");
+                return;
+            }
+
+            Root.Instance.Mod = this;
+            initialized = true;
+
+            System.Console.WriteLine(GameString);
+
+            Root.Instance.Factory.Add(Assembly.GetAssembly(typeof(Mod)));
+
+            //Root.Instance.Script.Execute(FileSystem.Get("mods/" + r.Mod + "/scripts/init.boo").getStream());
+            //Root.Instance.Script.Execute(Root.Instance.FileSystem.Get("mods/" + Root.Instance.Mod + "/scripts/init.boo").getStream());
+            //Root.Instance.Script.Execute(Root.Instance.FileSystem.Get("scripts/spacewar2006.boo").getStream());
+        }
+
+        public override Version AssemblyVersion
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
+
+        public override int Version
+        {
+            get
+            {
+                return AssemblyVersion.Minor;
+            }
+        }
+
+        public override string GameString
+        {
+            get
+            {
+                return "PhysicsTest (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
+            }
+        }
+
+
+        const int version = 1;
+        bool initialized = false;
+        public static Mod Instance = new Mod();
     }
 }
