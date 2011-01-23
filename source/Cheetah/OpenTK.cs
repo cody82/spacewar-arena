@@ -633,7 +633,17 @@ namespace Cheetah.OpenTK
 				window.VSync=VSyncMode.Adaptive;
 			}
         }
-
+        public bool CaptureMouse
+        {
+            get
+            {
+                return !window.CursorVisible;
+            }
+            set
+            {
+                window.CursorVisible = !value;
+            }
+        }
         public void ProcessEvents()
         {
             window.ProcessEvents();

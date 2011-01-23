@@ -154,6 +154,7 @@ namespace PhysicsTest
 
             if (k == OpenTK.Input.Key.Space)
             {
+                Root.Instance.UserInterface.CaptureMouse = true;
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
                 c.Position = camera.Position;

@@ -15,50 +15,55 @@ namespace Cheetah
 {
     public enum ControlID
     {
-        None=0,Keyboard, Mouse, Joystick0, Joystick1, Joystick2, Joystick3
+        None = 0, Keyboard, Mouse, Joystick0, Joystick1, Joystick2, Joystick3
     }
 
-	public interface IUserInterface : IDisposable,ITickable
-	{
-		void Create(bool fullscreen,int width,int height, bool audio);
-		
-		void ProcessEvents();
-		bool wantsQuit();
+    public interface IUserInterface : IDisposable, ITickable
+    {
+        void Create(bool fullscreen, int width, int height, bool audio);
+
+        void ProcessEvents();
+        bool wantsQuit();
 
         IControl GetControl(ControlID id);
         IControl[] GetAvailableControls();
 
-		IControl Keyboard
-	{
-		get;
-	}
-	IControl Mouse
-	{
-		get;
-	}
-    IControl Joystick
-    {
-        get;
-    }
+        IControl Keyboard
+        {
+            get;
+        }
+        IControl Mouse
+        {
+            get;
+        }
+        IControl Joystick
+        {
+            get;
+        }
         IRenderer Renderer
         {
             get;
             set;
         }
-	IAudio Audio
-		{
-			get;
-		}
+        IAudio Audio
+        {
+            get;
+        }
 
-    void Flip();
-	}
+        bool CaptureMouse
+        {
+            get;
+            set;
+        }
+        void Flip();
+    }
 
 
 
-	public interface IKeyboard
-	{
-		bool isKeyPressed(int key);
-	}
+    public interface IKeyboard
+    {
+        bool isKeyPressed(int key);
+    }
 
     public class DummyControl : IControl
     {
@@ -79,64 +84,64 @@ namespace Cheetah
         public static DummyControl Instance = new DummyControl();
     }
 
-	public struct VectorInt2
-	{
-		public int x,y;
-	}
+    public struct VectorInt2
+    {
+        public int x, y;
+    }
 
 
-	public enum RenderMode
-	{
-		Draw2D,Draw3D,Draw3DWireFrame,Draw3DPointSprite,DrawSkyBox
-	}
+    public enum RenderMode
+    {
+        Draw2D, Draw3D, Draw3DWireFrame, Draw3DPointSprite, DrawSkyBox
+    }
 
     public enum TextureFormat
     {
         DXT1, DXT2, DXT3, DXT4, DXT5, RGB, RGBA
     }
 
-	public class TextureId
-	{
+    public class TextureId
+    {
         public float LastBind = 0;
-	}
+    }
 
-	public interface IRenderer
-	{
-		void Clear(float r,float g,float b,float a);
-		//void Flip();
+    public interface IRenderer
+    {
+        void Clear(float r, float g, float b, float a);
+        //void Flip();
 
-		void SetMode(RenderMode m);
+        void SetMode(RenderMode m);
         void SetPointSize(float s);
 
-		//drawing functions
-		void Draw(VertexBuffer vertices,PrimitiveType type,int offset,int count,IndexBuffer ib);
-		void Draw(string text,float x,float y,float sx,float sy,Cheetah.Texture t,Color4f c,float width);
-        void Draw(string text, float x, float y, float sx, float sy, Cheetah.Texture t, Color4f c, float width,RectangleF scissor);
+        //drawing functions
+        void Draw(VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib);
+        void Draw(string text, float x, float y, float sx, float sy, Cheetah.Texture t, Color4f c, float width);
+        void Draw(string text, float x, float y, float sx, float sy, Cheetah.Texture t, Color4f c, float width, RectangleF scissor);
         void Draw(Cheetah.Graphics.VertexBuffer vertices, PrimitiveType type, int offset, int count, IndexBuffer ib, int indexoffset);
 
-		//texture functions
+        //texture functions
         TextureId CreateCompressedTexture(byte[][] mipmaps, TextureFormat codec, int w, int h);
-		TextureId CreateTexture(byte[] rgba,int w,int h,bool alpha);
+        TextureId CreateTexture(byte[] rgba, int w, int h, bool alpha);
         TextureId CreateTexture(int w, int h, bool alpha, bool depth);
         TextureId CreateDepthTexture(int w, int h);
-		void UpdateTexture(Cheetah.TextureId t,byte[] rgba);
-		void BindTexture(TextureId t);
-		void BindTexture(TextureId t,int unit);
-		void FreeTexture(TextureId t);
+        void UpdateTexture(Cheetah.TextureId t, byte[] rgba);
+        void BindTexture(TextureId t);
+        void BindTexture(TextureId t, int unit);
+        void FreeTexture(TextureId t);
         Cheetah.TextureId CreateCubeTexture(byte[] xpos, byte[] xneg, byte[] ypos, byte[] yneg, byte[] zpos, byte[] zneg, int w, int h);
-        Cheetah.TextureId CreateCompressedCubeTexture(byte[] xpos, byte[] xneg, byte[] ypos, byte[] yneg, byte[] zpos, byte[] zneg, TextureFormat codec,int w, int h);
+        Cheetah.TextureId CreateCompressedCubeTexture(byte[] xpos, byte[] xneg, byte[] ypos, byte[] yneg, byte[] zpos, byte[] zneg, TextureFormat codec, int w, int h);
 
-		//vertex buffer functions
-		VertexBuffer CreateStaticVertexBuffer(object data,int length);
-		DynamicVertexBuffer CreateDynamicVertexBuffer(int length);
-		void FreeVertexBuffer(VertexBuffer b);
+        //vertex buffer functions
+        VertexBuffer CreateStaticVertexBuffer(object data, int length);
+        DynamicVertexBuffer CreateDynamicVertexBuffer(int length);
+        void FreeVertexBuffer(VertexBuffer b);
 
         RenderTarget CreateRenderTarget(TextureId texture, Cheetah.TextureId depth);
         void BindRenderTarget(RenderTarget target);
 
-		//shader functions
-		//IEffect CreateEffect(string code);
-		//void FreeEffect(IEffect e);
+        //shader functions
+        //IEffect CreateEffect(string code);
+        //void FreeEffect(IEffect e);
         //Shader CreateShader(string vertex, string fragment);
         Shader CreateShader(string vertex, string fragment, string geometry, PrimitiveType input, PrimitiveType output);
         void FreeShader(Shader s);
@@ -145,21 +150,21 @@ namespace Cheetah
         void SetUniform(int location, int[] values);
         void SetAttribute(int location, float[] values);
 
-		void SetLighting(bool b);
-		void SetLight(int index,Light l);
-		void SetMaterial(Material m);
-		//void SetFog(Fog f);
+        void SetLighting(bool b);
+        void SetLight(int index, Light l);
+        void SetMaterial(Material m);
+        //void SetFog(Fog f);
 
-		void SetCamera(Camera c);
+        void SetCamera(Camera c);
 
-		void PushMatrix();
-		void PopMatrix();
-		void LoadMatrix(Matrix4 m);
-		void MultMatrix(Matrix4 m);
+        void PushMatrix();
+        void PopMatrix();
+        void LoadMatrix(Matrix4 m);
+        void MultMatrix(Matrix4 m);
 
-		void GetMatrix(float[] modelview,float[] projection);
+        void GetMatrix(float[] modelview, float[] projection);
         float[] GetRasterPosition(float[] pos3d);
-        Vector3 UnProject(float[] winxyz,float[] model,float[] proj,int[] viewport);
+        Vector3 UnProject(float[] winxyz, float[] model, float[] proj, int[] viewport);
 
         System.Drawing.Bitmap Screenshot();
         Cheetah.Graphics.Image Screenshot2();
@@ -175,17 +180,17 @@ namespace Cheetah
             set;
         }
         Point Size
-		{
-			get;
-		}
-	}
+        {
+            get;
+        }
+    }
 
-	public interface IMouse
-	{
-		VectorInt2 getPosition();
-		VectorInt2 getRelativePosition();
-		bool isButtonPressed(int number);
-	}
+    public interface IMouse
+    {
+        VectorInt2 getPosition();
+        VectorInt2 getRelativePosition();
+        bool isButtonPressed(int number);
+    }
 
     public class DummyMouse : IMouse
     {
@@ -231,7 +236,7 @@ namespace Cheetah
 
         public virtual void Dispose()
         {
-            
+
         }
 
         #endregion
@@ -239,11 +244,11 @@ namespace Cheetah
     }
 
     public interface IAudio : ITickable, IDisposable
-	{
+    {
         Sound Load(Stream s);
         //Sound Open(Stream s);
-        Channel Play(Sound sound,Vector3 pos,bool loop);
-        void SetListener(Vector3 pos,Vector3 forward,Vector3 up);
+        Channel Play(Sound sound, Vector3 pos, bool loop);
+        void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
         void SetPosition(Channel channel, Vector3 pos);
         void Stop(Channel channel);
         void Free(Sound sound);
@@ -260,8 +265,8 @@ namespace Cheetah
     }
     public class FmodSound : Sound
     {
-        public FmodSound(FmodAudio a,FMOD.Sound s,bool stream)
-            :base(a)
+        public FmodSound(FmodAudio a, FMOD.Sound s, bool stream)
+            : base(a)
         {
             sound = s;
             IsStream = stream;
@@ -291,7 +296,7 @@ namespace Cheetah
             return new DummySound();
         }
 
-        public Channel Play(Sound sound, Vector3 pos,bool loop)
+        public Channel Play(Sound sound, Vector3 pos, bool loop)
         {
             return new DummyChannel();
         }
@@ -347,7 +352,7 @@ namespace Cheetah
         {
             FMOD.RESULT result;
             bool b = false;
-            result=((FmodChannel)channel).channel.isPlaying(ref b);
+            result = ((FmodChannel)channel).channel.isPlaying(ref b);
             //ERRCHECK(result);
             return b;
         }
@@ -357,7 +362,7 @@ namespace Cheetah
             FMOD.VECTOR pos2;
             FMOD.VECTOR forward2;
             FMOD.VECTOR up2;
-            FMOD.VECTOR v=new FMOD.VECTOR();
+            FMOD.VECTOR v = new FMOD.VECTOR();
             pos2.x = pos.X;
             pos2.y = pos.Y;
             pos2.z = pos.Z;
@@ -375,7 +380,7 @@ namespace Cheetah
         {
             FMOD.RESULT result;
             FMOD.VECTOR pos2;
-            FMOD.VECTOR vel2=new FMOD.VECTOR();
+            FMOD.VECTOR vel2 = new FMOD.VECTOR();
             pos2.x = pos.X;
             pos2.y = pos.Y;
             pos2.z = pos.Z;
@@ -417,11 +422,11 @@ namespace Cheetah
 
         public Sound Load(Stream s)
         {
-            byte[] buffer=new byte[s.Length];
+            byte[] buffer = new byte[s.Length];
             s.Read(buffer, 0, (int)s.Length);
 
             FMOD.RESULT result;
-            FMOD.Sound sound1=null;
+            FMOD.Sound sound1 = null;
             FMOD.CREATESOUNDEXINFO exinfo = new FMOD.CREATESOUNDEXINFO();
             exinfo.cbsize = Marshal.SizeOf(exinfo);
             exinfo.length = (uint)s.Length;
@@ -431,7 +436,7 @@ namespace Cheetah
             ERRCHECK(result);
 
             sound1.set3DMinMaxDistance(500, 5000);
-            return new FmodSound(this,sound1,false);
+            return new FmodSound(this, sound1, false);
         }
 
         public Channel Play(Sound sound, Vector3 pos, bool loop)
@@ -453,7 +458,7 @@ namespace Cheetah
 
         public void Stop(Channel channel)
         {
-            FMOD.RESULT result=((FmodChannel)channel).channel.stop();
+            FMOD.RESULT result = ((FmodChannel)channel).channel.stop();
             //ERRCHECK(result);
         }
 
@@ -467,44 +472,44 @@ namespace Cheetah
     }
 
 
-	public class DummyTexture : Texture
-	{
-	}
+    public class DummyTexture : Texture
+    {
+    }
 
     public class RenderTarget
     {
         public TextureId Texture;
     }
 
-	public class Texture : IResource
-	{
-		public Texture()
-		{
-		}
-		public Texture(TextureId id)
-		{
-			Id=id;
-		}
+    public class Texture : IResource
+    {
+        public Texture()
+        {
+        }
+        public Texture(TextureId id)
+        {
+            Id = id;
+        }
 
-		public virtual void Dispose()
-		{
-		}
-		//public Texture(Color4b[] data,object tag);
-		//public void Bind();
-		public int width;
-		public int height;
-		public TextureId Id;
-		//public int format;
-	}
+        public virtual void Dispose()
+        {
+        }
+        //public Texture(Color4b[] data,object tag);
+        //public void Bind();
+        public int width;
+        public int height;
+        public TextureId Id;
+        //public int format;
+    }
 
-	public class DynamicTexture : Texture
-	{
-	}
+    public class DynamicTexture : Texture
+    {
+    }
 
-	public class VideoTexture : DynamicTexture,ITickable
-	{
-		public VideoTexture(Stream s)
-		{
+    public class VideoTexture : DynamicTexture, ITickable
+    {
+        public VideoTexture(Stream s)
+        {
             Avi = new AviLib.AviFile(s);
             try
             {
@@ -519,26 +524,26 @@ namespace Cheetah
 
 
 
-			Frame=new byte[Avi.MaxFrameSize];
-			int l=Avi.ReadFrame(Frame);
+            Frame = new byte[Avi.MaxFrameSize];
+            int l = Avi.ReadFrame(Frame);
 
-			ActiveSurface=new byte[Avi.Width*Avi.Height*3];
-			DecodingSurface=new byte[Avi.Width*Avi.Height*3];
+            ActiveSurface = new byte[Avi.Width * Avi.Height * 3];
+            DecodingSurface = new byte[Avi.Width * Avi.Height * 3];
 
-            XviD.Decode(Frame,l,ActiveSurface);
-			Id=Root.Instance.UserInterface.Renderer.CreateTexture(ActiveSurface,Avi.Width,Avi.Height,false);
+            XviD.Decode(Frame, l, ActiveSurface);
+            Id = Root.Instance.UserInterface.Renderer.CreateTexture(ActiveSurface, Avi.Width, Avi.Height, false);
             DecodedFrame = LoadedFrame = 0;
-            UpdateThread=new Thread(new ThreadStart(UpdateFunc));
-			UpdateThread.Start();
-		}
+            UpdateThread = new Thread(new ThreadStart(UpdateFunc));
+            UpdateThread.Start();
+        }
 
-		public override void Dispose()
-		{
-			if (UpdateThread!=null && !ExitThread)
-			{
+        public override void Dispose()
+        {
+            if (UpdateThread != null && !ExitThread)
+            {
                 StopThread();
-			}
-		}
+            }
+        }
 
         protected void StopThread()
         {
@@ -550,33 +555,33 @@ namespace Cheetah
             System.Console.WriteLine("video update thread ended.");
         }
 
-		~VideoTexture()
-		{
-			Dispose();
-		}
+        ~VideoTexture()
+        {
+            Dispose();
+        }
 
-		protected void UpdateSurface()
-		{
-			if(LoadedFrame!=DecodedFrame)
-			{
-				SwapMutex.WaitOne();
-				Root.Instance.UserInterface.Renderer.UpdateTexture(Id,ActiveSurface);
-				LoadedFrame=DecodedFrame;
-				SwapMutex.ReleaseMutex();
-			}
-		}
+        protected void UpdateSurface()
+        {
+            if (LoadedFrame != DecodedFrame)
+            {
+                SwapMutex.WaitOne();
+                Root.Instance.UserInterface.Renderer.UpdateTexture(Id, ActiveSurface);
+                LoadedFrame = DecodedFrame;
+                SwapMutex.ReleaseMutex();
+            }
+        }
 
-		protected void Swap()
-		{
-			SwapMutex.WaitOne();
-			byte[] tmp=ActiveSurface;
-			ActiveSurface=DecodingSurface;
-			DecodingSurface=tmp;
-			SwapMutex.ReleaseMutex();
-		}
+        protected void Swap()
+        {
+            SwapMutex.WaitOne();
+            byte[] tmp = ActiveSurface;
+            ActiveSurface = DecodingSurface;
+            DecodingSurface = tmp;
+            SwapMutex.ReleaseMutex();
+        }
 
-		public void Tick(float dtime)
-		{
+        public void Tick(float dtime)
+        {
             if (XviD == null)
                 return;
 
@@ -600,38 +605,38 @@ namespace Cheetah
                 Time += dtime;
                 UpdateSurface();
             }
-		}
+        }
 
-		protected void UpdateFunc()
-		{
-			while(!ExitThread)
-			{
+        protected void UpdateFunc()
+        {
+            while (!ExitThread)
+            {
                 int wantframe = (int)(Avi.Fps * Time);
-                bool newframe=false;
+                bool newframe = false;
                 while (wantframe > DecodedFrame)
                 {
                     int l = Avi.ReadFrame(Frame);
-                    newframe=true;
+                    newframe = true;
                     XviD.Decode(Frame, l, DecodingSurface);
                     DecodedFrame++;
                 }
-                if(newframe)
+                if (newframe)
                     Swap();
                 Thread.Sleep(0);
-			}
-		}
+            }
+        }
 
-        private bool Idle=false;
-		private Thread UpdateThread;
-		private XviD.XviD XviD;
-		private AviLib.AviFile Avi;
-		private byte[] Frame;
-		private byte[] ActiveSurface;
-		private byte[] DecodingSurface;
-		private Mutex SwapMutex=new Mutex();
-		private int LoadedFrame;
-		private int DecodedFrame;
-		private float Time;
-		private bool ExitThread=false;
-	}
+        private bool Idle = false;
+        private Thread UpdateThread;
+        private XviD.XviD XviD;
+        private AviLib.AviFile Avi;
+        private byte[] Frame;
+        private byte[] ActiveSurface;
+        private byte[] DecodingSurface;
+        private Mutex SwapMutex = new Mutex();
+        private int LoadedFrame;
+        private int DecodedFrame;
+        private float Time;
+        private bool ExitThread = false;
+    }
 }

@@ -24,6 +24,17 @@ namespace Cheetah.Graphics
         {
         }
 
+        public bool CaptureMouse
+        {
+            get
+            {
+                return false;
+            }
+            set
+            {
+            }
+        }
+
         #region Component Designer generated code
 
         /// <summary> 

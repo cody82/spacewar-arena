@@ -881,8 +881,8 @@ namespace Cheetah.Graphics
         protected void GlSetProgramPrimitiveType(int p, PrimitiveType input, PrimitiveType output)
         {
             CheckError();
-            GL.ProgramParameter(p, Version32.GeometryInputType, (int)GlPrimitiveInputType(input));
-            GL.ProgramParameter(p, Version32.GeometryOutputType, (int)GlPrimitiveOutputType(output));
+            GL.ProgramParameter(p,AssemblyProgramParameterArb.GeometryInputType, (int)GlPrimitiveInputType(input));
+            GL.ProgramParameter(p, AssemblyProgramParameterArb.GeometryOutputType, (int)GlPrimitiveOutputType(output));
             CheckError();
         }
 
