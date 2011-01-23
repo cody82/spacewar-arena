@@ -11,6 +11,7 @@ using JigLibX.Geometry;
 using JigLibX.Math;
 using JigLibX.Utils;
 using Box = JigLibX.Geometry.Box;
+using JigLibX.Vehicles;
 
 namespace Cheetah.Physics
 {
@@ -324,6 +325,7 @@ namespace Cheetah.Physics
     {
         IPhysicsObject CreateObjectSphere(float radius,float density);
         IPhysicsObject CreateObjectBox(float density, float lx, float ly, float lz);
+        IPhysicsObject CreateObjectCar();
 
         void DeleteObject(IPhysicsObject po);
         //event Physics.TwoCollisionDelegate Collision;
@@ -375,7 +377,7 @@ namespace Cheetah.Physics
         {
             body = b;
         }
-        Body body;
+        protected Body body;
 
         public Vector3 Position
         {
@@ -441,6 +443,15 @@ namespace Cheetah.Physics
             throw new NotImplementedException();
         }
 
+        public IPhysicsObject CreateObjectCar()
+        {
+            JigLibCar car = new JigLibCar(true, true, 30.0f, 5.0f, 4.7f, 5.0f, 0.20f, 0.4f, 0.05f, 0.45f, 0.3f, 1, 520.0f, world.Gravity.Length);
+            //car.Car.Chassis.Body.MoveTo(new Vector3(-5, -13, 5), Matrix4.Identity);
+            car.Car.EnableCar();
+            car.Car.Chassis.Body.AllowFreezing = false;
+            return car;
+        }
+
         private static Vector3 SetMass(float mass, CollisionSkin skin, Body body)
         {
             PrimitiveProperties primitiveProperties = new PrimitiveProperties(
@@ -498,5 +509,95 @@ namespace Cheetah.Physics
 
             world.Integrate(dtime);
         }
+    }
+
+
+    class JigLibCar : JigLibObject
+    {
+
+        private Car car;
+        private CollisionSkin collision;
+
+        public JigLibCar(bool FWDrive,
+                       bool RWDrive,
+                       float maxSteerAngle,
+                       float steerRate,
+                       float wheelSideFriction,
+                       float wheelFwdFriction,
+                       float wheelTravel,
+                       float wheelRadius,
+                       float wheelZOffset,
+                       float wheelRestingFrac,
+                       float wheelDampingFrac,
+                       int wheelNumRays,
+                       float driveTorque,
+                       float gravity)
+            :base(null)
+        {
+            car = new Car(FWDrive, RWDrive, maxSteerAngle, steerRate,
+                wheelSideFriction, wheelFwdFriction, wheelTravel, wheelRadius,
+                wheelZOffset, wheelRestingFrac, wheelDampingFrac,
+                wheelNumRays, driveTorque, gravity);
+
+            this.body = car.Chassis.Body;
+            this.collision = car.Chassis.Skin;
+            //this.wheel = wheels;
+
+            SetCarMass(100.0f);
+        }
+
+        private void DrawWheel(Wheel wh, bool rotated)
+        {
+            //foreach (ModelMesh mesh in wheel.Meshes)
+            {
+                //foreach (BasicEffect effect in mesh.Effects)
+                {
+                    float steer = wh.SteerAngle;
+
+                    /*Matrix rot;
+                    if (rotated) rot = Matrix.CreateRotationY(MathHelper.ToRadians(180.0f));
+                    else rot = Matrix.Identity;
+
+                    effect.World = rot * Matrix.CreateRotationZ(MathHelper.ToRadians(-wh.AxisAngle)) * // rotate the wheels
+                        Matrix.CreateRotationY(MathHelper.ToRadians(steer)) *
+                        Matrix.CreateTranslation(wh.Pos + wh.Displacement * wh.LocalAxisUp) * car.Chassis.Body.Orientation * // oritentation of wheels
+                        Matrix.CreateTranslation(car.Chassis.Body.Position); // translation
+                    */
+                }
+                //mesh.Draw();
+            }
+        }
+
+        /*
+        public override void Draw()
+        {
+            DrawWheel(car.Wheels[0], true);
+            DrawWheel(car.Wheels[1], true);
+            DrawWheel(car.Wheels[2], false);
+            DrawWheel(car.Wheels[3], false);
+        }
+        */
+        public Car Car
+        {
+            get { return this.car; }
+        }
+
+        private void SetCarMass(float mass)
+        {
+            body.Mass = mass;
+            Vector3 min, max;
+            car.Chassis.GetDims(out min, out max);
+            Vector3 sides = max - min;
+
+            float Ixx = (1.0f / 12.0f) * mass * (sides.Y * sides.Y + sides.Z * sides.Z);
+            float Iyy = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Z * sides.Z);
+            float Izz = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Y * sides.Y);
+
+            Matrix4 inertia = Matrix4.Identity;
+            inertia.M11 = Ixx; inertia.M22 = Iyy; inertia.M33 = Izz;
+            car.Chassis.Body.BodyInertia = inertia;
+            car.SetupDefaultWheels();
+        }
+
     }
 }
