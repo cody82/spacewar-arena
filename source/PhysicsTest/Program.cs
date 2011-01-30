@@ -80,13 +80,63 @@ namespace PhysicsTest
         }
     }
 
+
+    public class Actor : Node
+    {
+        public Actor()
+        {
+        }
+
+        public Actor(DeSerializationContext context):
+            base(context)
+        {
+        }
+
+        public override void DeSerialize(DeSerializationContext context)
+        {
+            base.DeSerialize(context);
+
+            int target = context.ReadInt32();
+            if (!IsLocal)
+                Owner = (PlayerEntity)Root.Instance.Scene.ServerListGet(target);
+        }
+
+        public override void Serialize(SerializationContext context)
+        {
+            base.Serialize(context);
+
+            int target = (Owner != null) ? Owner.ServerIndex : -1;
+            context.Write(target);
+        }
+
+        public void Shoot()
+        {
+            Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+        }
+
+        public void ShootEvent(string slot)
+        {
+            if (Root.Instance.IsAuthoritive)
+            {
+                Cube c = new Cube();
+                Root.Instance.Scene.Spawn(c);
+                c.Position = Position;
+                c.Orientation = Orientation;
+                c.Physics.Speed = Direction * 100;
+            }
+        }
+
+        public PlayerEntity Owner;
+    }
+
+
     public class PhysicsServer : Flow
     {
         public override void Start()
         {
             base.Start();
 
-            for (int i = 0; i < 20; ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
@@ -141,6 +191,10 @@ namespace PhysicsTest
 
             x = Root.Instance.UserInterface.Mouse.GetPosition(0);
             y = Root.Instance.UserInterface.Mouse.GetPosition(1);
+
+            actor = new Actor();
+            Root.Instance.Scene.Spawn(actor);
+
         }
 
         float x;
@@ -194,6 +248,10 @@ namespace PhysicsTest
 
             camera.Orientation = Quaternion.FromAxisAngle(Vector3.UnitY, ax * -0.005f) * Quaternion.FromAxisAngle(Vector3.UnitX, ay * 0.005f);
             //camera.rotationspeed.Y = dy;
+            actor.Position = camera.Position;
+            actor.Orientation = camera.Orientation;
+            actor.Speed = camera.Speed;
+
 
             x = tx;
             y = ty;
@@ -206,13 +264,9 @@ namespace PhysicsTest
             if (k == OpenTK.Input.Key.Space)
             {
                 //Root.Instance.UserInterface.CaptureMouse = true;
-                Cube c = new Cube();
-                Root.Instance.Scene.Spawn(c);
-                c.Position = camera.Position;
-                c.Orientation = camera.Orientation;
-                c.Physics.Speed = camera.Direction*100;
-                //cubes.Add(c);
 
+                //cubes.Add(c);
+                actor.Shoot();
             }
             else if (k == OpenTK.Input.Key.C)
             {
@@ -225,6 +279,7 @@ namespace PhysicsTest
             }
         }
         Camera camera;
+        Actor actor;
     }
 
     public class Program
