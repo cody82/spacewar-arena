@@ -209,23 +209,11 @@ namespace PhysicsTest
             if (server != null)
                 server.Tick(dtime);
 
-            //camera.Position = new Vector3((float)Math.Cos(Root.Instance.Time)*40, camera.Position.Y, (float)Math.Sin(Root.Instance.Time)*40);
-            //camera.LookAt(cubes[cubes.Count -20].Position);
-
-            /*if (Time > 10)
-            {
-                Start();
-                Time = 0;
-            }*/
-
             float tx=Root.Instance.UserInterface.Mouse.GetPosition(0);
             float ty=Root.Instance.UserInterface.Mouse.GetPosition(1);
 
             float dx = tx - x;
             float dy = ty - y;
-
-            System.Console.WriteLine(dx);
-            System.Console.WriteLine(dy);
 
             if (Root.Instance.UserInterface.Mouse.GetButtonState(1))
             {
@@ -247,7 +235,6 @@ namespace PhysicsTest
             }
 
             camera.Orientation = Quaternion.FromAxisAngle(Vector3.UnitY, ax * -0.005f) * Quaternion.FromAxisAngle(Vector3.UnitX, ay * 0.005f);
-            //camera.rotationspeed.Y = dy;
             actor.Position = camera.Position;
             actor.Orientation = camera.Orientation;
             actor.Speed = camera.Speed;
@@ -263,9 +250,6 @@ namespace PhysicsTest
 
             if (k == OpenTK.Input.Key.Space)
             {
-                //Root.Instance.UserInterface.CaptureMouse = true;
-
-                //cubes.Add(c);
                 actor.Shoot();
             }
             else if (k == OpenTK.Input.Key.C)
