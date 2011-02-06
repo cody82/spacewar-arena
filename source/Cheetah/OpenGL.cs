@@ -99,6 +99,11 @@ namespace Cheetah.Graphics
             }
         }
 
+        public ShaderConfig GetShaderConfig(Material m)
+        {
+            return Generator.MaterialToConfig(m);
+        }
+
         public Entry Get(Material m)
         {
             ShaderConfig cfg=Generator.MaterialToConfig(m);

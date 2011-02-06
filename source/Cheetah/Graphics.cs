@@ -1027,10 +1027,6 @@ namespace Cheetah.Graphics
                 }
             }
 
-            if (m.Shader == null && Root.Instance.ShaderManager != null)
-            {
-                m.Shader = Root.Instance.ShaderManager.GetShader(m);
-            }
 
             return m;
         }
@@ -4088,12 +4084,26 @@ namespace Cheetah.Graphics
 		    //r.SetMode(RenderMode.Draw3D);
 			foreach(SubMesh sm in SubMeshes)
 			{
-                r.UseShader(sm.Material.Shader);			
-				r.SetMaterial(sm.Material);
-                if(sm.Material.Shader!=null)
-                    sm.Material.Apply(sm.Material.Shader, r);
+                Shader s;
+                Material m = sm.Material;
+
+                if (m.Shader == null && Root.Instance.ShaderManager != null)
+                {
+                    ShaderConfig cfg = Root.Instance.ShaderManager.GetShaderConfig(m);
+                    cfg.LightCount = Root.Instance.Scene.lightcount;
+                    s = Root.Instance.ShaderManager.GetShader(cfg);
+                }
+                else
+                {
+                    s = m.Shader;
+                }
+
+                r.UseShader(s);			
+				r.SetMaterial(m);
+                if(s!=null)
+                    m.Apply(s, r);
                 if(n!=null)
-	                n.SetRenderParameters(r,this,sm.Material.Shader);
+	                n.SetRenderParameters(r,this,s);
 
                 sm.Draw(r);
 
