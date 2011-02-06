@@ -4090,7 +4090,7 @@ namespace Cheetah.Graphics
                 if (m.Shader == null && Root.Instance.ShaderManager != null)
                 {
                     ShaderConfig cfg = Root.Instance.ShaderManager.GetShaderConfig(m);
-                    cfg.LightCount = Math.Min(Root.Instance.Scene.lightcount, 8);
+                    cfg.LightCount = Math.Min(n.CurrentNumberOfLights, 8);
                     s = Root.Instance.ShaderManager.GetShader(cfg);
                 }
                 else
@@ -7205,34 +7205,22 @@ namespace Cheetah.Graphics
                 m = n.Matrix;
             }
 
-            SetupLighting(r,n,lights);
+            int numlights = SetupLighting(r,n,lights);
 
 
-            //if(n.Draw!=null&&n.Draw.Count>0&&n.Visible)
-			//{
-                foreach (IDrawable d in n.Draw)
+            foreach (IDrawable d in n.Draw)
+            {
+                if (!d.IsWorldSpace)
                 {
-                        if (!d.IsWorldSpace)
-                        {
-                            r.PushMatrix();
-                            r.MultMatrix(m);
-                        }
-                        d.Draw(r,n);
-
-                        if (!d.IsWorldSpace)
-                            r.PopMatrix();
+                    r.PushMatrix();
+                    r.MultMatrix(m);
                 }
-            //}
-			//else
-			//{
-					/*if(marker==null)
-					{
-						marker=new Marker();
-					}
+                d.Draw(r, n);
 
-					marker.Draw(r);*/
-			//}
-		}
+                if (!d.IsWorldSpace)
+                    r.PopMatrix();
+            }
+        }
 
 		protected bool IsServer
 		{
@@ -7685,7 +7673,7 @@ namespace Cheetah.Graphics
 
         }
 
-		protected void SetupLighting(IRenderer r,Node n,Light[] l)
+		protected int SetupLighting(IRenderer r,Node n,Light[] l)
 		{
             int lights = lightcount;
 			if(lightcount>1)
@@ -7702,7 +7690,7 @@ namespace Cheetah.Graphics
 			else if(lightcount==0)
 			{
 				r.SetLighting(false);
-				return;
+				return 0;
 			}
 
 			int max=8;
@@ -7720,6 +7708,10 @@ namespace Cheetah.Graphics
 				r.SetLight(i,null);
 			}
 			r.SetLighting(true);
+
+            n.CurrentNumberOfLights = max;
+
+            return max;
 		}
 
         public int lightcount;
