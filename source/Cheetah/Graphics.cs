@@ -4090,7 +4090,10 @@ namespace Cheetah.Graphics
                 if (m.Shader == null && Root.Instance.ShaderManager != null)
                 {
                     ShaderConfig cfg = Root.Instance.ShaderManager.GetShaderConfig(m);
-                    cfg.LightCount = Math.Min(n.CurrentNumberOfLights, 8);
+                    if (n != null)
+                        cfg.LightCount = Math.Min(n.CurrentNumberOfLights, 8);
+                    else
+                        cfg.LightCount = 8;
                     s = Root.Instance.ShaderManager.GetShader(cfg);
                 }
                 else
