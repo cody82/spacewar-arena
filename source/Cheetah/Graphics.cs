@@ -1027,10 +1027,6 @@ namespace Cheetah.Graphics
                 }
             }
 
-            if (m.Shader == null && Root.Instance.ShaderManager != null)
-            {
-                m.Shader = Root.Instance.ShaderManager.GetShader(m);
-            }
 
             return m;
         }
@@ -4088,12 +4084,29 @@ namespace Cheetah.Graphics
 		    //r.SetMode(RenderMode.Draw3D);
 			foreach(SubMesh sm in SubMeshes)
 			{
-                r.UseShader(sm.Material.Shader);			
-				r.SetMaterial(sm.Material);
-                if(sm.Material.Shader!=null)
-                    sm.Material.Apply(sm.Material.Shader, r);
+                Shader s;
+                Material m = sm.Material;
+
+                if (m.Shader == null && Root.Instance.ShaderManager != null)
+                {
+                    ShaderConfig cfg = Root.Instance.ShaderManager.GetShaderConfig(m);
+                    if (n != null)
+                        cfg.LightCount = Math.Min(n.CurrentNumberOfLights, 8);
+                    else
+                        cfg.LightCount = 8;
+                    s = Root.Instance.ShaderManager.GetShader(cfg);
+                }
+                else
+                {
+                    s = m.Shader;
+                }
+
+                r.UseShader(s);			
+				r.SetMaterial(m);
+                if(s!=null)
+                    m.Apply(s, r);
                 if(n!=null)
-	                n.SetRenderParameters(r,this,sm.Material.Shader);
+	                n.SetRenderParameters(r,this,s);
 
                 sm.Draw(r);
 
@@ -7195,34 +7208,22 @@ namespace Cheetah.Graphics
                 m = n.Matrix;
             }
 
-            SetupLighting(r,n,lights);
+            int numlights = SetupLighting(r,n,lights);
 
 
-            //if(n.Draw!=null&&n.Draw.Count>0&&n.Visible)
-			//{
-                foreach (IDrawable d in n.Draw)
+            foreach (IDrawable d in n.Draw)
+            {
+                if (!d.IsWorldSpace)
                 {
-                        if (!d.IsWorldSpace)
-                        {
-                            r.PushMatrix();
-                            r.MultMatrix(m);
-                        }
-                        d.Draw(r,n);
-
-                        if (!d.IsWorldSpace)
-                            r.PopMatrix();
+                    r.PushMatrix();
+                    r.MultMatrix(m);
                 }
-            //}
-			//else
-			//{
-					/*if(marker==null)
-					{
-						marker=new Marker();
-					}
+                d.Draw(r, n);
 
-					marker.Draw(r);*/
-			//}
-		}
+                if (!d.IsWorldSpace)
+                    r.PopMatrix();
+            }
+        }
 
 		protected bool IsServer
 		{
@@ -7675,7 +7676,7 @@ namespace Cheetah.Graphics
 
         }
 
-		protected void SetupLighting(IRenderer r,Node n,Light[] l)
+		protected int SetupLighting(IRenderer r,Node n,Light[] l)
 		{
             int lights = lightcount;
 			if(lightcount>1)
@@ -7692,7 +7693,7 @@ namespace Cheetah.Graphics
 			else if(lightcount==0)
 			{
 				r.SetLighting(false);
-				return;
+				return 0;
 			}
 
 			int max=8;
@@ -7710,6 +7711,10 @@ namespace Cheetah.Graphics
 				r.SetLight(i,null);
 			}
 			r.SetLighting(true);
+
+            n.CurrentNumberOfLights = max;
+
+            return max;
 		}
 
         public int lightcount;

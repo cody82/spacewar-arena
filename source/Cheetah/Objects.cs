@@ -1773,6 +1773,7 @@ using Cheetah;");
         public bool Visible = true;
         public static Vector3 Up = Vector3.UnitY;
         public float RenderRadius = -1;
+        public int CurrentNumberOfLights;
     }
 
 

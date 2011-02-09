@@ -8,4 +8,4 @@ depthwrite: false
 depthtest: false
 wire: false
 twosided: true
-//shader: simple3d.shader
+shader: simple3d.color.shader
