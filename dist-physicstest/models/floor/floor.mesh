@@ -1,0 +1,3 @@
+MESHTEXT
+material: cube.material
+submesh: cube.submesh 
