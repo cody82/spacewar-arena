@@ -10,7 +10,7 @@ specularmap: buildbac_specular.bmp
 emissivemap: black.png
 #reflectionmap: buildbac_reflection.bmp
 reflectionmap: black.png
-shader: bump.specular.spheremap.reflectionmap.shader
+#shader: bump.specular.spheremap.reflectionmap.shader
 #shader: spheremap.shader
 #shader: bump.spheremap.shader
 #shader: simple3d.textured.shader

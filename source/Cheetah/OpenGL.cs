@@ -403,7 +403,7 @@ namespace Cheetah.Graphics
             }
             else
             {
-                Output.AppendLine("vec4 color;");
+                Output.AppendLine("vec4 color=vec4(0,0,0,0);");
             }
 
 

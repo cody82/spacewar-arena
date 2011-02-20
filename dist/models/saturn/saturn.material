@@ -6,4 +6,4 @@ glossiness: 10.0
 diffusemap: saturnmap512x512.dds
 
 bumpmap: flat.png
-shader: bump.shader
+#shader: bump.shader
