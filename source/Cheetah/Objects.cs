@@ -6310,6 +6310,10 @@ using Cheetah;");
             {
                 return Authoritive;
             }
+            set
+            {
+                Authoritive = value;
+            }
         }
 
         /*public Lidgren.Library.Network.NetStatistics Delta(Lidgren.Library.Network.NetStatistics before, Lidgren.Library.Network.NetStatistics after)

@@ -111,7 +111,14 @@ namespace PhysicsTest
 
         public void Shoot()
         {
-            Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            if (!Root.Instance.IsAuthoritive)
+            {
+                Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            }
+            else
+            {
+                ShootEvent("");
+            }
         }
 
         public void ShootEvent(string slot)
@@ -311,6 +318,7 @@ namespace PhysicsTest
             }
             else
             {
+                Root.Instance.IsAuthoritive = true;
                 f = new PhysicsClient(true);
             }
 
