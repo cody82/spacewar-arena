@@ -361,19 +361,10 @@ namespace PhysicsTest
             {
                 ClientMain(args);
             }
-            /*else if (Array.IndexOf<string>(args, "clientserver") != -1)
+            else
             {
-                System.Console.WriteLine("client started. launching server...");
-                Process server = Process.Start("Game.exe", "server");
-                Thread.Sleep(1000);
-                System.Console.WriteLine("done.");
-
                 ClientMain(args);
-
-                server.Kill();
-            }*/
-            //ServerMain(args);
-            //ClientMain(args);
+            }
         }
     }
 
