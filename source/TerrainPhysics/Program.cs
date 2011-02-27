@@ -59,6 +59,36 @@ namespace TerrainPhysics
         }
     }
 
+
+    public class Terrain : PhysicsNode
+    {
+        public Terrain(DeSerializationContext context)
+            : base(context)
+        {
+        }
+        
+        SupComMap map;
+
+        public Terrain()
+        {
+            NoReplication = true;
+
+            Draw = new System.Collections.ArrayList();
+            map = Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap");
+            //map.Wireframe = true;
+            Draw = new ArrayList(new IDrawable[] { map });
+        }
+
+        protected override IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            IHeightMap hm = new SupComMapLoader.Heightmap(map.MapFile);
+            //100,0.03f
+            IPhysicsObject obj = s.Physics.CreateHeightmap(hm, 100.0f/33.0f, 0, 0, 0.03f);
+            obj.Movable = false;
+            return obj;
+        }
+    }
+
     public class Floor : PhysicsNode
     {
         public Floor(DeSerializationContext context)
@@ -111,7 +141,14 @@ namespace TerrainPhysics
 
         public void Shoot()
         {
-            Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            if (!Root.Instance.IsAuthoritive)
+            {
+                Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            }
+            else
+            {
+                ShootEvent("");
+            }
         }
 
         public void ShootEvent(string slot)
@@ -140,24 +177,17 @@ namespace TerrainPhysics
             {
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
-                c.Position = new Vector3(0, 10 + i * 2, 0);
+                c.Position = new Vector3(0, 300 + i * 2, 0);
                 cubes.Add(c);
             }
-            Root.Instance.Scene.Spawn(new Floor());
+            //Root.Instance.Scene.Spawn(new Floor());
 
             Root.Instance.Scene.Spawn(light = new Light());
             light.Position = new Vector3(1, 1, 1);
             light.directional = true;
             light.diffuse = new Color4f(0.5f, 0.5f, 0.5f);
-            Root.Instance.Scene.Spawn(light = new Light());
-            light.Position = new Vector3(-20, 20, 20);
-            light.diffuse = new Color4f(0.6f, 0, 0);
-            Root.Instance.Scene.Spawn(light = new Light());
-            light.Position = new Vector3(20, 20, -20);
-            light.diffuse = new Color4f(0, 0.6f, 0);
-            Root.Instance.Scene.Spawn(light = new Light());
-            light.Position = new Vector3(-20, 20, -20);
-            light.diffuse = new Color4f(0, 0, 0.6f);
+
+            Root.Instance.Scene.Spawn(new Terrain());
         }
         List<Cube> cubes = new List<Cube>();
         Light light;
@@ -183,7 +213,7 @@ namespace TerrainPhysics
                 server.Start();
 
             camera = new Camera();
-            camera.Position = new Vector3(40, 40, 40);
+            camera.Position = new Vector3(40, 300, 40);
             camera.LookAt(0, 5, 0);
             Root.Instance.LocalObjects.Add(camera);
 
@@ -311,6 +341,7 @@ namespace TerrainPhysics
             }
             else
             {
+                Root.Instance.IsAuthoritive = true;
                 f = new PhysicsClient(true);
             }
 

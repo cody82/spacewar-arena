@@ -868,44 +868,45 @@ namespace Cheetah.Graphics
         public SupComMap(SupCom.ScmapFile map)
             : base(new SupComMapLoader.Heightmap(map),33,100,0.03f)
         {
-            scmap = map;
+            MapFile = map;
 
             TextureLoader loader = new TextureLoader();
 
-            Normal = loader.LoadDDS(new MemoryStream(scmap.NormalmapData));
-            Mask = loader.LoadDDS(new MemoryStream(scmap.TexturemapData));
+            Normal = loader.LoadDDS(new MemoryStream(MapFile.NormalmapData));
+            Mask = loader.LoadDDS(new MemoryStream(MapFile.TexturemapData));
 
 
         }
         Texture Normal;
         Texture Mask;
+        public bool Wireframe;
 
         public override void Draw(IRenderer r, Node n)
         {
             Material m = new Material();
-            m.wire = true;
+            m.wire = Wireframe;
             r.SetMaterial(m);
 
             Shader s = Root.Instance.ResourceManager.LoadShader("terrain.supcom.shader");
             r.UseShader(s);
 
             r.SetUniform(s.GetUniformLocation("LowerAlbedo"), new int[] { 0 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[0].PathTexture).Id, 0);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[0].PathTexture).Id, 0);
 
             r.SetUniform(s.GetUniformLocation("Albedo0"), new int[] { 1 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[1].PathTexture).Id, 1);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[1].PathTexture).Id, 1);
 
             r.SetUniform(s.GetUniformLocation("Albedo1"), new int[] { 2 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[2].PathTexture).Id, 2);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[2].PathTexture).Id, 2);
 
             r.SetUniform(s.GetUniformLocation("Albedo2"), new int[] { 3 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[3].PathTexture).Id, 3);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[3].PathTexture).Id, 3);
 
             r.SetUniform(s.GetUniformLocation("Albedo3"), new int[] { 4 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[4].PathTexture).Id, 4);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[4].PathTexture).Id, 4);
 
             r.SetUniform(s.GetUniformLocation("UpperAlbedo"), new int[] { 5 });
-            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(scmap.Layers[5].PathTexture).Id, 5);
+            r.BindTexture(Root.Instance.ResourceManager.LoadTexture(MapFile.Layers[5].PathTexture).Id, 5);
 
             r.SetUniform(s.GetUniformLocation("Mask"), new int[] { 6 });
             r.BindTexture(Mask.Id, 6);
@@ -913,17 +914,17 @@ namespace Cheetah.Graphics
             r.BindTexture(Normal.Id, 7);
 
             r.SetUniform(s.GetUniformLocation("TerrainScale"), new float[] { 5.0f });
-            r.SetUniform(s.GetUniformLocation("LowerAlbedoTile"), new float[] { scmap.Layers[0].ScaleTexture });
-            r.SetUniform(s.GetUniformLocation("Albedo0Tile"), new float[] { scmap.Layers[1].ScaleTexture });
-            r.SetUniform(s.GetUniformLocation("Albedo1Tile"), new float[] { scmap.Layers[2].ScaleTexture });
-            r.SetUniform(s.GetUniformLocation("Albedo2Tile"), new float[] { scmap.Layers[3].ScaleTexture });
-            r.SetUniform(s.GetUniformLocation("Albedo3Tile"), new float[] { scmap.Layers[4].ScaleTexture });
-            r.SetUniform(s.GetUniformLocation("UpperAlbedoTile"), new float[] { scmap.Layers[5].ScaleTexture }); 
+            r.SetUniform(s.GetUniformLocation("LowerAlbedoTile"), new float[] { MapFile.Layers[0].ScaleTexture });
+            r.SetUniform(s.GetUniformLocation("Albedo0Tile"), new float[] { MapFile.Layers[1].ScaleTexture });
+            r.SetUniform(s.GetUniformLocation("Albedo1Tile"), new float[] { MapFile.Layers[2].ScaleTexture });
+            r.SetUniform(s.GetUniformLocation("Albedo2Tile"), new float[] { MapFile.Layers[3].ScaleTexture });
+            r.SetUniform(s.GetUniformLocation("Albedo3Tile"), new float[] { MapFile.Layers[4].ScaleTexture });
+            r.SetUniform(s.GetUniformLocation("UpperAlbedoTile"), new float[] { MapFile.Layers[5].ScaleTexture }); 
             
             base.Draw(r, n);
         }
 
-        SupCom.ScmapFile scmap;
+        public SupCom.ScmapFile MapFile;
 
         #region IDisposable Members
 
