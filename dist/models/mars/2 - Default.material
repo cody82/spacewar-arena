@@ -8,5 +8,5 @@ bumpmap: marsbump1024x512.jpg
 specularmap: test.jpg
 emissivemap: black.png
 #shader: bump.specular.shader
-shader: diffuse.shader
+#shader: diffuse.shader
 #environmentmap: wasser.jpg

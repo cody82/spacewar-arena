@@ -111,7 +111,14 @@ namespace PhysicsTest
 
         public void Shoot()
         {
-            Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            if (!Root.Instance.IsAuthoritive)
+            {
+                Root.Instance.EventSendQueue.Add(new EventReplicationInfo("ShootEvent", this, new string[] { "dummy" }));
+            }
+            else
+            {
+                ShootEvent("");
+            }
         }
 
         public void ShootEvent(string slot)
@@ -311,6 +318,7 @@ namespace PhysicsTest
             }
             else
             {
+                Root.Instance.IsAuthoritive = true;
                 f = new PhysicsClient(true);
             }
 
@@ -361,19 +369,10 @@ namespace PhysicsTest
             {
                 ClientMain(args);
             }
-            /*else if (Array.IndexOf<string>(args, "clientserver") != -1)
+            else
             {
-                System.Console.WriteLine("client started. launching server...");
-                Process server = Process.Start("Game.exe", "server");
-                Thread.Sleep(1000);
-                System.Console.WriteLine("done.");
-
                 ClientMain(args);
-
-                server.Kill();
-            }*/
-            //ServerMain(args);
-            //ClientMain(args);
+            }
         }
     }
 
