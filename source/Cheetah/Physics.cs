@@ -334,6 +334,7 @@ namespace Cheetah.Physics
         IPhysicsObject CreateObjectSphere(float radius,float density);
         IPhysicsObject CreateObjectBox(float density, float lx, float ly, float lz);
         IPhysicsObject CreateObjectCar();
+        IPhysicsObject CreateHeightmap(IHeightMap heightMapInfo, float scale, float shiftx, float shifty, float heightscale);
 
         void DeleteObject(IPhysicsObject po);
         //event Physics.TwoCollisionDelegate Collision;
@@ -458,6 +459,36 @@ namespace Cheetah.Physics
             car.Car.EnableCar();
             car.Car.Chassis.Body.AllowFreezing = false;
             return car;
+        }
+
+        public IPhysicsObject CreateHeightmap(IHeightMap heightMapInfo, float scale, float shiftx, float shifty, float heightscale)
+        {
+            CollisionSkin collision = new CollisionSkin(null);
+            Body _body = new Body();
+            
+            Array2D field = new Array2D(heightMapInfo.Size.X, heightMapInfo.Size.Y);
+
+            for (int x = 0; x < field.Nx; x++)
+            {
+                for (int z = 0; z < field.Nz; z++)
+                {
+                    field.SetAt(x, z, heightscale * heightMapInfo.GetHeight(x,z));
+                }
+            }
+
+            // move the body. The body (because its not connected to the collision
+            // skin) is just a dummy. But the base class shoudl know where to
+            // draw the model.
+            _body.MoveTo(new Vector3(shiftx, 0, shifty), Matrix4.Identity);
+
+            //collision.AddPrimitive(new Heightmap(field, shift.X, shift.Y, heightMapInfo.terrainScale, heightMapInfo.terrainScale), new MaterialProperties(0.7f, 0.7f, 0.6f));
+            collision.AddPrimitive(new Heightmap(field, shiftx, shifty, scale, scale), new MaterialProperties(0.7f, 0.7f, 0.6f));
+
+            _body.CollisionSkin = collision;
+            _body.Immovable = true;
+            _body.EnableBody();
+
+            return new JigLibObject(_body);
         }
 
         private static Vector3 SetMass(float mass, CollisionSkin skin, Body body)
