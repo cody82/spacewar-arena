@@ -361,19 +361,10 @@ namespace TerrainPhysics
             {
                 ClientMain(args);
             }
-            /*else if (Array.IndexOf<string>(args, "clientserver") != -1)
+            else
             {
-                System.Console.WriteLine("client started. launching server...");
-                Process server = Process.Start("Game.exe", "server");
-                Thread.Sleep(1000);
-                System.Console.WriteLine("done.");
-
                 ClientMain(args);
-
-                server.Kill();
-            }*/
-            //ServerMain(args);
-            //ClientMain(args);
+            }
         }
     }
 
@@ -421,7 +412,7 @@ namespace TerrainPhysics
         {
             get
             {
-                return "PhysicsTest (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
+                return "TerrainPhysics (net: " + Root.Instance.Version + "." + Root.Instance.Mod.Version + ", assembly: " + Root.Instance.AssemblyVersion.ToString() + ";" + Root.Instance.Mod.AssemblyVersion + ")";
             }
         }
 
