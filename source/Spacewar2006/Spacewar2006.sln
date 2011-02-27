@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JigLibOpenTK", "..\JigLibOp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicsTest", "..\PhysicsTest\PhysicsTest.csproj", "{E6913201-5368-4DBE-BA3C-E27CA86D0C2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrainPhysics", "..\TerrainPhysics\TerrainPhysics.csproj", "{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,21 @@ Global
 		{E6913201-5368-4DBE-BA3C-E27CA86D0C2E}.ReleaseWithStatistics|Mixed Platforms.Build.0 = Release|x86
 		{E6913201-5368-4DBE-BA3C-E27CA86D0C2E}.ReleaseWithStatistics|x86.ActiveCfg = Release|x86
 		{E6913201-5368-4DBE-BA3C-E27CA86D0C2E}.ReleaseWithStatistics|x86.Build.0 = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Debug|x86.ActiveCfg = Debug|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Debug|x86.Build.0 = Debug|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Release|Any CPU.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Release|Mixed Platforms.Build.0 = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Release|x86.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.Release|x86.Build.0 = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.ReleaseWithStatistics|Any CPU.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.ReleaseWithStatistics|Mixed Platforms.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.ReleaseWithStatistics|Mixed Platforms.Build.0 = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.ReleaseWithStatistics|x86.ActiveCfg = Release|x86
+		{86C9FD7E-BCD0-428C-AFEC-D6F5A53C2F84}.ReleaseWithStatistics|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
