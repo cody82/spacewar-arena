@@ -1796,6 +1796,8 @@ namespace SpaceWar2006.GameObjects
             Vector2 v1 = new Vector2(Position.X, Position.Z);
             Vector2 v2 = new Vector2(target.X, target.Z);
             Vector2 want = (v2 - v1);
+            if (want.Length == 0)
+                return 0;
             want.Normalize();
             Vector2 left = new Vector2(Left.X, Left.Z);
 
