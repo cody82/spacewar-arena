@@ -341,10 +341,16 @@ namespace SpaceWar2006.GameSystem
                 FileSystemNode n = ((FileSystemNode)de.Value);
                 if (n.GetName().EndsWith(".dll"))
                 {
-                    AssemblyResource ar = Root.Instance.ResourceManager.LoadAssembly(n.GetFullPath());
-                    Root.Instance.Factory.Add(ar.Assembly);
-                    Root.Instance.Assemblies.Add(ar.Assembly);
-                    Root.Instance.Script.Reference(ar.Assembly);
+					try
+					{
+                    	AssemblyResource ar = Root.Instance.ResourceManager.LoadAssembly(n.GetFullPath());
+                    	Root.Instance.Factory.Add(ar.Assembly);
+                    	Root.Instance.Assemblies.Add(ar.Assembly);
+                    	Root.Instance.Script.Reference(ar.Assembly);
+					}
+					catch(BadImageFormatException)
+					{
+					}
                 }
             }
 
