@@ -202,7 +202,9 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+#endif
             //try
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
