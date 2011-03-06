@@ -68,6 +68,7 @@
     <Compile Include="SWRACE01.designer.cs">
       <DependentUpon>SWRACE01.cs</DependentUpon>
     </Compile>
+    <Compile Include="Terrain.cs" />
     <Compile Include="TestSector.cs" />
     <Compile Include="TestSector.designer.cs">
       <DependentUpon>TestSector.cs</DependentUpon>
