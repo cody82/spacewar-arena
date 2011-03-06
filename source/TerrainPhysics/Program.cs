@@ -177,7 +177,7 @@ namespace TerrainPhysics
             {
                 Cube c = new Cube();
                 Root.Instance.Scene.Spawn(c);
-                c.Position = new Vector3(0, 300 + i * 2, 0);
+                c.Position = new Vector3(0, 350 + i * 2, 0);
                 cubes.Add(c);
             }
             //Root.Instance.Scene.Spawn(new Floor());
@@ -284,12 +284,12 @@ namespace TerrainPhysics
             }
             else if (k == OpenTK.Input.Key.C)
             {
-                Car c = new Car();
+                /*Car c = new Car();
                 Root.Instance.Scene.Spawn(c);
                 c.Position = camera.Position;
                 c.Orientation = camera.Orientation;
                 c.Physics.Speed = camera.Direction * 10;
-
+                */
             }
         }
         Camera camera;
