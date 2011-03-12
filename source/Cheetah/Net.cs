@@ -187,13 +187,20 @@ namespace Cheetah
 
         List<Server> GetInternetServerList()
         {
-            string url = @"http://spacewar-arena.com/spacewar-arena-servers.Xml";
+            string url = @"http://spacewar-arena.com/spacewar-arena-servers.xml";
             List<Server> servers = new List<Server>();
 
-            WebClient wclient = new WebClient();
             XmlDocument doc = new XmlDocument();
-            Stream strm = wclient.OpenRead(url);
-            doc.Load(strm);
+            try
+            {
+                WebClient wclient = new WebClient();
+                Stream strm = wclient.OpenRead(url);
+                doc.Load(strm);
+            }
+            catch (WebException)
+            {
+                return servers;
+            }
 
             XmlNode list = doc.GetElementsByTagName("serverlist")[0];
             foreach (XmlNode server in list.ChildNodes)
