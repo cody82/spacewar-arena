@@ -89,7 +89,7 @@ namespace Lidgren.Network
 
 		// public double LastSendRespondedTo { get { return m_connection.m_lastSendRespondedTo; } }
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		internal void PacketSent(int numBytes, int numMessages)
 		{
 			NetException.Assert(numBytes > 0 && numMessages > 0);
@@ -98,7 +98,7 @@ namespace Lidgren.Network
 			m_sentMessages += numMessages;
 		}
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		internal void PacketReceived(int numBytes, int numMessages)
 		{
 			NetException.Assert(numBytes > 0 && numMessages > 0);
@@ -107,7 +107,7 @@ namespace Lidgren.Network
 			m_receivedMessages += numMessages;
 		}
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		internal void MessageResent(MessageResendReason reason)
 		{
 			if (reason == MessageResendReason.Delay)
