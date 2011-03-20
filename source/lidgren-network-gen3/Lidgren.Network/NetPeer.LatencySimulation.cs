@@ -232,7 +232,9 @@ namespace Lidgren.Network
 			{
 				if (target.Address == IPAddress.Broadcast)
 					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-
+				
+				m_statistics.PacketSent(numBytes, numMessages);
+				
 				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");

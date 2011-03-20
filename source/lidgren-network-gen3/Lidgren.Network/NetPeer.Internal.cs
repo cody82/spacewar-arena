@@ -321,6 +321,7 @@ namespace Lidgren.Network
 			//
 			// parse packet into messages
 			//
+			int msg_count = 0;
 			int ptr = 0;
 			while ((bytesReceived - ptr) >= NetConstants.HeaderByteSize)
 			{
@@ -400,6 +401,12 @@ namespace Lidgren.Network
 					LogError("Packet parsing error: " + ex.Message + " from " + ipsender);
 				}
 				ptr += payloadByteLength;
+				msg_count++;
+			}
+			m_statistics.PacketReceived(ptr, msg_count);
+			if (sender != null)
+			{
+				sender.m_statistics.PacketReceived(ptr, msg_count);
 			}
 		}
 
