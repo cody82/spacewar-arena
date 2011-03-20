@@ -202,20 +202,13 @@ namespace SpaceWar2006
         [STAThread]
         static void Main(string[] args)
         {
-#if !DEBUG
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-#endif
-            //try
+			bool mail = Array.IndexOf<string>(args, "-mail") != -1;
+            if (mail)
+            	AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
             {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
-                Spacewar2006.Forms.LoadForm load = null;
-                /*if (args.Length == 0)
-                {
-                    load = new Spacewar2006.Forms.LoadForm();
-                    load.Show();
-                    System.Windows.Forms.Application.DoEvents();
-                }*/
 
                 string dir = Directory.GetCurrentDirectory();
                 Assembly a = Assembly.GetEntryAssembly();
@@ -285,11 +278,11 @@ namespace SpaceWar2006
                 else
                 {
                     Root r = new Root(args, false);
-
-                    System.Windows.Forms.Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+					
+					if (mail)
+                    	System.Windows.Forms.Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
 
                     SpaceWar2006.GameSystem.Mod.Instance.Init();
-                    load = null;
                     new Spacewar2006.Forms.MainForm().ShowDialog();
 
                 }
@@ -299,7 +292,6 @@ namespace SpaceWar2006
         static bool mailing_done = false;
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-#if !DEBUG
             if (!mailing_done)
             {
 				try
@@ -311,13 +303,11 @@ namespace SpaceWar2006
 				}
                 mailing_done = true;
             }
-#endif
             throw e.Exception;
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-#if !DEBUG
             if (!mailing_done)
             {
 				try
@@ -329,7 +319,7 @@ namespace SpaceWar2006
 				}
                 mailing_done = true;
             }
-#endif
+            throw (Exception)e.ExceptionObject;
         }
     }
 }
