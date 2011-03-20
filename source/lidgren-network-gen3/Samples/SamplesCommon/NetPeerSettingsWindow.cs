@@ -55,8 +55,8 @@ namespace SamplesCommon
 #endif
 			DebugCheckBox.Checked = Peer.Configuration.IsMessageTypeEnabled(NetIncomingMessageType.DebugMessage);
 			VerboseCheckBox.Checked = Peer.Configuration.IsMessageTypeEnabled(NetIncomingMessageType.VerboseDebugMessage);
-			textBox1.Text = (Peer.Configuration.PingFrequency * 1000).ToString();
-			ThrottleTextBox.Text = Peer.Configuration.ThrottleBytesPerSecond.ToString();
+			textBox1.Text = (Peer.Configuration.PingInterval * 1000).ToString();
+			//ThrottleTextBox.Text = Peer.Configuration.ThrottleBytesPerSecond.ToString();
 
 			StringBuilder bdr = new StringBuilder();
 			bdr.AppendLine(Peer.Statistics.ToString());
@@ -65,9 +65,9 @@ namespace SamplesCommon
 			{
 				NetConnection conn = Peer.Connections[0];
 				bdr.AppendLine("Connection 0:");
-				bdr.AppendLine("Average RTT: " + ((int)(conn.AverageRoundtripTime * 1000.0f)) + " ms");
-				bdr.AppendLine("Last response: " + (int)(NetTime.Now - conn.Statistics.LastSendRespondedTo) + "s ago");
-				bdr.AppendLine("Most sends: " + conn.Statistics.MostSends);
+				//bdr.AppendLine("Average RTT: " + ((int)(conn.AverageRoundtripTime * 1000.0f)) + " ms");
+				//bdr.AppendLine("Last response: " + (int)(NetTime.Now - conn.Statistics.LastSendRespondedTo) + "s ago");
+				//bdr.AppendLine("Most sends: " + conn.Statistics.MostSends);
 				bdr.Append(conn.Statistics.ToString());
 			}
 
@@ -139,7 +139,7 @@ namespace SamplesCommon
 		{
 			float d;
 			if (float.TryParse(textBox1.Text, out d))
-				Peer.Configuration.PingFrequency = (float)(d / 1000.0);
+				Peer.Configuration.PingInterval = (float)(d / 1000.0);
 		}
 
 		private void button2_Click(object sender, EventArgs e)
@@ -149,9 +149,9 @@ namespace SamplesCommon
 
 		private void ThrottleTextBox_TextChanged(object sender, EventArgs e)
 		{
-			uint bps;
-			if (UInt32.TryParse(ThrottleTextBox.Text, out bps))
-				Peer.Configuration.ThrottleBytesPerSecond = (int)bps;
+			//uint bps;
+			//if (UInt32.TryParse(ThrottleTextBox.Text, out bps))
+			//	Peer.Configuration.ThrottleBytesPerSecond = (int)bps;
 		}
 
 	}

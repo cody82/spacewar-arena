@@ -31,10 +31,8 @@ namespace Lidgren.Network
 	/// </summary>
 	public static class NetUtility
 	{
-		private static Regex s_regIP;
-
 		/// <summary>
-		/// Get IP endpoint from notation (xxx.xxx.xxx.xxx) or hostname and port number
+		/// Get IPv4 endpoint from notation (xxx.xxx.xxx.xxx) or hostname and port number
 		/// </summary>
 		public static IPEndPoint Resolve(string ipOrHost, int port)
 		{
@@ -43,7 +41,7 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
-		/// Get IP address from notation (xxx.xxx.xxx.xxx) or hostname
+		/// Get IPv4 address from notation (xxx.xxx.xxx.xxx) or hostname
 		/// </summary>
 		public static IPAddress Resolve(string ipOrHost)
 		{
@@ -52,17 +50,13 @@ namespace Lidgren.Network
 
 			ipOrHost = ipOrHost.Trim();
 
-			if (s_regIP == null)
-			{
-				string expression = "\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
-				RegexOptions options = RegexOptions.Compiled;
-				s_regIP = new Regex(expression, options);
-			}
-
-			// is it an ip number string?
 			IPAddress ipAddress = null;
-			if (s_regIP.Match(ipOrHost).Success && IPAddress.TryParse(ipOrHost, out ipAddress))
-				return ipAddress;
+			if (IPAddress.TryParse(ipOrHost, out ipAddress))
+			{
+				if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+					return ipAddress;
+				throw new ArgumentException("This method will not currently resolve other than ipv4 addresses");
+			}
 
 			// ok must be a host name
 			IPHostEntry entry;
@@ -75,15 +69,11 @@ namespace Lidgren.Network
 				// check each entry for a valid IP address
 				foreach (IPAddress ipCurrent in entry.AddressList)
 				{
-					string sIP = ipCurrent.ToString();
-					bool isIP = s_regIP.Match(sIP).Success && IPAddress.TryParse(sIP, out ipAddress);
-					if (isIP)
-						break;
+					if (ipCurrent.AddressFamily == AddressFamily.InterNetwork)
+						return ipCurrent;
 				}
-				if (ipAddress == null)
-					return null;
 
-				return ipAddress;
+				return null;
 			}
 			catch (SocketException ex)
 			{
@@ -143,12 +133,16 @@ namespace Lidgren.Network
 
 		public static string ToHexString(byte[] data)
 		{
-			StringBuilder sb = new StringBuilder(data.Length * 2);
-			foreach (byte b in data)
+			char[] c = new char[data.Length * 2];
+			byte b;
+			for (int i = 0; i < data.Length; ++i)
 			{
-				sb.AppendFormat("{0:X2}", b);
+				b = ((byte)(data[i] >> 4));
+				c[i * 2] = (char)(b > 9 ? b + 0x37 : b + 0x30);
+				b = ((byte)(data[i] & 0xF));
+				c[i * 2 + 1] = (char)(b > 9 ? b + 0x37 : b + 0x30);
 			}
-			return sb.ToString();
+			return new string(c);
 		}
 
 		/// <summary>
@@ -226,8 +220,7 @@ namespace Lidgren.Network
 			return (numBits + 7) / 8;
 		}
 
-		[CLSCompliant(false)]
-		public static UInt32 SwapByteOrder(UInt32 value)
+		internal static UInt32 SwapByteOrder(UInt32 value)
 		{
 			return
 				((value & 0xff000000) >> 24) |
@@ -236,8 +229,7 @@ namespace Lidgren.Network
 				((value & 0x000000ff) << 24);
 		}
 
-		[CLSCompliant(false)]
-		public static UInt64 SwapByteOrder(UInt64 value)
+		internal static UInt64 SwapByteOrder(UInt64 value)
 		{
 			return
 				((value & 0xff00000000000000L) >> 56) |
@@ -250,7 +242,7 @@ namespace Lidgren.Network
 				((value & 0x00000000000000ffL) << 56);
 		}
 
-		public static bool CompareElements(byte[] one, byte[] two)
+		internal static bool CompareElements(byte[] one, byte[] two)
 		{
 			if (one.Length != two.Length)
 				return false;
@@ -260,12 +252,108 @@ namespace Lidgren.Network
 			return true;
 		}
 
+		/// <summary>
+		/// Convert a hexadecimal string to a byte array
+		/// </summary>
 		public static byte[] ToByteArray(String hexString)
 		{
 			byte[] retval = new byte[hexString.Length / 2];
 			for (int i = 0; i < hexString.Length; i += 2)
 				retval[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
 			return retval;
+		}
+
+		/// <summary>
+		/// Converts a number of bytes to a shorter, more readable string representation
+		/// </summary>
+		public static string ToHumanReadable(long bytes)
+		{
+			if (bytes < 4000) // 1-4 kb is printed in bytes
+				return bytes + " bytes";
+			if (bytes < 1000 * 1000) // 4-999 kb is printed in kb
+				return Math.Round(((double)bytes / 1000.0), 2) + " kilobytes";
+			return Math.Round(((double)bytes / (1000.0 * 1000.0)), 2) + " megabytes"; // else megabytes
+		}
+
+		internal static int RelativeSequenceNumber(int nr, int expected)
+		{
+			int retval = ((nr + NetConstants.NumSequenceNumbers) - expected) % NetConstants.NumSequenceNumbers;
+			if (retval > (NetConstants.NumSequenceNumbers / 2))
+				retval -= NetConstants.NumSequenceNumbers;
+			return retval;
+		}
+
+		public static int GetWindowSize(NetDeliveryMethod method)
+		{
+			switch (method)
+			{
+				case NetDeliveryMethod.Unknown:
+					return 0;
+
+				case NetDeliveryMethod.Unreliable:
+				case NetDeliveryMethod.UnreliableSequenced:
+					return NetConstants.UnreliableWindowSize;
+
+				case NetDeliveryMethod.ReliableOrdered:
+					return NetConstants.ReliableOrderedWindowSize;
+
+				case NetDeliveryMethod.ReliableSequenced:
+				case NetDeliveryMethod.ReliableUnordered:
+				default:
+					return NetConstants.DefaultWindowSize;
+			}
+		}
+
+		// shell sort
+		internal static void SortMembersList(System.Reflection.MemberInfo[] list)
+		{
+			int h;
+			int j;
+			System.Reflection.MemberInfo tmp;
+
+			h = 1;
+			while (h * 3 + 1 <= list.Length)
+				h = 3 * h + 1;
+
+			while (h > 0)
+			{
+				for (int i = h - 1; i < list.Length; i++)
+				{
+					tmp = list[i];
+					j = i;
+					while (true)
+					{
+						if (j >= h)
+						{
+							if (string.Compare(list[j - h].Name, tmp.Name, StringComparison.InvariantCulture) > 0)
+							{
+								list[j] = list[j - h];
+								j -= h;
+							}
+							else
+								break;
+						}
+						else
+							break;
+					}
+
+					list[j] = tmp;
+				}
+				h /= 3;
+			}
+		}
+
+		internal static NetDeliveryMethod GetDeliveryMethod(NetMessageType mtp)
+		{
+			if (mtp >= NetMessageType.UserReliableOrdered1)
+				return NetDeliveryMethod.ReliableOrdered;
+			else if (mtp >= NetMessageType.UserReliableSequenced1)
+				return NetDeliveryMethod.ReliableSequenced;
+			else if (mtp >= NetMessageType.UserReliableUnordered)
+				return NetDeliveryMethod.ReliableUnordered;
+			else if (mtp >= NetMessageType.UserSequenced1)
+				return NetDeliveryMethod.UnreliableSequenced;
+			return NetDeliveryMethod.Unreliable;
 		}
 	}
 }

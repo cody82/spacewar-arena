@@ -22,11 +22,18 @@ namespace UnitTests
 			msg.Write(true);
 
 			msg.WritePadBits();
-			
+
+			int bcnt = 0;
+
 			msg.Write(45.0f);
 			msg.Write(46.0);
-			msg.WriteVariableInt32(-47);
+			bcnt += msg.WriteVariableInt32(-47);
+			msg.WriteVariableInt32(470000);
 			msg.WriteVariableUInt32(48);
+			bcnt += msg.WriteVariableInt64(-49);
+
+			if (bcnt != 2)
+				throw new NetException("WriteVariable* wrote too many bytes!");
 
 			byte[] data = msg.PeekDataBuffer();
 
@@ -51,9 +58,11 @@ namespace UnitTests
 			bdr.Append(inc.ReadSingle());
 			bdr.Append(inc.ReadDouble());
 			bdr.Append(inc.ReadVariableInt32());
+			bdr.Append(inc.ReadVariableInt32());
 			bdr.Append(inc.ReadVariableUInt32());
+			bdr.Append(inc.ReadVariableInt64());
 
-			if (bdr.ToString().Equals("False-342duke of earl4344True4546-4748"))
+			if (bdr.ToString().Equals("False-342duke of earl4344True4546-4747000048-49"))
 				Console.WriteLine("Read/write tests OK");
 			else
 				throw new NetException("Read/write tests FAILED!");
@@ -88,25 +97,18 @@ namespace UnitTests
 			NetException.Assert(readTest.Number == 42);
 			NetException.Assert(readTest.Name == "Hallon");
 			NetException.Assert(readTest.Age == 8.2f);
-
+			
+			// test aligned WriteBytes/ReadBytes
 			msg = peer.CreateMessage();
+			byte[] tmparr = new byte[] { 5, 6, 7, 8, 9 };
+			msg.Write(tmparr);
 
-			System.IO.BinaryWriter br = new System.IO.BinaryWriter(msg);
+			inc = Program.CreateIncomingMessage(msg.PeekDataBuffer(), msg.LengthBits);
+			byte[] result = inc.ReadBytes(tmparr.Length);
 
-			br.Write(true);
-			br.Write("hallon");
-			br.Write((byte)42);
-
-			int byteLen = msg.LengthBytes;
-			byte[] rbts = msg.PeekDataBuffer();
-
-			inc = Program.CreateIncomingMessage(rbts, msg.LengthBits);
-
-			System.IO.BinaryReader rdr = new System.IO.BinaryReader(inc);
-
-			bool one = rdr.ReadBoolean();
-			string hallon = rdr.ReadString();
-			byte fourtyTwo = rdr.ReadByte();
+			for (int i = 0; i < tmparr.Length; i++)
+				if (tmparr[i] != result[i])
+					throw new Exception("readbytes fail");
 		}
 	}
 

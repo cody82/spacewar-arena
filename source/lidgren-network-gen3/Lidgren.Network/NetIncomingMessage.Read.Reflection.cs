@@ -41,7 +41,7 @@ namespace Lidgren.Network
 			Type tp = target.GetType();
 
 			FieldInfo[] fields = tp.GetFields(flags);
-			SortMembersList(fields);
+			NetUtility.SortMembersList(fields);
 
 			foreach (FieldInfo fi in fields)
 			{
@@ -74,11 +74,14 @@ namespace Lidgren.Network
 		public void ReadAllProperties(object target, BindingFlags flags)
 		{
 			if (target == null)
+				throw new ArgumentNullException("target");
+
+			if (target == null)
 				return;
 			Type tp = target.GetType();
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
-			SortMembersList(fields);
+			NetUtility.SortMembersList(fields);
 			foreach (PropertyInfo fi in fields)
 			{
 				object value;
@@ -94,45 +97,6 @@ namespace Lidgren.Network
 					MethodInfo setMethod = fi.GetSetMethod((flags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
 					setMethod.Invoke(target, new object[] { value });
 				}
-			}
-		}
-
-		// shell sort
-		internal static void SortMembersList(MemberInfo[] list)
-		{
-			int h;
-			int j;
-			MemberInfo tmp;
-
-			h = 1;
-			while (h * 3 + 1 <= list.Length)
-				h = 3 * h + 1;
-
-			while (h > 0)
-			{
-				for (int i = h - 1; i < list.Length; i++)
-				{
-					tmp = list[i];
-					j = i;
-					while (true)
-					{
-						if (j >= h)
-						{
-							if (string.Compare(list[j - h].Name, tmp.Name, StringComparison.InvariantCulture) > 0)
-							{
-								list[j] = list[j - h];
-								j -= h;
-							}
-							else
-								break;
-						}
-						else
-							break;
-					}
-
-					list[j] = tmp;
-				}
-				h /= 3;
 			}
 		}
 	}

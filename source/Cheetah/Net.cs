@@ -691,7 +691,7 @@ namespace Cheetah
                             Console.WriteLine("status: " + status.ToString());
                             switch (status)
                             {
-                                case NetConnectionStatus.Connecting:
+								case NetConnectionStatus.InitiatedConnect:
                                     break;
                                 case NetConnectionStatus.Connected:
                                     break;

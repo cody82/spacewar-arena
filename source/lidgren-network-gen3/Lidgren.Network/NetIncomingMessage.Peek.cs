@@ -25,9 +25,20 @@ namespace Lidgren.Network
 {
 	public partial class NetIncomingMessage
 	{
+		/// <summary>
+		/// Returns the internal data buffer, don't modify
+		/// </summary>
+		public byte[] PeekDataBuffer()
+		{
+			return m_data;
+		}
+
 		//
 		// 1 bit
 		//
+		/// <summary>
+		/// Reads a 1-bit Boolean without advancing the read pointer
+		/// </summary>
 		public bool PeekBoolean()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 1, c_readOverflowError);
@@ -38,6 +49,9 @@ namespace Lidgren.Network
 		//
 		// 8 bit 
 		//
+		/// <summary>
+		/// Reads a Byte without advancing the read pointer
+		/// </summary>
 		public byte PeekByte()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 8, c_readOverflowError);
@@ -45,6 +59,9 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads an SByte without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public sbyte PeekSByte()
 		{
@@ -53,12 +70,18 @@ namespace Lidgren.Network
 			return (sbyte)retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bits into a Byte without advancing the read pointer
+		/// </summary>
 		public byte PeekByte(int numberOfBits)
 		{
 			byte retval = NetBitWriter.ReadByte(m_data, numberOfBits, m_readPosition);
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bytes without advancing the read pointer
+		/// </summary>
 		public byte[] PeekBytes(int numberOfBytes)
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= (numberOfBytes * 8), c_readOverflowError);
@@ -68,6 +91,9 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bytes without advancing the read pointer
+		/// </summary>
 		public void PeekBytes(byte[] into, int offset, int numberOfBytes)
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= (numberOfBytes * 8), c_readOverflowError);
@@ -80,6 +106,9 @@ namespace Lidgren.Network
 		//
 		// 16 bit
 		//
+		/// <summary>
+		/// Reads an Int16 without advancing the read pointer
+		/// </summary>
 		public Int16 PeekInt16()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 16, c_readOverflowError);
@@ -87,6 +116,9 @@ namespace Lidgren.Network
 			return (short)retval;
 		}
 
+		/// <summary>
+		/// Reads a UInt16 without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public UInt16 PeekUInt16()
 		{
@@ -98,6 +130,9 @@ namespace Lidgren.Network
 		//
 		// 32 bit
 		//
+		/// <summary>
+		/// Reads an Int32 without advancing the read pointer
+		/// </summary>
 		public Int32 PeekInt32()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 32, c_readOverflowError);
@@ -105,6 +140,9 @@ namespace Lidgren.Network
 			return (Int32)retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bits into an Int32 without advancing the read pointer
+		/// </summary>
 		public Int32 PeekInt32(int numberOfBits)
 		{
 			NetException.Assert((numberOfBits > 0 && numberOfBits <= 32), "ReadInt() can only read between 1 and 32 bits");
@@ -128,6 +166,9 @@ namespace Lidgren.Network
 			}
 		}
 
+		/// <summary>
+		/// Reads a UInt32 without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public UInt32 PeekUInt32()
 		{
@@ -136,6 +177,9 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bits into a UInt32 without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public UInt32 PeekUInt32(int numberOfBits)
 		{
@@ -149,6 +193,9 @@ namespace Lidgren.Network
 		//
 		// 64 bit
 		//
+		/// <summary>
+		/// Reads a UInt64 without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public UInt64 PeekUInt64()
 		{
@@ -162,6 +209,9 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads an Int64 without advancing the read pointer
+		/// </summary>
 		public Int64 PeekInt64()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 64, c_readOverflowError);
@@ -173,6 +223,9 @@ namespace Lidgren.Network
 			}
 		}
 
+		/// <summary>
+		/// Reads the specified number of bits into an UInt64 without advancing the read pointer
+		/// </summary>
 		[CLSCompliant(false)]
 		public UInt64 PeekUInt64(int numberOfBits)
 		{
@@ -192,6 +245,9 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+		/// <summary>
+		/// Reads the specified number of bits into an Int64 without advancing the read pointer
+		/// </summary>
 		public Int64 PeekInt64(int numberOfBits)
 		{
 			NetException.Assert(((numberOfBits > 0) && (numberOfBits < 65)), "ReadInt64(bits) can only read between 1 and 64 bits");
@@ -201,11 +257,17 @@ namespace Lidgren.Network
 		//
 		// Floating point
 		//
+		/// <summary>
+		/// Reads a 32-bit Single without advancing the read pointer
+		/// </summary>
 		public float PeekFloat()
 		{
 			return PeekSingle();
 		}
 
+		/// <summary>
+		/// Reads a 32-bit Single without advancing the read pointer
+		/// </summary>
 		public float PeekSingle()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 32, c_readOverflowError);
@@ -221,6 +283,9 @@ namespace Lidgren.Network
 			return BitConverter.ToSingle(bytes, 0); // endianness is handled inside BitConverter.ToSingle
 		}
 
+		/// <summary>
+		/// Reads a 64-bit Double without advancing the read pointer
+		/// </summary>
 		public double PeekDouble()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 64, c_readOverflowError);
@@ -235,28 +300,16 @@ namespace Lidgren.Network
 			byte[] bytes = PeekBytes(8);
 			return BitConverter.ToDouble(bytes, 0); // endianness is handled inside BitConverter.ToSingle
 		}
-		
+
 		/// <summary>
-		/// Reads a string
+		/// Reads a string without advancing the read pointer
 		/// </summary>
 		public string PeekString()
 		{
-			int byteLen = (int)ReadVariableUInt32();
-
-			if (byteLen == 0)
-				return String.Empty;
-
-			NetException.Assert(m_bitLength - m_readPosition >= (byteLen * 8), c_readOverflowError);
-
-			if ((m_readPosition & 7) == 0)
-			{
-				// read directly
-				string retval = System.Text.Encoding.UTF8.GetString(m_data, m_readPosition >> 3, byteLen);
-				return retval;
-			}
-
-			byte[] bytes = PeekBytes(byteLen);
-			return System.Text.Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+			int wasReadPosition = m_readPosition;
+			string retval = ReadString();
+			m_readPosition = wasReadPosition;
+			return retval;
 		}
 	}
 }

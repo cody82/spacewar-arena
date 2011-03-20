@@ -26,9 +26,9 @@ namespace Lidgren.Network
 	{
 		internal int m_storedBytes;
 		private int m_maxStoredBytes;
-		private List<byte[]> m_storagePool = new List<byte[]>();
-		private NetQueue<NetIncomingMessage> m_incomingMessagesPool = new NetQueue<NetIncomingMessage>(16);
-		private NetQueue<NetOutgoingMessage> m_outgoingMessagesPool = new NetQueue<NetOutgoingMessage>(16);
+		private readonly List<byte[]> m_storagePool = new List<byte[]>();
+		private readonly NetQueue<NetIncomingMessage> m_incomingMessagesPool = new NetQueue<NetIncomingMessage>(16);
+		private readonly NetQueue<NetOutgoingMessage> m_outgoingMessagesPool = new NetQueue<NetOutgoingMessage>(16);
 
 		private void InitializeRecycling()
 		{
@@ -81,11 +81,11 @@ namespace Lidgren.Network
 		/// <param name="initialCapacity">initial capacity in bytes</param>
 		public NetOutgoingMessage CreateMessage(int initialCapacity)
 		{
-			NetOutgoingMessage retval = m_outgoingMessagesPool.TryDequeue();
-			if (retval == null)
-				retval = new NetOutgoingMessage();
-			else
+			NetOutgoingMessage retval;
+			if (m_outgoingMessagesPool.TryDequeue(out retval))
 				retval.Reset();
+			else
+				retval = new NetOutgoingMessage();
 
 			byte[] storage = GetStorage(initialCapacity);
 			retval.m_data = storage;
@@ -106,6 +106,9 @@ namespace Lidgren.Network
 		/// </summary>
 		public void Recycle(NetIncomingMessage msg)
 		{
+			if (msg == null)
+				throw new ArgumentNullException("msg");
+
 			if (msg.m_status != NetIncomingMessageReleaseStatus.ReleasedToApplication)
 				throw new NetException("Message not under application control; recycled more than once?");
 
@@ -186,12 +189,15 @@ namespace Lidgren.Network
 				wasStoredBytes = m_storedBytes;
 				reduceTo = m_maxStoredBytes / 2;
 
-				while (m_storedBytes > reduceTo && m_storagePool.Count > 0)
+				int remove = 0;
+				while (m_storedBytes > reduceTo && remove < m_storagePool.Count)
 				{
 					byte[] arr = m_storagePool[0];
 					m_storedBytes -= arr.Length;
-					m_storagePool.RemoveAt(0);
+					remove++;
 				}
+				if (remove > 0)
+					m_storagePool.RemoveRange(0, remove);
 			}
 
 			// done
@@ -225,11 +231,11 @@ namespace Lidgren.Network
 		/// </summary>
 		internal NetIncomingMessage CreateIncomingMessage(NetIncomingMessageType tp, int requiredCapacity)
 		{
-			NetIncomingMessage retval = m_incomingMessagesPool.TryDequeue();
-			if (retval == null)
-				retval = new NetIncomingMessage();
-			else
+			NetIncomingMessage retval;
+			if (m_incomingMessagesPool.TryDequeue(out retval))
 				retval.Reset();
+			else
+				retval = new NetIncomingMessage();
 
 			NetException.Assert(retval.m_status == NetIncomingMessageReleaseStatus.NotReleased);
 
@@ -253,11 +259,11 @@ namespace Lidgren.Network
 
 		internal NetIncomingMessage CreateIncomingMessage(NetIncomingMessageType tp, byte[] copyFrom, int offset, int copyLength)
 		{
-			NetIncomingMessage retval = m_incomingMessagesPool.TryDequeue();
-			if (retval == null)
-				retval = new NetIncomingMessage();
-			else
+			NetIncomingMessage retval;
+			if (m_incomingMessagesPool.TryDequeue(out retval))
 				retval.Reset();
+			else
+				retval = new NetIncomingMessage();
 
 			NetException.Assert(retval.m_status == NetIncomingMessageReleaseStatus.NotReleased);
 

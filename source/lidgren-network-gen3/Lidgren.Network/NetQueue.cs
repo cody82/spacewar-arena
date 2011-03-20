@@ -23,7 +23,7 @@ using System.Diagnostics;
 namespace Lidgren.Network
 {
 	/// <summary>
-	/// Thread safe (blocking) queue with TryDequeue() and EnqueueFirst()
+	/// Thread safe (blocking) expanding queue with TryDequeue() and EnqueueFirst()
 	/// </summary>
 	[DebuggerDisplay("Count={Count} Capacity={Capacity}")]
 	public sealed class NetQueue<T>
@@ -47,8 +47,14 @@ namespace Lidgren.Network
 		private int m_size;
 		private int m_head;
 
+		/// <summary>
+		/// Gets the number of items in the queue
+		/// </summary>
 		public int Count { get { return m_size; } }
 
+		/// <summary>
+		/// Gets the current capacity for the queue
+		/// </summary>
 		public int Capacity { get { return m_items.Length; } }
 
 		public NetQueue(int initialCapacity)
@@ -58,24 +64,15 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
-		/// Places an item last/tail of the queue
+		/// Adds an item last/tail of the queue
 		/// </summary>
 		public void Enqueue(T item)
 		{
-#if DEBUG
-			if (typeof(T) == typeof(NetSending))
-			{
-				NetSending om = item as NetSending;
-				if (om != null)
-					if (om.MessageType == NetMessageType.Error)
-						throw new NetException("Enqueuing NetSending with MessageType.Error!");
-			}
-#endif
 			lock (m_lock)
 			{
 				if (m_size == m_items.Length)
 					SetCapacity(m_items.Length + 8);
-							
+
 				int slot = (m_head + m_size) % m_items.Length;
 				m_items[slot] = item;
 				m_size++;
@@ -91,7 +88,7 @@ namespace Lidgren.Network
 			{
 				if (m_size >= m_items.Length)
 					SetCapacity(m_items.Length + 8);
-			
+
 				m_head--;
 				if (m_head < 0)
 					m_head = m_items.Length - 1;
@@ -133,26 +130,35 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Gets an item from the head of the queue, or returns default(T) if empty
 		/// </summary>
-		public T TryDequeue()
+		public bool TryDequeue(out T item)
 		{
 			if (m_size == 0)
-				return default(T);
+			{
+				item = default(T);
+				return false;
+			}
 
 			lock (m_lock)
 			{
 				if (m_size == 0)
-					return default(T);
+				{
+					item = default(T);
+					return false;
+				}
 
-				T retval = m_items[m_head];
+				item = m_items[m_head];
 				m_items[m_head] = default(T);
 
 				m_head = (m_head + 1) % m_items.Length;
 				m_size--;
 
-				return retval;
+				return true;
 			}
 		}
 
+		/// <summary>
+		/// Returns default(T) if queue is empty
+		/// </summary>
 		public T TryPeek(int offset)
 		{
 			if (m_size == 0)
@@ -166,6 +172,9 @@ namespace Lidgren.Network
 			}
 		}
 
+		/// <summary>
+		/// Determines whether an item is in the queue
+		/// </summary>
 		public bool Contains(T item)
 		{
 			lock (m_lock)
@@ -173,14 +182,44 @@ namespace Lidgren.Network
 				int ptr = m_head;
 				for (int i = 0; i < m_size; i++)
 				{
-					if (m_items[ptr].Equals(item))
-						return true;
+					if (m_items[ptr] == null)
+					{
+						if (item == null)
+							return true;
+					}
+					else
+					{
+						if (m_items[ptr].Equals(item))
+							return true;
+					}
 					ptr = (ptr + 1) % m_items.Length;
 				}
 			}
 			return false;
 		}
 
+		/// <summary>
+		/// Copies the queue items to a new array
+		/// </summary>
+		public T[] ToArray()
+		{
+			lock (m_lock)
+			{
+				T[] retval = new T[m_size];
+				int ptr = m_head;
+				for (int i = 0; i < m_size; i++)
+				{
+					retval[i] = m_items[ptr++];
+					if (ptr >= m_items.Length)
+						ptr = 0;
+				}
+				return retval;
+			}
+		}
+
+		/// <summary>
+		/// Removes all objects from the queue
+		/// </summary>
 		public void Clear()
 		{
 			lock (m_lock)
@@ -188,6 +227,7 @@ namespace Lidgren.Network
 				for (int i = 0; i < m_items.Length; i++)
 					m_items[i] = default(T);
 				m_head = 0;
+				m_size = 0;
 			}
 		}
 	}

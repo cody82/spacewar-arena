@@ -31,9 +31,6 @@
 			this.DebugCheckBox = new System.Windows.Forms.CheckBox();
 			this.VerboseCheckBox = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label10 = new System.Windows.Forms.Label();
-			this.label11 = new System.Windows.Forms.Label();
-			this.ThrottleTextBox = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.textBox2 = new System.Windows.Forms.TextBox();
@@ -82,9 +79,6 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.label10);
-			this.groupBox1.Controls.Add(this.label11);
-			this.groupBox1.Controls.Add(this.ThrottleTextBox);
 			this.groupBox1.Controls.Add(this.label8);
 			this.groupBox1.Controls.Add(this.label9);
 			this.groupBox1.Controls.Add(this.textBox2);
@@ -98,36 +92,10 @@
 			this.groupBox1.Controls.Add(this.MinLatencyTextBox);
 			this.groupBox1.Location = new System.Drawing.Point(291, 12);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(300, 142);
+			this.groupBox1.Size = new System.Drawing.Size(300, 110);
 			this.groupBox1.TabIndex = 2;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Simulation";
-			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(163, 108);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(75, 13);
-			this.label10.TabIndex = 13;
-			this.label10.Text = "bytes/second";
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(6, 108);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(47, 13);
-			this.label11.TabIndex = 12;
-			this.label11.Text = "Throttle";
-			// 
-			// ThrottleTextBox
-			// 
-			this.ThrottleTextBox.Location = new System.Drawing.Point(103, 105);
-			this.ThrottleTextBox.Name = "ThrottleTextBox";
-			this.ThrottleTextBox.Size = new System.Drawing.Size(54, 22);
-			this.ThrottleTextBox.TabIndex = 11;
-			this.ThrottleTextBox.TextChanged += new System.EventHandler(this.ThrottleTextBox_TextChanged);
 			// 
 			// label8
 			// 
@@ -233,7 +201,7 @@
 			this.groupBox2.Controls.Add(this.textBox1);
 			this.groupBox2.Location = new System.Drawing.Point(12, 12);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(273, 142);
+			this.groupBox2.Size = new System.Drawing.Size(273, 110);
 			this.groupBox2.TabIndex = 3;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Settings";
@@ -281,9 +249,9 @@
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.Controls.Add(this.StatisticsLabel);
-			this.groupBox3.Location = new System.Drawing.Point(12, 160);
+			this.groupBox3.Location = new System.Drawing.Point(12, 128);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(579, 197);
+			this.groupBox3.Size = new System.Drawing.Size(579, 233);
 			this.groupBox3.TabIndex = 6;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Statistics";
@@ -355,8 +323,5 @@
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
 		public System.Windows.Forms.TextBox textBox2;
-		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.Label label11;
-		public System.Windows.Forms.TextBox ThrottleTextBox;
 	}
 }

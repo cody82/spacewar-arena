@@ -38,6 +38,8 @@ namespace SamplesCommon
 
 		public static void AppendText(RichTextBox box, string line)
 		{
+			if (box == null || box.IsDisposed)
+				return;
 			try
 			{
 				box.AppendText(line + Environment.NewLine);

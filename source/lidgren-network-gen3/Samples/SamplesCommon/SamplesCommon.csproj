@@ -12,6 +12,14 @@
     <AssemblyName>SamplesCommon</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{FA245447-5F23-4AA1-BD5F-8D2DDF33CFBD}</Project>
+      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
   </ItemGroup>

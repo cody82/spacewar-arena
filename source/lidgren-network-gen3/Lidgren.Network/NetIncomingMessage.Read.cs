@@ -28,17 +28,25 @@ namespace Lidgren.Network
 	{
 		private const string c_readOverflowError = "Trying to read past the buffer size - likely caused by mismatching Write/Reads, different size or order.";
 
-		private static Dictionary<Type, MethodInfo> s_readMethods;
+		private static readonly Dictionary<Type, MethodInfo> s_readMethods;
 
-		private int m_readPosition;
+		internal int m_readPosition;
 
 		/// <summary>
 		/// Gets or sets the read position in the buffer, in bits (not bytes)
 		/// </summary>
-		public override long Position // override of Stream property
+		public long Position
 		{
 			get { return (long)m_readPosition; }
 			set { m_readPosition = (int)value; }
+		}
+
+		/// <summary>
+		/// Gets the position in the buffer in bytes; note that the bits of the first returned byte may already have been read - check the Position property to make sure.
+		/// </summary>
+		public int PositionInBytes
+		{
+			get { return (int)(m_readPosition / 8); }
 		}
 
 		static NetIncomingMessage()
@@ -83,6 +91,7 @@ namespace Lidgren.Network
 			return retval;
 		}
 
+
 		[CLSCompliant(false)]
 		public sbyte ReadSByte()
 		{
@@ -101,7 +110,7 @@ namespace Lidgren.Network
 
 		public byte[] ReadBytes(int numberOfBytes)
 		{
-			NetException.Assert(m_bitLength - m_readPosition >= (numberOfBytes * 8), c_readOverflowError);
+			NetException.Assert(m_bitLength - m_readPosition + 7 >= (numberOfBytes * 8), c_readOverflowError);
 
 			byte[] retval = new byte[numberOfBytes];
 			NetBitWriter.ReadBytes(m_data, numberOfBytes, m_readPosition, retval, 0);
@@ -111,7 +120,7 @@ namespace Lidgren.Network
 
 		public void ReadBytes(byte[] into, int offset, int numberOfBytes)
 		{
-			NetException.Assert(m_bitLength - m_readPosition >= (numberOfBytes * 8), c_readOverflowError);
+			NetException.Assert(m_bitLength - m_readPosition + 7 >= (numberOfBytes * 8), c_readOverflowError);
 			NetException.Assert(offset + numberOfBytes <= into.Length);
 
 			NetBitWriter.ReadBytes(m_data, numberOfBytes, m_readPosition, into, offset);
@@ -355,6 +364,29 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
+		/// Reads a Int64 written using WriteVariableInt64()
+		/// </summary>
+		public Int64 ReadVariableInt64()
+		{
+			Int64 num1 = 0;
+			int num2 = 0;
+			while (true)
+			{
+				if (num2 == 0x23)
+					throw new FormatException("Bad 7-bit encoded integer");
+
+				byte num3 = this.ReadByte();
+				num1 |= (Int64)((Int64)(num3 & 0x7f) << (num2 & 0x1f));
+				num2 += 7;
+				if ((num3 & 0x80) == 0)
+				{
+					Int64 sign = (num1 << 63) >> 63;
+					return sign ^ (num1 >> 1);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Reads a UInt32 written using WriteVariableInt64()
 		/// </summary>
 		[CLSCompliant(false)]
@@ -454,6 +486,21 @@ namespace Lidgren.Network
 
 			IPAddress address = new IPAddress(addressBytes);
 			return new IPEndPoint(address, port);
+		}
+
+		/// <summary>
+		/// Reads a value, in local time comparable to NetTime.Now, written using WriteTime()
+		/// Must have a connected sender
+		/// </summary>
+		public double ReadTime(bool highPrecision)
+		{
+			double remoteTime = (highPrecision ? ReadDouble() : (double)ReadSingle());
+
+			if (m_senderConnection == null)
+				throw new NetException("Cannot call ReadTime() on message without a connected sender (ie. unconnected messages)");
+
+			// lets bypass NetConnection.GetLocalTime for speed
+			return remoteTime - m_senderConnection.m_remoteTimeOffset;
 		}
 
 		/// <summary>

@@ -160,7 +160,7 @@ namespace Lidgren.Network
 			m_bitLength += bits;
 		}
 
-		public override void Write(byte[] source, int offsetInBytes, int numberOfBytes)
+		public void Write(byte[] source, int offsetInBytes, int numberOfBytes)
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
@@ -430,6 +430,24 @@ namespace Lidgren.Network
 		}
 
 		/// <summary>
+		/// Write Base128 encoded variable sized signed integer
+		/// </summary>
+		/// <returns>number of bytes written</returns>
+		public int WriteVariableInt64(Int64 value)
+		{
+			int retval = 1;
+			UInt64 num1 = (UInt64)((value << 1) ^ (value >> 31));
+			while (num1 >= 0x80)
+			{
+				this.Write((byte)(num1 | 0x80));
+				num1 = num1 >> 7;
+				retval++;
+			}
+			this.Write((byte)num1);
+			return retval;
+		}
+
+		/// <summary>
 		/// Write Base128 encoded variable sized unsigned integer
 		/// </summary>
 		/// <returns>number of bytes written</returns>
@@ -518,7 +536,7 @@ namespace Lidgren.Network
 			}
 
 			byte[] bytes = Encoding.UTF8.GetBytes(source);
-			EnsureBufferSize(m_bitLength + 1 + bytes.Length);
+			EnsureBufferSize(m_bitLength + 8 + (bytes.Length * 8));
 			WriteVariableUInt32((uint)bytes.Length);
 			Write(bytes);
 		}
@@ -532,6 +550,17 @@ namespace Lidgren.Network
 			Write((byte)bytes.Length);
 			Write(bytes);
 			Write((ushort)endPoint.Port);
+		}
+
+		/// <summary>
+		/// Writes the local time to a message; readable (and convertable to local time) by the remote host using ReadTime()
+		/// </summary>
+		public void WriteTime(double localTime, bool highPrecision)
+		{
+			if (highPrecision)
+				Write(localTime);
+			else
+				Write((float)localTime);
 		}
 
 		/// <summary>
@@ -556,6 +585,24 @@ namespace Lidgren.Network
 		/// Append all the bits of message to this message
 		/// </summary>
 		public void Write(NetOutgoingMessage message)
+		{
+			EnsureBufferSize(m_bitLength + (message.LengthBytes * 8));
+
+			Write(message.m_data, 0, message.LengthBytes);
+
+			// did we write excessive bits?
+			int bitsInLastByte = (message.m_bitLength % 8);
+			if (bitsInLastByte != 0)
+			{
+				int excessBits = 8 - bitsInLastByte;
+				m_bitLength -= excessBits;
+			}
+		}
+
+		/// <summary>
+		/// Append all the bits of message to this message
+		/// </summary>
+		public void Write(NetIncomingMessage message)
 		{
 			EnsureBufferSize(m_bitLength + (message.LengthBytes * 8));
 
