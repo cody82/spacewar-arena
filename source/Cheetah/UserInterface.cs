@@ -183,6 +183,12 @@ namespace Cheetah
         {
             get;
         }
+		
+		
+		bool SupportsCompressedTextures
+		{
+			get;
+		}
     }
 
     public interface IMouse

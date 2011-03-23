@@ -1392,7 +1392,15 @@ namespace Cheetah.Graphics
             else
                 return true;
         }
-
+		
+		public bool SupportsCompressedTextures
+		{
+			get
+			{
+				return supports_compressed_textures;
+			}
+		}
+		
         bool can_generate_mipmaps = false;
 		bool supports_compressed_textures = false;
 		
