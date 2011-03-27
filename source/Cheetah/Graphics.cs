@@ -17,6 +17,7 @@ using OpenTK;
 
 namespace Cheetah.Graphics
 {
+	[StructLayout(LayoutKind.Sequential)]
     public struct NormalMappingVertex
     {
         public Vector3 Position;
@@ -1317,7 +1318,6 @@ namespace Cheetah.Graphics
             facecount = -1;
             vertexproperties = null;
 
-            Stream s = n.getStream();
             string line;
             string[] split;
 
@@ -1339,7 +1339,7 @@ namespace Cheetah.Graphics
 
             fmt = NormalMappingVertex.Format;
 
-            int vertexfloatsize = fmt.Size / 4;
+            //int vertexfloatsize = fmt.Size / 4;
             //float[] vertices = new float[vertexfloatsize * vertexcount];
             NormalMappingVertex[] vertices = new NormalMappingVertex[vertexcount];
 
@@ -1407,14 +1407,17 @@ namespace Cheetah.Graphics
             MeshUtil.CalculateTangentSpace(vertices, triangles);
 
             SubMesh mesh = new SubMesh();
-
+			
+			float[] vtmp = NormalMappingVertex.ToFloatArray(vertices);
             if (Root.Instance.UserInterface != null)
-                mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * fmt.Size);
+                //HACK why doesnt this work?
+				//mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * fmt.Size);
+                mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vtmp, vtmp.Length * 4);
             else
                 mesh.Vertices = new VertexBuffer();
 
             mesh.Vertices.Format = fmt;
-            mesh.Vertices.Buffer = NormalMappingVertex.ToFloatArray(vertices);
+            mesh.Vertices.Buffer = vtmp;
             mesh.VertexCount = vertexcount;
             mesh.Indices = new IndexBuffer();
             mesh.Indices.buffer = indices.ToArray();
