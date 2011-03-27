@@ -9692,14 +9692,16 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
         public Vector3 Position;
         public Color4f Color;
     }
-
+	
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexP2C4T2
     {
 		public Vector2 position;
 		public Color4f color;
 		public Vector2 texture0;
 	}
-
+	
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexP3T2
     {
         public Vector3 position;
