@@ -1381,7 +1381,9 @@ namespace SpaceWar2006.Windows
             }
             Count = i;
 
-            PointBuffer.Update(Vertices, Count * 36);
+			
+			//HACK: why is ToFloatArray needed??
+            PointBuffer.Update(VertexP3C4T2.ToFloatArray(Vertices), Count * 36);
         }
         public override void DrawInternal(IRenderer r, RectangleF rect)
         {
