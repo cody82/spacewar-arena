@@ -17,8 +17,8 @@ using OpenTK;
 
 namespace Cheetah.Graphics
 {
-	[StructLayout(LayoutKind.Sequential)]
-    public struct NormalMappingVertex
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public struct NormalMappingVertex
     {
         public Vector3 Position;
         public Vector2 Texture0;
@@ -1408,16 +1408,15 @@ namespace Cheetah.Graphics
 
             SubMesh mesh = new SubMesh();
 			
-			float[] vtmp = NormalMappingVertex.ToFloatArray(vertices);
+			//float[] vtmp = NormalMappingVertex.ToFloatArray(vertices);
             if (Root.Instance.UserInterface != null)
                 //HACK why doesnt this work?
-				//mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * fmt.Size);
-                mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vtmp, vtmp.Length * 4);
+				mesh.Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(vertices, vertices.Length * fmt.Size);
             else
                 mesh.Vertices = new VertexBuffer();
 
             mesh.Vertices.Format = fmt;
-            mesh.Vertices.Buffer = vtmp;
+            mesh.Vertices.Buffer = NormalMappingVertex.ToFloatArray(vertices);
             mesh.VertexCount = vertexcount;
             mesh.Indices = new IndexBuffer();
             mesh.Indices.buffer = indices.ToArray();
@@ -9604,7 +9603,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 		});
 
     }
-
+	
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexP3C4T2
     {
         public VertexP3C4T2(float px, float py, float pz, float r, float g, float b,float a,float u,float v)
@@ -9620,7 +9620,7 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             texture0.Y = v;
         }
 		
-		public static float[] ToFloatArray(VertexP3C4T2[] vertices)
+		public unsafe static float[] ToFloatArray(VertexP3C4T2[] vertices)
 		{
 			float[] f = new float[vertices.Length * 9];
 			for(int i=0; i<vertices.Length; ++i)
@@ -9659,7 +9659,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 																						new VertexFormat.Element(VertexFormat.ElementName.Tangent,3)
 		});
     }
-
+	
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexP3C3
 	{
         public VertexP3C3(float px, float py, float pz, float r, float g, float b)
@@ -9674,7 +9675,8 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
 		public Vector3 Position;
 		public Color3f Color;
 	}
-
+	
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexP3C4
     {
         public VertexP3C4(float px, float py, float pz, float r, float g, float b, float a)
