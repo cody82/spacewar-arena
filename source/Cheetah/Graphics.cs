@@ -9619,6 +9619,25 @@ gluLookAt(float eyex, float eyey, float eyez, float centerx,
             texture0.X = u;
             texture0.Y = v;
         }
+		
+		public static float[] ToFloatArray(VertexP3C4T2[] vertices)
+		{
+			float[] f = new float[vertices.Length * 9];
+			for(int i=0; i<vertices.Length; ++i)
+			{
+				f[i * 9 + 0] = vertices[i].position.X;
+				f[i * 9 + 1] = vertices[i].position.Y;
+				f[i * 9 + 2] = vertices[i].position.Z;
+				f[i * 9 + 3] = vertices[i].color.r;
+				f[i * 9 + 4] = vertices[i].color.g;
+				f[i * 9 + 5] = vertices[i].color.b;
+				f[i * 9 + 6] = vertices[i].color.a;
+				f[i * 9 + 7] = vertices[i].texture0.X;
+				f[i * 9 + 8] = vertices[i].texture0.Y;
+			}
+			return f;
+		}
+		
 		public Vector3 position;
 		public Color4f color;
 		public Vector2 texture0;

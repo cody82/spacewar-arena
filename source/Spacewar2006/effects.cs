@@ -743,7 +743,7 @@ namespace SpaceWar2006.Effects
                new VertexP3C4T2(-1,0,1, 1,1,1,1, 0,1),
                 new VertexP3C4T2(1,0,1, 1,1,1,1, 1,1)
             };
-            Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(data, (3 + 4 + 2) * 4 * 4);
+            Vertices = Root.Instance.UserInterface.Renderer.CreateStaticVertexBuffer(VertexP3C4T2.ToFloatArray(data), (3 + 4 + 2) * 4 * 4);
             Vertices.Format = VertexFormat.VF_P3C4T2;
         }
 
