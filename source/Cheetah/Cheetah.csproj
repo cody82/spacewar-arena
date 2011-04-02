@@ -117,6 +117,7 @@
     <Compile Include="xna.cs" />
     <Compile Include="XviD.cs" />
     <Compile Include="Audio.cs" />
+    <Compile Include="DevIlDdsDecode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.1.271, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
@@ -157,6 +158,10 @@
     <Reference Include="OpenTK.GLControl, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.DevIl, Version=1.6.8.3, Culture=neutral, PublicKeyToken=7ec4053013524957">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Tao.DevIl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

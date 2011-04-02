@@ -2728,7 +2728,12 @@ using Cheetah;");
 				if(!Root.Instance.UserInterface.Renderer.SupportsCompressedTextures)
 				{
 					Cheetah.Console.WriteLine("compressed textures not supported:(");
-					t = new Texture(Root.Instance.UserInterface.Renderer.CreateTexture(new byte[128*128*3], 128, 128, false));
+					//t = new Texture(Root.Instance.UserInterface.Renderer.CreateTexture(new byte[128*128*3], 128, 128, false));
+					DevIlDdsDecoder dec =new DevIlDdsDecoder();
+					s.Position = 0;
+					dec.Load(s);
+	                t = new Texture(Root.Instance.UserInterface.Renderer.CreateTexture(dec.getRGBA(), dec.getWidth(), dec.getHeight(), true));
+					
 				}
                 else if (f.Header.IsCubeMap)
                 {
@@ -2775,7 +2780,10 @@ using Cheetah;");
 
         protected IImageDecoder CreateDecoder(FileSystemNode n)
         {
-            return new DotNetImageDecoder();
+			if(!Root.Instance.UserInterface.Renderer.SupportsCompressedTextures && n.GetName().ToLower().EndsWith(".dds"))
+				return new DevIlDdsDecoder();
+            else
+				return new DotNetImageDecoder();
         }
 
         public Type LoadType
