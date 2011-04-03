@@ -1777,15 +1777,15 @@ using Cheetah;");
     }
 
 
-    public class VecRandom : Random
+    public class VecRandom : SimpleRNG
     {
-        public VecRandom(int seed)
-            : base(seed)
+        public VecRandom()
         {
         }
 
-        public VecRandom()
+        public double NextDouble()
         {
+            return GetUniform();
         }
 
         public Vector3 NextUnitVector3()
@@ -1826,6 +1826,11 @@ using Cheetah;");
         }
 
         public static VecRandom Instance = new VecRandom();
+
+        public int Next(int p, int p_2)
+        {
+            return p + (int)(GetUniform() * (double)(p_2 - p) + 0.5);
+        }
     }
 
     public interface IResource : IDisposable

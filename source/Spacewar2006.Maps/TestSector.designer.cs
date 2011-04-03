@@ -54,7 +54,7 @@ namespace SpaceWar2006.Maps
             cp.Position = new Vector3(4000, 0, 2000);
             Spawn(cp, true);
 
-            VecRandom r = new VecRandom(1000);
+            VecRandom r = new VecRandom();
             Vector3 center = new Vector3(-4000, 0, -2000);
             for (int i = 0; i < 20; ++i)
             {

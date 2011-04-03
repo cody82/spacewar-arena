@@ -111,6 +111,11 @@
     <Compile Include="OpenGL.cs" />
     <Compile Include="OpenTK.cs" />
     <Compile Include="Physics.cs" />
+    <Compile Include="Random\IRandomGenerator.cs" />
+    <Compile Include="Random\MersenneTwister.cs" />
+    <Compile Include="Random\NormalRandomGenerator.cs" />
+    <Compile Include="Random\SimpleRNG.cs" />
+    <Compile Include="Random\UniformRandomGenerator.cs" />
     <Compile Include="SupCom.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="UserInterface.cs" />
