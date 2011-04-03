@@ -1829,7 +1829,7 @@ using Cheetah;");
 
         public int Next(int p, int p_2)
         {
-            return p + (int)(GetUniform() * (double)(p_2 - p) + 0.5);
+            return p + (int)(GetUniform() * (double)(p_2 - p - 1) + 0.5);
         }
     }
 
