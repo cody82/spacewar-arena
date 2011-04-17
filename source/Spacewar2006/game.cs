@@ -265,7 +265,6 @@ namespace SpaceWar2006.GameObjects
         public override void OnRemove(Scene s)
         {
             base.OnRemove(s);
-            Cheetah.Console.WriteLine("dskjvgndfskj");
         }
         public void UpdateDirection(Vector3 lookat, float dtime)
         {
@@ -970,7 +969,7 @@ namespace SpaceWar2006.GameObjects
         {
             DeSerialize(context);
         }
-
+		
         public override void OnCollide(Node other)
         {
             CollisionDirection = other.AbsolutePosition - AbsolutePosition;
@@ -990,7 +989,22 @@ namespace SpaceWar2006.GameObjects
             }
 
         }
+		
+        public override void OnRemove(Scene s)
+        {
+            base.OnRemove(s);
+			
+            if (Smoke != null)
+            {
+                Smoke.Attach = null;
+                Smoke = null;
 
+                FireLight.Kill = true;
+                FireLight.Attach = null;
+                FireLight = null;
+            }
+        }
+		
         public override bool CanCollide(Node other)
         {
             if (other is Projectile)
@@ -1170,7 +1184,7 @@ namespace SpaceWar2006.GameObjects
         Light FireLight;
         protected void UpdateFireTrail()
         {
-            if (Hull.CurrentHitpoints / Hull.MaxHitpoints <= 0.5f)
+            if (Hull.CurrentHitpoints / Hull.MaxHitpoints <= 0.5f && Hull.CurrentHitpoints > 0.0f)
             {
                 if (Smoke == null)
                 {
