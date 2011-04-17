@@ -545,7 +545,7 @@ namespace Cheetah.Graphics
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("cant load ogg");
+				Console.WriteLine("cant load ogg: " + e.Message);
 				return;
 			}
 			
