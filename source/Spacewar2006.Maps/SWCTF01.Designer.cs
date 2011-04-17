@@ -26,20 +26,18 @@ Spawn(e,true);
 }
 {
 SpaceWar2006.GameObjects.Flag e=new SpaceWar2006.GameObjects.Flag();
-e.Position=new Vector3(-4180f,0f,120f);
+e.FlagPosition = e.Position=new Vector3(-4180f,0f,120f);
 e.rotationspeed=new Vector3(0f,0f,0f);
 e.Orientation=new Quaternion(0f,0f,0f,1f);
 e.Team=0;
-e.FlagPosition=new Vector3(0f,0f,0f);
 Spawn(e,true);
 }
 {
 SpaceWar2006.GameObjects.Flag e=new SpaceWar2006.GameObjects.Flag();
-e.Position=new Vector3(4120f,0f,230f);
+e.FlagPosition = e.Position=new Vector3(4120f,0f,230f);
 e.rotationspeed=new Vector3(0f,0f,0f);
 e.Orientation=new Quaternion(0f,0f,0f,1f);
 e.Team=1;
-e.FlagPosition=new Vector3(0f,0f,0f);
 Spawn(e,true);
 }
 {
