@@ -658,7 +658,7 @@ namespace SpaceWar2006.Weapons
                     first = false;
                     //rotation = (float)Math.Acos(Vector3.Dot(Direction, Vector3.ZAxis));
                     Vector3 d = Direction;
-                    rotation = -(float)Math.Atan2(d.X, d.Z);
+                    rotation = (float)Math.Atan2(d.X, d.Z);
                     //System.Console.WriteLine(rotation.ToString());
                     Orientation = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotation);
                     //rotation = -(float)Math.Atan2(Direction.X, Direction.Z);
@@ -687,7 +687,7 @@ namespace SpaceWar2006.Weapons
                 float cos = Vector3.Dot(left, want);
                 float a = (float)Math.Acos((double)cos) * 180.0f / (float)Math.PI;
                 // rotationspeed = new Vector3(0, -2 * cos, 0);
-                rotationspeed = -2 * cos;
+                rotationspeed = 2 * cos;
 
                 rotation += rotationspeed * dTime;
                 roll = -rotationspeed / 2;
