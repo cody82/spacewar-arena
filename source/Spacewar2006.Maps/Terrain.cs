@@ -27,14 +27,14 @@ namespace SpaceWar2006.Maps
 
 
                 t.Draw = new ArrayList(new IDrawable[] { Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap") });
-                t.Position = new Vector3(0, -400, 0);
+                t.Position = new Vector3(0, -900, 0);
                 Spawn(t, true);
             }
 
             {
                 PlayerStart n = new PlayerStart();
                 n.rotationspeed = new Vector3(0, 1, 0);
-                n.Position = new Vector3(0, 0, 0);
+                n.Position = new Vector3(0, 0, 500);
                 Spawn(n, true);
             }
 

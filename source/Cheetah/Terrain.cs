@@ -866,7 +866,7 @@ namespace Cheetah.Graphics
     public class SupComMap : GeoMipmap, IResource
     {
         public SupComMap(SupCom.ScmapFile map)
-            : base(new SupComMapLoader.Heightmap(map),33,100,0.03f)
+            : base(new SupComMapLoader.Heightmap(map),33,10000.0f / 16.0f,0.15f)
         {
             MapFile = map;
 
