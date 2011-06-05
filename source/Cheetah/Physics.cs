@@ -28,7 +28,11 @@ namespace Cheetah.Physics
 
         protected virtual IPhysicsObject CreatePhysicsObject(Scene s)
         {
-            return s.Physics.CreateObjectBox(1, 2,2,2);
+            IPhysicsObject obj = s.Physics.CreateObjectBox(1, 2,2,2);
+            obj.Position = base.Position;
+            obj.Speed = base.Speed;
+            obj.Orientation = base.Orientation;
+            return obj;
         }
 
         public override void OnAdd(Scene s)
@@ -50,13 +54,77 @@ namespace Cheetah.Physics
             }
         }
 
+        /*
+        public override void Tick(float dtime)
+        {
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+            Matrix4 m = Matrix4.Rotate(orientation);
+            position.Tick(dtime, SmoothTime);
+            speed.Tick(dtime, SmoothTime);
+            position.Original += speed.Original * dtime;
+            position.Original += Vector3.Transform(localspeed,m) * dtime;
+
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+
+            orientation.Tick(dtime, SmoothTime);
+            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
+            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
+            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
+            Quaternion q = qx * qy * qz;
+
+            //q=Quaternion.Identity*Quaternion.Identity;
+            orientation.Original = q * orientation.Original;
+            //HACK
+            if (orientation.Original.W < -1.0f)
+            {
+                orientation.Original.W = -1.0f;
+            }
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+
+            age += dtime;
+
+            if (Attach != null && Attach.Kill)
+                Attach = null;
+
+            if (Draw != null)
+                foreach (object o in Draw)
+                {
+                    if (o is ITickable)
+                    {
+                        ((ITickable)o).Tick(dtime);
+                    }
+                }
+            MathUtil.Check(position.Original);
+            MathUtil.Check(orientation);
+        }*/
         public override void Tick(float dtime)
         {
             position.Original = Position;
             orientation.Original = Orientation;
-            orientation.Tick(dtime);
+            orientation.Tick(dtime, SmoothTime);
             position.Tick(dtime);
             age+=dtime;
+
+            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
+            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
+            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
+            Quaternion q = qx * qy * qz;
+
+            orientation.Original = q * orientation.Original;
+            //HACK
+            if (orientation.Original.W < -1.0f)
+            {
+                orientation.Original.W = -1.0f;
+            }
+
+            Orientation = orientation.Original;
+
+            if (Attach != null && Attach.Kill)
+                Attach = null;
+
             if(Draw!=null)
                 foreach(object o in Draw)
                 {
@@ -98,12 +166,24 @@ namespace Cheetah.Physics
         {
             get
             {
+                if (Physics == null)
+                    return base.Position;
                 return Physics.Position;
             }
             set
             {
-                Physics.Position=value;
-                position.Original = value;
+                if (Physics == null)
+                {
+                    base.Position = value;
+                    position.Original = value;
+                    position.Smoothed = value;
+                }
+                else
+                {
+                    Physics.Position = value;
+                    position.Original = value;
+                    position.Smoothed = value;
+                }
             }
         }
 
@@ -111,11 +191,21 @@ namespace Cheetah.Physics
         {
             get
             {
+                if (Physics == null)
+                    return base.Speed;
                 return Physics.Speed;
             }
             set
             {
-                Physics.Speed = value;
+                if (Physics == null)
+                {
+                    base.speed.Original = value;
+                    base.speed.Smoothed = value;
+                }
+                else
+                {
+                    Physics.Speed = value;
+                }
             }
         }
 
@@ -123,13 +213,22 @@ namespace Cheetah.Physics
         {
             get
             {
-                //return QuaternionExtensions.GetInverse(Physics.Orientation);
+                if (Physics == null)
+                    return base.Orientation;
                 return Physics.Orientation;
             }
             set
             {
-                Physics.Orientation = value;// QuaternionExtensions.GetInverse(value);
-                orientation.Original = value;
+                if (Physics == null)
+                {
+                    orientation.Original = value;
+                    orientation.Smoothed = value;
+                }
+                else
+                {
+                    Physics.Orientation = value;
+                    orientation.Original = value;
+                }
             }
         }
 
@@ -338,6 +437,12 @@ namespace Cheetah.Physics
 
         void DeleteObject(IPhysicsObject po);
         //event Physics.TwoCollisionDelegate Collision;
+
+        Vector3 Gravity
+        {
+            get;
+            set;
+        }
     }
 
     public static class Physics
@@ -445,6 +550,18 @@ namespace Cheetah.Physics
         {
             world = new PhysicsSystem();
             world.CollisionSystem = new CollisionSystemSAP();
+        }
+
+        public Vector3 Gravity
+        {
+            get
+            {
+                return world.Gravity;
+            }
+            set
+            {
+                world.Gravity = value;
+            }
         }
 
         public IPhysicsObject CreateObjectSphere(float radius, float density)

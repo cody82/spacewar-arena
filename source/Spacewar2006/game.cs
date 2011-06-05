@@ -1752,8 +1752,9 @@ namespace SpaceWar2006.GameObjects
 
         Damage Damage = new Damage(1, 30, 0, 10);
     }
-
+    
     public class Actor : Node
+    //public class Actor : Cheetah.Physics.PhysicsNode
     {
         public Actor()
         {

@@ -6957,6 +6957,7 @@ namespace Cheetah.Graphics
             }
 
             Physics = Cheetah.Physics.Physics.Create();
+            Physics.Gravity = Vector3.Zero;
 		}
 
         public bool ServerListCheck(int id)
