@@ -17,6 +17,7 @@ using SpaceWar2006.Effects;
 using Cheetah;
 using Cheetah.Graphics;
 using OpenTK;
+using Cheetah.Physics;
 
 namespace SpaceWar2006.Weapons
 {
@@ -197,7 +198,7 @@ namespace SpaceWar2006.Weapons
             DeSerialize(context);
         }
     }
-
+    
     public abstract class Projectile : Node
     {
         public Projectile()
@@ -206,6 +207,24 @@ namespace SpaceWar2006.Weapons
             RenderRadius = 0;
         }
 
+        /*
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                return obj;
+            }
+            else
+                return base.CreatePhysicsObject(s);
+        }
+        */
         public Projectile(DeSerializationContext context)
         {
             NoReplication = true;
@@ -224,7 +243,7 @@ namespace SpaceWar2006.Weapons
 
         public override CollisionInfo GetCollisionInfo()
         {
-            return new SphereCollisionInfo(AbsolutePosition, 0);
+            return new SphereCollisionInfo(AbsolutePosition, 0.1f);
         }
         public override void OnKill()
         {

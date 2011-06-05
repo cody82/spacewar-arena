@@ -7823,8 +7823,35 @@ namespace Cheetah.Graphics
         Node[] clist = new Node[1024];
         public void Tick(float dtime)
         {
-            
+
+            var collisions = Physics.DetectCollisions();
+            System.Console.WriteLine(collisions.Length);
+
+            foreach (var c in collisions)
             {
+                Node o1 = c.Key.Owner;
+                Node o2 = c.Value.Owner;
+
+                if(o1 == null || o2 == null)
+                    continue;
+
+                if (o1.Kill || o2.Kill)
+                    continue;
+
+                if (!(o1.CanCollide(o2) && o2.CanCollide(o1)))
+                    continue;
+
+                System.Console.WriteLine(o1);
+                System.Console.WriteLine(o2);
+
+                o1.OnCollide(o2);
+                o2.OnCollide(o1);
+
+                if (Root.Instance.CurrentFlow != null)
+                    Root.Instance.CurrentFlow.OnCollision(o1, o2);
+            }
+
+            /*{// collision detection
                 int i = 0;
 
                 foreach (KeyValuePair<int, Node> de in ServerCollideList)
@@ -7861,7 +7888,7 @@ namespace Cheetah.Graphics
 
                     }
                 }
-            }
+            }*/
 
 
             if (Root.Instance.UserInterface!=null)

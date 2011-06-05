@@ -1,3 +1,5 @@
+#define USE_PHYSICSENGINE
+
 using System;
 using System.Threading;
 using System.Reflection;
@@ -21,6 +23,7 @@ using SpaceWar2006.Pickups;
 using Cheetah;
 using Cheetah.Graphics;
 using OpenTK;
+using Cheetah.Physics;
 
 namespace SpaceWar2006.GameObjects
 {
@@ -1753,8 +1756,12 @@ namespace SpaceWar2006.GameObjects
         Damage Damage = new Damage(1, 30, 0, 10);
     }
     
+
+#if USE_PHYSICSENGINE
+    public class Actor : Cheetah.Physics.PhysicsNode
+#else
     public class Actor : Node
-    //public class Actor : Cheetah.Physics.PhysicsNode
+#endif
     {
         public Actor()
         {
@@ -1766,6 +1773,24 @@ namespace SpaceWar2006.GameObjects
         {
         }
 
+#if USE_PHYSICSENGINE
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                return obj;
+            }
+            else
+                return base.CreatePhysicsObject(s);
+        }
+#endif
         public override void DeSerialize(DeSerializationContext context)
         {
             base.DeSerialize(context);

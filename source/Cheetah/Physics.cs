@@ -12,6 +12,8 @@ using JigLibX.Math;
 using JigLibX.Utils;
 using Box = JigLibX.Geometry.Box;
 using JigLibX.Vehicles;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Cheetah.Physics
 {
@@ -438,6 +440,8 @@ namespace Cheetah.Physics
         void DeleteObject(IPhysicsObject po);
         //event Physics.TwoCollisionDelegate Collision;
 
+        KeyValuePair<IPhysicsObject, IPhysicsObject>[] DetectCollisions();
+
         Vector3 Gravity
         {
             get;
@@ -482,6 +486,12 @@ namespace Cheetah.Physics
             get;
             set;
         }
+
+        Node Owner
+        {
+            get;
+            set;
+        }
         //event Physics.OneCollisionDelegate Collision;
     }
 
@@ -490,7 +500,22 @@ namespace Cheetah.Physics
         public JigLibObject(Body b)
         {
             body = b;
+            Debug.Assert(body.ExternalData == null);
+            body.ExternalData = this;
+            //body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
         }
+
+        bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        {
+            return false;
+        }
+
+        public Node Owner
+        {
+            get;
+            set;
+        }
+
         protected Body body;
 
         public Vector3 Position
@@ -552,6 +577,23 @@ namespace Cheetah.Physics
             world.CollisionSystem = new CollisionSystemSAP();
         }
 
+        public KeyValuePair<IPhysicsObject, IPhysicsObject>[] DetectCollisions()
+        {
+            /*List<JigLibX.Collision.CollisionInfo> collisionInfos = new List<JigLibX.Collision.CollisionInfo>(); // this is filled by collisionfuntor
+            CollisionFunctor collisionFunctor = new BasicCollisionFunctor(collisionInfos); // as parameter pass CollisionInfo-List
+            world.CollisionSystem.DetectAllCollisions(new List<Body>(world.Bodies), collisionFunctor, null, 0.05f);*/
+
+            List<KeyValuePair<IPhysicsObject, IPhysicsObject>> list = new List<KeyValuePair<IPhysicsObject, IPhysicsObject>>();
+            foreach (JigLibX.Collision.CollisionInfo info in world.Collisions)
+            {
+                Body body0 = info.SkinInfo.Skin0.Owner;
+                Body body1 = info.SkinInfo.Skin1.Owner;
+                list.Add(new KeyValuePair<IPhysicsObject, IPhysicsObject>((IPhysicsObject)body0.ExternalData, (IPhysicsObject)body1.ExternalData));
+            }
+
+            return list.ToArray();
+        }
+
         public Vector3 Gravity
         {
             get
@@ -566,7 +608,7 @@ namespace Cheetah.Physics
 
         public IPhysicsObject CreateObjectSphere(float radius, float density)
         {
-            throw new NotImplementedException();
+            return new JigLibObject(CreateSphere(Vector3.Zero, radius));
         }
 
         public IPhysicsObject CreateObjectCar()
@@ -627,6 +669,24 @@ namespace Cheetah.Physics
             return com;
         }
 
+
+        static Body CreateSphere(Vector3 pos, float radius)
+        {
+            Body _body = new Body();
+            CollisionSkin _skin = new CollisionSkin(_body);
+            _body.CollisionSkin = _skin;
+
+            JigLibX.Geometry.Sphere  box = new JigLibX.Geometry.Sphere(pos, radius);
+            _skin.AddPrimitive(box, new MaterialProperties(0.8f, 0.8f, 0.7f));
+
+            Vector3 com = SetMass(1.0f, _skin, _body);
+
+            _body.MoveTo(pos, Matrix4.Identity);
+            _skin.ApplyLocalTransform(new Transform(-com, Matrix4.Identity));
+            _body.EnableBody();
+            return _body;
+        }
+
         static Body CreateCube(Vector3 pos, Vector3 size)
         {
             Body _body = new Body();
@@ -655,13 +715,13 @@ namespace Cheetah.Physics
 
         public void Tick(float dtime)
         {
-            float timestep = 0.01f;
+            /*float timestep = 0.01f;
 
             while (dtime > timestep)
             {
                 world.Integrate(timestep);
                 dtime -= timestep;
-            }
+            }*/
 
             world.Integrate(dtime);
         }
