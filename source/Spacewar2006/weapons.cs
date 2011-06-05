@@ -199,7 +199,7 @@ namespace SpaceWar2006.Weapons
         }
     }
     
-    public abstract class Projectile : Node
+    public abstract class Projectile : PhysicsNode
     {
         public Projectile()
         {
@@ -207,7 +207,7 @@ namespace SpaceWar2006.Weapons
             RenderRadius = 0;
         }
 
-        /*
+        
         protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
         {
             CollisionInfo info = GetCollisionInfo();
@@ -224,7 +224,7 @@ namespace SpaceWar2006.Weapons
             else
                 return base.CreatePhysicsObject(s);
         }
-        */
+        
         public Projectile(DeSerializationContext context)
         {
             NoReplication = true;

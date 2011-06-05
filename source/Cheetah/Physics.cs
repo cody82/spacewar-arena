@@ -502,12 +502,24 @@ namespace Cheetah.Physics
             body = b;
             Debug.Assert(body.ExternalData == null);
             body.ExternalData = this;
-            //body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
+            body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
         }
 
         bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
         {
-            return false;
+            JigLibObject jo1 = (JigLibObject)skin0.Owner.ExternalData;
+            JigLibObject jo2 = (JigLibObject)skin1.Owner.ExternalData;
+
+            if (jo1 == null || jo2 == null)
+                return true;
+
+            Node n1 = jo1.Owner;
+            Node n2 = jo2.Owner;
+
+            if (n1 == null || n2 == null)
+                return true;
+
+            return n1.CanCollide(n2) && n2.CanCollide(n1);
         }
 
         public Node Owner

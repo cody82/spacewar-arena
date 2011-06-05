@@ -6991,10 +6991,7 @@ namespace Cheetah.Graphics
                     TypeList[t] = d2;
                 }
             }
-            if (e is Node && ((Node)e).GetCollisionInfo()!=null)
-            {
-                ServerCollideList.Add(id, (Node)e);
-            }
+
             e.OnAdd(this);
             if (SpawnEvent!=null)
                 SpawnEvent(e);
@@ -7014,8 +7011,6 @@ namespace Cheetah.Graphics
             }
             ServerList.Remove(id);
 
-            if (ServerCollideList.ContainsKey(id))
-                ServerCollideList.Remove(id);
         }
         public Entity ServerListGet(int id)
         {
@@ -7056,10 +7051,6 @@ namespace Cheetah.Graphics
                 }
             }
 
-            if (e is Node && ((Node)e).GetCollisionInfo() != null)
-            {
-                ClientCollideList.Add(id, (Node)e);
-            }
 
             e.OnAdd(this);
             if (SpawnEvent != null)
@@ -7078,8 +7069,6 @@ namespace Cheetah.Graphics
                     TypeList[t].Remove(id);
                 }
             }
-            if (ClientCollideList.ContainsKey(id))
-                ClientCollideList.Remove(id);
         }
         public Entity ClientListGet(int id)
         {
@@ -7119,8 +7108,6 @@ namespace Cheetah.Graphics
             BlackList.Clear();
             TypeList.Clear();
             KillQueue.Clear();
-            ClientCollideList.Clear();
-            ServerCollideList.Clear();
             SpawnEvent = null;
             RemoveEvent = null;
         }
@@ -7820,12 +7807,9 @@ namespace Cheetah.Graphics
 
         //private OdeJointGroup ContactGroup=new OdeJointGroup(10);
 
-        Node[] clist = new Node[1024];
         public void Tick(float dtime)
         {
-
             var collisions = Physics.DetectCollisions();
-            System.Console.WriteLine(collisions.Length);
 
             foreach (var c in collisions)
             {
@@ -7850,45 +7834,6 @@ namespace Cheetah.Graphics
                 if (Root.Instance.CurrentFlow != null)
                     Root.Instance.CurrentFlow.OnCollision(o1, o2);
             }
-
-            /*{// collision detection
-                int i = 0;
-
-                foreach (KeyValuePair<int, Node> de in ServerCollideList)
-                {
-                            clist[i++] = de.Value;
-                }
-                if (ClientList != null)
-                    foreach (KeyValuePair<int, Node> de in ClientCollideList)
-                    {
-                        clist[i++] = de.Value;
-                    }
-
-                for (int k = 0; k < i; ++k)
-                {
-                    Node o1 = clist[k];
-                    CollisionInfo c1 = o1.GetCollisionInfo();
-                    for (int j = k + 1; j < i; ++j)
-                    {
-                        Node o2 = clist[j];
-                        if (o1.Kill || o2.Kill)
-                            continue;
-
-                        CollisionInfo c2 = o2.GetCollisionInfo();
-                        if (!(o1.CanCollide(o2) && o2.CanCollide(o1)))
-                            continue;
-                        if (!c1.Check(c2))
-                            continue;
-
-                        o1.OnCollide(o2);
-                        o2.OnCollide(o1);
-
-                        if (Root.Instance.CurrentFlow != null)
-                            Root.Instance.CurrentFlow.OnCollision(o1, o2);
-
-                    }
-                }
-            }*/
 
 
             if (Root.Instance.UserInterface!=null)
@@ -7968,8 +7913,6 @@ namespace Cheetah.Graphics
 		}
 
         protected Dictionary<Type, Dictionary<int, Entity>> TypeList = new Dictionary<Type, Dictionary<int, Entity>>();
-        protected Dictionary<int, Node> ClientCollideList = new Dictionary<int, Node>();
-        protected Dictionary<int, Node> ServerCollideList = new Dictionary<int, Node>();
 
         //protected Dictionary<Type, Dictionary<int, Entity>> ClientTypeList;
 

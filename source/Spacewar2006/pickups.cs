@@ -14,6 +14,7 @@ using System.Drawing;
 using SpaceWar2006.GameObjects;
 using SpaceWar2006.Weapons;
 using Cheetah;
+using Cheetah.Graphics;
 
 namespace SpaceWar2006.Pickups
 {
@@ -63,7 +64,7 @@ namespace SpaceWar2006.Pickups
         }
     }
 
-    public abstract class Pickup : Node
+    public abstract class Pickup : Cheetah.Physics.PhysicsNode
     {
         public Pickup(Type t, int n)
         {
@@ -73,6 +74,23 @@ namespace SpaceWar2006.Pickups
 
         public Pickup()
         {
+        }
+
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                Cheetah.Physics.IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                return obj;
+            }
+            else
+                return base.CreatePhysicsObject(s);
         }
 
         public Pickup(Dictionary<Type, int> items)
