@@ -36,7 +36,9 @@ namespace TerrainPhysics
 
         protected override IPhysicsObject CreatePhysicsObject(Scene s)
         {
-            return s.Physics.CreateObjectCar();
+            IPhysicsObject obj = s.Physics.CreateObjectCar();
+            obj.Owner = this;
+            return obj;
         }
     }
 
@@ -55,7 +57,9 @@ namespace TerrainPhysics
 
         protected override IPhysicsObject CreatePhysicsObject(Scene s)
         {
-            return s.Physics.CreateObjectBox(1, 2, 2, 2);
+            IPhysicsObject obj = s.Physics.CreateObjectBox(1, 2, 2, 2);
+            obj.Owner = this;
+            return obj;
         }
     }
 
@@ -73,18 +77,20 @@ namespace TerrainPhysics
         {
             NoReplication = true;
 
-            Draw = new System.Collections.ArrayList();
             map = Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap");
             //map.Wireframe = true;
             Draw = new ArrayList(new IDrawable[] { map });
+            Position = new Vector3(0, -900, 0);
         }
 
         protected override IPhysicsObject CreatePhysicsObject(Scene s)
         {
             IHeightMap hm = new SupComMapLoader.Heightmap(map.MapFile);
             //100,0.03f
-            IPhysicsObject obj = s.Physics.CreateHeightmap(hm, 100.0f/33.0f, 0, 0, 0.03f);
+            IPhysicsObject obj = s.Physics.CreateHeightmap(hm, 10000.0f / 512.0f, 0, 0, 0.15f);
             obj.Movable = false;
+            obj.Owner = this;
+            obj.Position = Position;
             return obj;
         }
     }
@@ -106,6 +112,7 @@ namespace TerrainPhysics
         {
             IPhysicsObject obj = s.Physics.CreateObjectBox(1, 200, 2, 200);
             obj.Movable = false;
+            obj.Owner = this;
             return obj;
         }
     }

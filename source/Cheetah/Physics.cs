@@ -507,6 +507,9 @@ namespace Cheetah.Physics
 
         bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
         {
+            if (skin0.Owner == null || skin1.Owner == null)
+                return true;
+
             JigLibObject jo1 = (JigLibObject)skin0.Owner.ExternalData;
             JigLibObject jo2 = (JigLibObject)skin1.Owner.ExternalData;
 
@@ -600,6 +603,10 @@ namespace Cheetah.Physics
             {
                 Body body0 = info.SkinInfo.Skin0.Owner;
                 Body body1 = info.SkinInfo.Skin1.Owner;
+                if (body0 == null || body1 == null)
+                    continue;
+                if (body0.ExternalData == null || body1.ExternalData == null)
+                    continue;
                 list.Add(new KeyValuePair<IPhysicsObject, IPhysicsObject>((IPhysicsObject)body0.ExternalData, (IPhysicsObject)body1.ExternalData));
             }
 
@@ -634,8 +641,9 @@ namespace Cheetah.Physics
 
         public IPhysicsObject CreateHeightmap(IHeightMap heightMapInfo, float scale, float shiftx, float shifty, float heightscale)
         {
-            CollisionSkin collision = new CollisionSkin(null);
             Body _body = new Body();
+            CollisionSkin collision = new CollisionSkin(_body);
+            //CollisionSkin collision = new CollisionSkin(null);
             
             Array2D field = new Array2D(heightMapInfo.Size.X, heightMapInfo.Size.Y);
 
@@ -643,7 +651,8 @@ namespace Cheetah.Physics
             {
                 for (int z = 0; z < field.Nz; z++)
                 {
-                    field.SetAt(x, z, heightscale * heightMapInfo.GetHeight(x,z));
+                    //HACK: -900
+                    field.SetAt(x, z, heightscale * heightMapInfo.GetHeight(x,z) -900);
                 }
             }
 

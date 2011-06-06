@@ -11,9 +11,63 @@ using Cheetah;
 using OpenTK;
 using System.Collections;
 using Cheetah.Graphics;
+using Cheetah.Physics;
 
 namespace SpaceWar2006.Maps
 {
+
+    public class TerrainNode : PhysicsNode
+    {
+        public TerrainNode(DeSerializationContext context)
+            : base(context)
+        {
+        }
+
+        SupComMap map;
+
+        public TerrainNode()
+        {
+            NoReplication = true;
+
+            map = Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap");
+            //map.Wireframe = true;
+            Draw = new ArrayList(new IDrawable[] { map });
+        }
+
+        public override bool CanCollide(Node other)
+        {
+            return true;
+        }
+
+        public override void OnCollide(Node other)
+        {
+            base.OnCollide(other);
+
+            if (!Root.Instance.IsAuthoritive)
+                return;
+
+            Actor a = other as Actor;
+            if (a != null)
+            {
+                a.Damage(new Damage(1000, 1000, 1000, 0));
+            }
+        }
+
+        protected override IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            //new SupComMapLoader.Heightmap(map),33,10000.0f / 16.0f,0.15f
+            IHeightMap hm = new SupComMapLoader.Heightmap(map.MapFile);
+            //100,0.03f
+            IPhysicsObject obj = s.Physics.CreateHeightmap(hm, 10000.0f / 512.0f, 0, 0, 0.15f);
+            obj.Position = base.Position;
+            obj.Speed = base.Speed;
+            obj.Orientation = base.Orientation;
+            obj.Owner = this;
+            //obj.Movable = false;
+            return obj;
+        }
+    }
+
     public partial class Terrain : Map
     {
 
@@ -23,12 +77,13 @@ namespace SpaceWar2006.Maps
         public override void Create()
         {
             {
-                Node t = new Node();
+                TerrainNode t = new TerrainNode();
 
 
-                t.Draw = new ArrayList(new IDrawable[] { Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap") });
+                //t.Draw = new ArrayList(new IDrawable[] { Root.Instance.ResourceManager.Load<SupComMap>("terrain/SCMP_015.scmap") });
                 t.Position = new Vector3(0, -900, 0);
                 Spawn(t, true);
+                t.Position = new Vector3(0, -900, 0);
             }
 
             {
