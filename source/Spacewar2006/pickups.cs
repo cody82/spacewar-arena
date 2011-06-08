@@ -15,6 +15,7 @@ using SpaceWar2006.GameObjects;
 using SpaceWar2006.Weapons;
 using Cheetah;
 using Cheetah.Graphics;
+using OpenTK;
 
 namespace SpaceWar2006.Pickups
 {
@@ -87,12 +88,18 @@ namespace SpaceWar2006.Pickups
                 obj.Speed = base.Speed;
                 obj.Orientation = base.Orientation;
                 obj.Owner = this;
+                //obj.Movable = false;
                 return obj;
             }
-            else
-                return base.CreatePhysicsObject(s);
+            throw new Exception();
         }
 
+        public override void Tick(float dtime)
+        {
+            base.Tick(dtime);
+
+            Speed = Vector3.Zero;
+        }
         public Pickup(Dictionary<Type, int> items)
         {
             Items = items;

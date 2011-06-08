@@ -10,6 +10,7 @@ using SpaceWar2006.Effects;
 using Cheetah;
 using Cheetah.Graphics;
 using OpenTK;
+using Cheetah.Physics;
 
 namespace SpaceWar2006.Maps
 {
@@ -62,7 +63,7 @@ namespace SpaceWar2006.Maps
                 n = new Phobos();
                 Spawn(n, true);
                 float s = 30.0f / 180.0f * (float)Math.PI;
-                n.rotationspeed = r.NextScaledVector3(s, s, s);
+                ((PhysicsNode)n).RotationSpeed = r.NextScaledVector3(s, s, s);
                 n.Position = center + rv;
 
             }

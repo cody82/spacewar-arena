@@ -1,5 +1,3 @@
-#define USE_PHYSICSENGINE
-
 using System;
 using System.Threading;
 using System.Reflection;
@@ -387,8 +385,25 @@ namespace SpaceWar2006.GameObjects
     }
 
     [Editable]
-    public class Flag : Node
+    public class Flag : Cheetah.Physics.PhysicsNode
     {
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                Cheetah.Physics.IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                //obj.Movable = false;
+                return obj;
+            }
+            throw new Exception();
+        }
+
         public Flag(int team, Vector3 position)
         {
             Position = FlagPosition = position;
@@ -502,6 +517,7 @@ namespace SpaceWar2006.GameObjects
         }
         public override void Tick(float dtime)
         {
+            Speed = Vector3.Zero;
 
             if (Ctf == null)
                 Ctf = Root.Instance.Scene.FindEntityByType<CaptureTheFlag>();
@@ -1024,7 +1040,7 @@ namespace SpaceWar2006.GameObjects
             //HACK
             if (IsLocal)
             {
-                rotationspeed.Y = RotationPower * MaxRotationSpeed;
+                RotationSpeed = new Vector3(0, RotationPower * MaxRotationSpeed, 0);
 
                 Quaternion q1 = QuaternionExtensions.FromAxisAngle(0, 1, 0, -Rotation);
                 Orientation = q1;
@@ -1038,15 +1054,18 @@ namespace SpaceWar2006.GameObjects
                 Orientation = q2 * q1;
             }
 
-            position.Original.Y = 0;
+            Vector3 pos = Position;
+            pos.Y = 0;
+            Position = position.Original = pos;
 
 
 
-
-            Speed += Direction * ThrustPower * MainThrust * dtime;
-            Speed += Left * StrafePower * StrafeThrust * dtime;
-            float factor = Math.Max(Speed.Length / 100, 1);
-            Speed -= Speed * Resistance * dtime * factor;
+            Vector3 speed = Speed;
+            speed += Direction * ThrustPower * MainThrust * dtime;
+            speed += Left * StrafePower * StrafeThrust * dtime;
+            float factor = Math.Max(speed.Length / 100, 1);
+            speed -= speed * Resistance * dtime * factor;
+            Speed = speed;
 
             foreach (Slot s in Slots)
             {
@@ -1719,7 +1738,7 @@ namespace SpaceWar2006.GameObjects
     }
 
     [Editable]
-    public class Nebula : Node
+    public class Nebula : Cheetah.Physics.PhysicsNode
     {
         public Nebula()
         {
@@ -1729,6 +1748,29 @@ namespace SpaceWar2006.GameObjects
             Draw.Add(new ParticleNebula());
         }
 
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                Cheetah.Physics.IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                //obj.Movable = false;
+                return obj;
+            }
+            throw new Exception();
+        }
+
+        public override void Tick(float dtime)
+        {
+            base.Tick(dtime);
+
+            Speed = Vector3.Zero;
+        }
         public override bool DrawLocal(IDrawable d)
         {
             return true;
@@ -1757,11 +1799,7 @@ namespace SpaceWar2006.GameObjects
     }
     
 
-#if USE_PHYSICSENGINE
     public class Actor : Cheetah.Physics.PhysicsNode
-#else
-    public class Actor : Node
-#endif
     {
         public Actor()
         {
@@ -1773,7 +1811,6 @@ namespace SpaceWar2006.GameObjects
         {
         }
 
-#if USE_PHYSICSENGINE
         protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
         {
             CollisionInfo info = GetCollisionInfo();
@@ -1790,7 +1827,7 @@ namespace SpaceWar2006.GameObjects
             else
                 return base.CreatePhysicsObject(s);
         }
-#endif
+
         public override void DeSerialize(DeSerializationContext context)
         {
             base.DeSerialize(context);

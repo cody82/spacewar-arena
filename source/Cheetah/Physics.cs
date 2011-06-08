@@ -56,52 +56,6 @@ namespace Cheetah.Physics
             }
         }
 
-        /*
-        public override void Tick(float dtime)
-        {
-            MathUtil.Check(position.Original);
-            MathUtil.Check(orientation);
-            Matrix4 m = Matrix4.Rotate(orientation);
-            position.Tick(dtime, SmoothTime);
-            speed.Tick(dtime, SmoothTime);
-            position.Original += speed.Original * dtime;
-            position.Original += Vector3.Transform(localspeed,m) * dtime;
-
-            MathUtil.Check(position.Original);
-            MathUtil.Check(orientation);
-
-            orientation.Tick(dtime, SmoothTime);
-            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
-            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
-            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
-            Quaternion q = qx * qy * qz;
-
-            //q=Quaternion.Identity*Quaternion.Identity;
-            orientation.Original = q * orientation.Original;
-            //HACK
-            if (orientation.Original.W < -1.0f)
-            {
-                orientation.Original.W = -1.0f;
-            }
-            MathUtil.Check(position.Original);
-            MathUtil.Check(orientation);
-
-            age += dtime;
-
-            if (Attach != null && Attach.Kill)
-                Attach = null;
-
-            if (Draw != null)
-                foreach (object o in Draw)
-                {
-                    if (o is ITickable)
-                    {
-                        ((ITickable)o).Tick(dtime);
-                    }
-                }
-            MathUtil.Check(position.Original);
-            MathUtil.Check(orientation);
-        }*/
         public override void Tick(float dtime)
         {
             position.Original = Position;
@@ -110,12 +64,6 @@ namespace Cheetah.Physics
             position.Tick(dtime);
             age+=dtime;
 
-            Quaternion qx = QuaternionExtensions.FromAxisAngle(1, 0, 0, rotationspeed.X * dtime);
-            Quaternion qy = QuaternionExtensions.FromAxisAngle(0, 1, 0, rotationspeed.Y * dtime);
-            Quaternion qz = QuaternionExtensions.FromAxisAngle(0, 0, 1, rotationspeed.Z * dtime);
-            Quaternion q = qx * qy * qz;
-
-            orientation.Original = q * orientation.Original;
             //HACK
             if (orientation.Original.W < -1.0f)
             {
@@ -164,6 +112,28 @@ namespace Cheetah.Physics
 
         }
 
+        public Vector3 RotationSpeed
+        {
+            get
+            {
+                if (Physics == null)
+                    return base.rotationspeed;
+                return Physics.AngularVelocity;
+            }
+            set
+            {
+                if (Physics == null)
+                {
+                    base.rotationspeed = value;
+                }
+                else
+                {
+                    Physics.AngularVelocity = value;
+                    base.rotationspeed = value;
+                }
+            }
+        }
+
         public override Vector3 Position
         {
             get
@@ -178,13 +148,11 @@ namespace Cheetah.Physics
                 {
                     base.Position = value;
                     position.Original = value;
-                    position.Smoothed = value;
                 }
                 else
                 {
                     Physics.Position = value;
                     position.Original = value;
-                    position.Smoothed = value;
                 }
             }
         }
@@ -199,12 +167,8 @@ namespace Cheetah.Physics
             }
             set
             {
-                if (Physics == null)
-                {
-                    base.speed.Original = value;
-                    base.speed.Smoothed = value;
-                }
-                else
+                base.speed.Original = value;
+                if (Physics != null)
                 {
                     Physics.Speed = value;
                 }
@@ -224,7 +188,6 @@ namespace Cheetah.Physics
                 if (Physics == null)
                 {
                     orientation.Original = value;
-                    orientation.Smoothed = value;
                 }
                 else
                 {
@@ -475,6 +438,12 @@ namespace Cheetah.Physics
             set;
         }
 
+        Vector3 AngularVelocity
+        {
+            get;
+            set;
+        }
+
         Quaternion Orientation
         {
             get;
@@ -554,6 +523,17 @@ namespace Cheetah.Physics
             set
             {
                 body.Velocity = value;
+            }
+        }
+        public Vector3 AngularVelocity
+        {
+            get
+            {
+                return body.AngularVelocity;
+            }
+            set
+            {
+                body.AngularVelocity = value;
             }
         }
 

@@ -191,12 +191,49 @@ namespace SpaceWar2006.Planets
             RenderRadius = Radius;
         }
 
+        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
+        {
+            CollisionInfo info = GetCollisionInfo();
+            SphereCollisionInfo sphere = info as SphereCollisionInfo;
+            if (sphere != null)
+            {
+                Cheetah.Physics.IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 10000000000);
+                obj.Position = base.Position;
+                obj.Speed = base.Speed;
+                obj.Orientation = base.Orientation;
+                obj.Owner = this;
+                return obj;
+            }
+            throw new Exception();
+        }
         public override string Name
         {
             get
             {
                 return "Planet";
             }
+        }
+
+        Vector3 pos;
+        public override Vector3 Position
+        {
+            get
+            {
+                return base.Position;
+            }
+            set
+            {
+                base.Position = value;
+                pos = value;
+            }
+        }
+        public override void Tick(float dtime)
+        {
+            base.Tick(dtime);
+
+            Speed = Vector3.Zero;
+            
+            Position = pos;
         }
 
         public Planet(DeSerializationContext context)
@@ -220,7 +257,7 @@ namespace SpaceWar2006.Planets
         }
         public override bool CanCollide(Node other)
         {
-            if (other is Planet)
+            if (other is Planet || other is Pickups.Pickup)
                 return false;
             else
                 return true;

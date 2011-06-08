@@ -98,7 +98,7 @@ namespace JigLibX.Physics
         private List<Constraint> constraints = new List<Constraint>();
 
         // Helper to stop the velocities getting silly.
-        private const float VelMax = 100.0f;
+        private const float VelMax = 1000.0f;
         private const float AngVelMax = 50.0f;
 
         // wether gravity should be applied

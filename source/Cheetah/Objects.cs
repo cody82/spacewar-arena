@@ -1496,12 +1496,10 @@ using Cheetah;");
                 {
                     Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    //m[12] = Position.X;
-                    //m[13] = Position.Y;
-                    //m[14] = Position.Z;
-                    m.Row3.X = Position.X;
-                    m.Row3.Y = Position.Y;
-                    m.Row3.Z = Position.Z;
+                    Vector3 p = Position;
+                    m.Row3.X = p.X;
+                    m.Row3.Y = p.Y;
+                    m.Row3.Z = p.Z;
                     return m;
                 }
                 else
@@ -1511,12 +1509,10 @@ using Cheetah;");
 
                     Matrix4 m = Matrix4Extensions.FromQuaternion(Orientation);
 
-                    //m[12] = Position.X;
-                    //m[13] = Position.Y;
-                    //m[14] = Position.Z;
-                    m.Row3.X = Position.X;
-                    m.Row3.Y = Position.Y;
-                    m.Row3.Z = Position.Z;
+                    Vector3 p = Position;
+                    m.Row3.X = p.X;
+                    m.Row3.Y = p.Y;
+                    m.Row3.Z = p.Z;
 
                     return m * Attach.Matrix;
                 }
