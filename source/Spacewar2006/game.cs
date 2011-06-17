@@ -445,7 +445,7 @@ namespace SpaceWar2006.GameObjects
         }
         public override CollisionInfo GetCollisionInfo()
         {
-            return new SphereCollisionInfo(AbsolutePosition, 50);
+            return new SphereCollisionInfo(AbsolutePosition, 100);
         }
 
         public override void SetRenderParameters(IRenderer r, IDrawable draw, Shader shade)
@@ -556,7 +556,20 @@ namespace SpaceWar2006.GameObjects
 
         public override bool CanCollide(Node other)
         {
-            return (other is SpaceShip && other != Attach) || other is Flag;
+			if(other is Flag)
+				return true;
+				
+			SpaceShip ss = other as SpaceShip;
+			if (ss != null)
+			{
+				Player p = ss.GetPlayer();
+				if (p != null)	
+				{
+					return p.Team != Team;
+				}
+			}
+			
+			return false;
         }
 
         public SpaceShip Carrier

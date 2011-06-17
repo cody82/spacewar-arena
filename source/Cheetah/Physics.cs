@@ -36,7 +36,36 @@ namespace Cheetah.Physics
             obj.Orientation = base.Orientation;
             return obj;
         }
+		
+		
+        public override Matrix4 SmoothMatrix
+        {
+            get
+            {
+				Matrix4 m = Matrix4Extensions.FromQuaternion (orientation.Smoothed);
 
+				m.Row3.X = position.Smoothed.X;
+				m.Row3.Y = position.Smoothed.Y;
+				m.Row3.Z = position.Smoothed.Z;
+
+				return m;
+			}
+        }
+
+        public override Matrix4 Matrix
+        {
+            get
+            {
+				Matrix4 m = Matrix4Extensions.FromQuaternion (Orientation);
+
+				Vector3 p = Position;
+				m.Row3.X = p.X;
+				m.Row3.Y = p.Y;
+				m.Row3.Z = p.Z;
+				return m;
+			}
+        }
+		
         public override void OnAdd(Scene s)
         {
             base.OnAdd (s);
@@ -72,9 +101,14 @@ namespace Cheetah.Physics
 
             Orientation = orientation.Original;
 
-            if (Attach != null && Attach.Kill)
-                Attach = null;
-
+            if (Attach != null)
+			{
+				Position = Attach.AbsolutePosition;
+				Orientation = Attach.Orientation;
+				if (Attach.Kill)
+                	Attach = null;
+			}
+			
             if(Draw!=null)
                 foreach(object o in Draw)
                 {
