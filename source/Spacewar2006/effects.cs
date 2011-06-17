@@ -457,31 +457,21 @@ namespace SpaceWar2006.Effects
             HalfSize = Size * 0.5f;
             Transparent = 1;
         }
-
-        public override bool CanCollide(Node other)
-        {
-            Vector3 p = other.AbsolutePosition;
-            if (Math.Abs(p.X) < HalfSize && Math.Abs(p.Z) < HalfSize)
-                return false;
-
-            return other is GameObjects.Actor;
-        }
-
-        public override CollisionInfo GetCollisionInfo()
-        {
-            return new AlwaysCollisionInfo();
-        }
-        public override void OnCollide(Node other)
-        {
-            //Vector3 p = other.AbsolutePosition;
-            //if (Math.Abs(p.X) < HalfSize && Math.Abs(p.Z) < HalfSize)
-            //    return;
-
-            base.OnCollide(other);
-
-            ((GameObjects.Actor)other).Damage(new SpaceWar2006.GameObjects.Damage(DamageSpeed * Root.Instance.TickDelta, DamageSpeed * Root.Instance.TickDelta, 0, 0));
-        }
-
+		
+		public override void Tick (float dTime)
+		{
+			base.Tick (dTime);
+			
+			IList<GameObjects.Actor> actors = Root.Instance.Scene.FindEntitiesByType<GameObjects.Actor>();
+			foreach(GameObjects.Actor other in actors)
+			{
+            	Vector3 p = other.AbsolutePosition;
+            	if (Math.Abs(p.X) < HalfSize && Math.Abs(p.Z) < HalfSize)
+                	continue;
+                	
+            	other.Damage(new SpaceWar2006.GameObjects.Damage(DamageSpeed * Root.Instance.TickDelta, DamageSpeed * dTime, 0, 0));
+			}
+		}
         float DamageSpeed=50;
         float Size;
         float HalfSize;
