@@ -368,7 +368,7 @@ namespace SpaceWar2006.GameSystem
         {
             get
             {
-                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                return System.Reflection.Assembly.GetAssembly(typeof(Mod)).GetName().Version;
             }
         }
 
@@ -389,7 +389,6 @@ namespace SpaceWar2006.GameSystem
         }
 
         
-        const int version = 1;
         bool initialized = false;
         public static Mod Instance = new Mod();
     }
