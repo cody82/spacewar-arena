@@ -1751,7 +1751,7 @@ namespace SpaceWar2006.GameObjects
     }
 
     [Editable]
-    public class Nebula : Cheetah.Physics.PhysicsNode
+    public class Nebula : Node
     {
         public Nebula()
         {
@@ -1761,28 +1761,20 @@ namespace SpaceWar2006.GameObjects
             Draw.Add(new ParticleNebula());
         }
 
-        protected override Cheetah.Physics.IPhysicsObject CreatePhysicsObject(Scene s)
-        {
-            CollisionInfo info = GetCollisionInfo();
-            SphereCollisionInfo sphere = info as SphereCollisionInfo;
-            if (sphere != null)
-            {
-                Cheetah.Physics.IPhysicsObject obj = s.Physics.CreateObjectSphere(sphere.Sphere.Radius, 1);
-                obj.Position = base.Position;
-                obj.Speed = base.Speed;
-                obj.Orientation = base.Orientation;
-                obj.Owner = this;
-                //obj.Movable = false;
-                return obj;
-            }
-            throw new Exception();
-        }
 
         public override void Tick(float dtime)
         {
             base.Tick(dtime);
-
-            Speed = Vector3.Zero;
+			
+            if (!Root.Instance.IsAuthoritive)
+                return;
+                
+			IList<GameObjects.Actor> actors = Root.Instance.Scene.FindEntitiesByType<GameObjects.Actor>();
+			foreach(GameObjects.Actor other in actors)
+			{
+            	if (Distance (other)<=500)
+            		other.Damage(Damage * dtime);
+			}
         }
         public override bool DrawLocal(IDrawable d)
         {
@@ -1791,21 +1783,7 @@ namespace SpaceWar2006.GameObjects
 
         public override bool CanCollide(Node other)
         {
-            return other is SpaceShip;
-        }
-
-        public override CollisionInfo GetCollisionInfo()
-        {
-            return new SphereCollisionInfo(this.Position, 500);
-        }
-
-        public override void OnCollide(Node other)
-        {
-            if (!Root.Instance.IsAuthoritive)
-                return;
-
-            SpaceShip s = (SpaceShip)other;
-            s.Damage(Damage * Root.Instance.TickDelta);
+            return false;
         }
 
         Damage Damage = new Damage(1, 30, 0, 10);

@@ -462,6 +462,9 @@ namespace SpaceWar2006.Effects
 		{
 			base.Tick (dTime);
 			
+            if (!Root.Instance.IsAuthoritive)
+                return;
+                
 			IList<GameObjects.Actor> actors = Root.Instance.Scene.FindEntitiesByType<GameObjects.Actor>();
 			foreach(GameObjects.Actor other in actors)
 			{
