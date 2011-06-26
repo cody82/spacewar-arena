@@ -70,21 +70,33 @@ namespace Cheetah.Physics
         {
             base.OnAdd (s);
 
-            if(Physics==null)
-                Physics=CreatePhysicsObject(s);
+            if (Physics == null)
+            {
+                if (Kill)
+                    return;
+
+                Physics = CreatePhysicsObject(s);
+            }
         }
 
         public override void OnRemove(Scene s)
         {
             base.OnRemove (s);
 
-            if(Physics!=null)
+        }
+
+        public override void OnKill()
+        {
+            base.OnKill();
+
+            Scene s = Root.Instance.Scene;
+
+            if (Physics != null)
             {
                 s.Physics.DeleteObject(Physics);
                 Physics = null;
             }
         }
-
         public override void Tick(float dtime)
         {
             position.Original = Position;
@@ -534,7 +546,7 @@ namespace Cheetah.Physics
             set;
         }
 
-        protected Body body;
+        internal Body body;
 
         public Vector3 Position
         {
@@ -619,7 +631,7 @@ namespace Cheetah.Physics
                 Body body1 = info.SkinInfo.Skin1.Owner;
                 if (body0 == null || body1 == null)
                     continue;
-                if (body0.ExternalData == null || body1.ExternalData == null)
+                if (body0.ExternalData == body1.ExternalData || body0.ExternalData == null || body1.ExternalData == null)
                     continue;
                 list.Add(new KeyValuePair<IPhysicsObject, IPhysicsObject>((IPhysicsObject)body0.ExternalData, (IPhysicsObject)body1.ExternalData));
             }
@@ -745,7 +757,13 @@ namespace Cheetah.Physics
 
         public void DeleteObject(IPhysicsObject po)
         {
-            throw new NotImplementedException();
+            JigLibObject obj = (JigLibObject)po;
+            if (obj.body == null)
+                return;
+            if(obj.body.CollisionSkin != null)
+                world.CollisionSystem.RemoveCollisionSkin(obj.body.CollisionSkin);
+            world.RemoveBody(obj.body);
+            //throw new NotImplementedException();
         }
 
         public void Tick(float dtime)

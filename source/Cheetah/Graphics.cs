@@ -7822,6 +7822,9 @@ namespace Cheetah.Graphics
                 if (o1.Kill || o2.Kill)
                     continue;
 
+                if (o1.Scene != this || o2.Scene != this)
+                    continue;
+
                 if (!(o1.CanCollide(o2) && o2.CanCollide(o1)))
                     continue;
 
